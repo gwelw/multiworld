@@ -34,36 +34,15 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * The main class of the project
- * <p>
- *
- * @author Fernando
- */
 public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder {
 
   private static MultiWorldPlugin instance;
   public CommandStackBuilder builder = this;
   private CommandHandler commandHandler;
-  /**
-   * The configuration
-   */
   private DataHandler data = null;
-  /**
-   * was there any critical error?
-   */
   private boolean errorStatus = false;
-  /**
-   * The logger
-   */
   private MyLogger log;
-  /**
-   * The plugin directory
-   */
   private File pluginDir;
-  /**
-   * The version of the plugin that is running on the server
-   */
   private String version;
   private PlayerHandler playerHandler;
   private AddonHandler pluginHandler;
@@ -89,9 +68,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
         .setLocation(loc).setPermissible(sender).build();
   }
 
-  /**
-   * Tries to clean up multiworlds memory caches
-   */
   public void gc() {
     WorldGenerator[] list = WorldGenerator.values();
     for (WorldGenerator w : list) {
@@ -105,13 +81,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     }
   }
 
-  /**
-   * Gets the nl.ferrybig.multiworld api interface Notice that its better to cache the result of
-   * this since its a heavy call
-   * <p>
-   *
-   * @return the api interface
-   */
   public MultiWorldAPI getApi() {
     if (this.isEnabled()) {
       return new MultiWorldAPI(this);
@@ -127,14 +96,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     return this.data;
   }
 
-  /**
-   * Gets a chunk gen by name
-   * <p>
-   *
-   * @param worldName The name of the world
-   * @param id        the id of the gen to get
-   * @return The chunk gen of succces, or null on error
-   */
   @Override
   public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
     ChunkGenerator gen = WorldGenerator.getGen(id);
@@ -144,9 +105,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     return gen;
   }
 
-  /**
-   * @return the pluginHandler
-   */
   public AddonHandler getPluginHandler() {
     return pluginHandler;
   }
@@ -155,16 +113,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     this.log.info(msg);
   }
 
-  /**
-   * Called when there a command for this plugin
-   * <p>
-   *
-   * @param sender  The sender of the command
-   * @param cmd     The command itself
-   * @param cmdLine The raw command
-   * @param split   The parameters for the command
-   * @return if the command was ecuted succesfiully
-   */
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String cmdLine, String[] split) {
     split = Utils.parseArguments(split);
@@ -187,8 +135,7 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       arguments[0] = cmdLine;
       System.arraycopy(split, 0, arguments, 1, split.length);
       CommandStack stack = this.builder.build(sender, DebugLevel.NONE).editStack()
-          .setArguments(arguments).setCommandLabel(
-              "nl/ferrybig/multiworld").build();
+          .setArguments(arguments).setCommandLabel("nl/ferrybig/multiworld").build();
       this.pushCommandStack(stack);
     }
     return true;
