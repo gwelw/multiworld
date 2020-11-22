@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import java.io.PrintWriter;
@@ -11,9 +7,6 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-/**
- * @author Fernando
- */
 public class FileLogFormatter extends Formatter {
 
   private final SimpleDateFormat date;

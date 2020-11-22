@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.other;
 
 import nl.ferrybig.multiworld.chat.Formatter;
@@ -12,9 +8,6 @@ import nl.ferrybig.multiworld.data.VersionHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-/**
- * @author Fernando
- */
 public class DebugCommand extends Command {
 
   private final VersionHandler debug;

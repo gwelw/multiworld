@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import nl.ferrybig.multiworld.MultiWorldPlugin;
@@ -14,9 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 
-/**
- * @author Fernando
- */
 public class WorldContainer implements MultiWorldWorldData {
 
   private InternalWorld world;
@@ -28,33 +21,19 @@ public class WorldContainer implements MultiWorldWorldData {
 
   }
 
-  /**
-   * @return the world
-   */
   public InternalWorld getWorld() {
     return world;
   }
 
-  /**
-   * @param world the world to set
-   */
   public void setWorld(InternalWorld world) {
     this.world = world;
   }
 
-  /**
-   * @return the loaded
-   */
   @Override
   public boolean isLoaded() {
     return loaded;
   }
 
-  /**
-   * Internal use only
-   *
-   * @param loaded the loaded to set
-   */
   public void setLoaded(boolean loaded) {
     if (this.loaded != loaded) {
       if (loaded) {

@@ -10,9 +10,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author ferrybig
- */
 public class UnloadWorldCommand extends Command {
 
   private final DataHandler data;

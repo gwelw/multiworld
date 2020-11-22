@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data.config;
 
 import java.util.Locale;
 import org.bukkit.Difficulty;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @author ferrybig
- */
 public class DifficultyConfigNode extends ConfigNode<Difficulty> {
 
   public DifficultyConfigNode(ConfigNode<ConfigurationSection> parent, String configPath,

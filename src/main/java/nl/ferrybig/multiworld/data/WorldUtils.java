@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import nl.ferrybig.multiworld.exception.WorldGenException;
@@ -13,81 +9,46 @@ import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @author Fernando
- */
 public interface WorldUtils {
 
-  public boolean deleteWorld(String world);
+  boolean deleteWorld(String world);
 
-  public MultiWorldWorldData[] getAllWorlds();
+  MultiWorldWorldData[] getAllWorlds();
+  
+  FlagValue getFlag(String worldName, FlagName flag);
 
-  /**
-   * Gets an flag from the specified world
-   * <p>
-   *
-   * @param worldName
-   * @param flag      The flag to return
-   * @return The value of the specified flag
-   */
-  public FlagValue getFlag(String worldName, FlagName flag);
+  InternalWorld getInternalWorld(String name, boolean mustBeLoaded);
 
-  public InternalWorld getInternalWorld(String name, boolean mustBeLoaded);
+  InternalWorld[] getLoadedWorlds();
 
-  public InternalWorld[] getLoadedWorlds();
+  World getWorld(String name);
 
-  public World getWorld(String name);
+  WorldContainer getWorldMeta(String world, boolean mustLoad);
 
-  public WorldContainer getWorldMeta(String world, boolean mustLoad);
+  InternalWorld[] getWorlds(boolean b);
 
-  public InternalWorld[] getWorlds(boolean b);
+  boolean isWorldLoaded(String name);
 
-  public boolean isWorldLoaded(String name);
+  World loadWorld(String name);
 
-  public World loadWorld(String name);
-
-  public boolean makeWorld(String name, WorldGenerator env, long seed, String options)
+  boolean makeWorld(String name, WorldGenerator env, long seed, String options)
       throws WorldGenException;
+  
+  boolean setEndPortal(String fromWorld, String toWorld);
+  
+  void setFlag(String world, FlagName flag, FlagValue value);
+  
+  boolean setPortal(String fromWorld, String toWorld);
 
-  /**
-   * Sets the end portal from world "fromworld" to be redirected to "toworld"
-   * <p>
-   *
-   * @param fromWorld
-   * @param toWorld
-   * @return
-   */
-  public boolean setEndPortal(String fromWorld, String toWorld);
+  boolean unloadWorld(String world);
 
-  /**
-   * Sets an flag on a world
-   * <p>
-   *
-   * @param world the world to set on
-   * @param flag  The flag to affect
-   * @param value The new value
-   */
-  public void setFlag(String world, FlagName flag, FlagValue value);
+  WorldContainer[] getWorlds();
 
-  /**
-   * Sets the nether portal from world "fromworld" to be redirected to "toworld"
-   * <p>
-   *
-   * @param fromWorld
-   * @param toWorld
-   * @return
-   */
-  public boolean setPortal(String fromWorld, String toWorld);
-
-  public boolean unloadWorld(String world);
-
-  public WorldContainer[] getWorlds();
-
-  public void loadWorlds(ConfigurationSection worldList, MyLogger logger, Difficulty baseDifficulty,
+  void loadWorlds(ConfigurationSection worldList, MyLogger logger, Difficulty baseDifficulty,
       SpawnWorldControl spawn);
 
-  public void saveWorlds(ConfigurationSection worldSection, MyLogger log, SpawnWorldControl spawn);
+  void saveWorlds(ConfigurationSection worldSection, MyLogger log, SpawnWorldControl spawn);
 
-  public boolean isWorldExisting(String world);
+  boolean isWorldExisting(String world);
 
 }

@@ -2,9 +2,9 @@ package nl.ferrybig.multiworld.addons;
 
 public interface MultiworldAddon {
 
-  public abstract void onDisable();
+  void onDisable();
 
-  public abstract void onEnable();
+  void onEnable();
 
-  public abstract boolean isEnabled();
+  boolean isEnabled();
 }

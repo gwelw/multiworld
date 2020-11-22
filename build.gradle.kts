@@ -12,14 +12,15 @@ repositories {
     mavenCentral()
     maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven(url = "https://papermc.io/repo/repository/maven-public")
 
 }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compileOnly("org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT")
-
+    compileOnly("com.destroystokyo.paper:paper-api:1.13.2-R0.1-SNAPSHOT")
+    compileOnly("com.google.guava:guava:21.0-jre")
 }
 
 tasks.withType<Test> {

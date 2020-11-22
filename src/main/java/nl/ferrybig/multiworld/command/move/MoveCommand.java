@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.move;
 
 import nl.ferrybig.multiworld.Utils;
@@ -20,9 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * @author Fernando
- */
 public class MoveCommand extends Command {
 
   private final PlayerHandler p;

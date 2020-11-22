@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.world;
 
 import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
@@ -19,9 +15,6 @@ import nl.ferrybig.multiworld.translation.message.MessageCache;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class CreateCommand extends Command {
 
   private final DataHandler data;

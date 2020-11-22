@@ -5,10 +5,6 @@ import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.MyLogger;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @param <T> The type objects this config gives you
- * @author ferrybig
- */
 public abstract class ConfigNode<T> {
 
   protected final String configPath;
@@ -85,16 +81,10 @@ public abstract class ConfigNode<T> {
 
   }
 
-  /**
-   * @return the configName
-   */
   public String getConfigPath() {
     return configPath;
   }
 
-  /**
-   * @return the defaultValue
-   */
   public T getDefaultValue() {
     return defaultValue;
   }
@@ -123,5 +113,4 @@ public abstract class ConfigNode<T> {
   protected abstract T unpack(Object rawConfigValue) throws DataPackException;
 
   protected abstract Object pack(T data);
-
 }

@@ -1,21 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.chat;
 
+import java.util.Arrays;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import nl.ferrybig.multiworld.worldgen.SpeedLevel;
 import org.bukkit.ChatColor;
 
-/**
- * @author Fernando
- */
 public class Formatter {
 
-  private final static String BOOLEAN_TRUE = ChatColor.GREEN + "True";
-  private final static String BOOLEAN_FALSE = ChatColor.RED + "False";
-  private final static String UNKNOWN_FLAG = ChatColor.GOLD + "Unknown";
+  private static final String BOOLEAN_TRUE = ChatColor.GREEN + "True";
+  private static final String BOOLEAN_FALSE = ChatColor.RED + "False";
+  private static final String UNKNOWN_FLAG = ChatColor.GOLD + "Unknown";
 
   public static String printBoolean(boolean b) {
     return (b ? BOOLEAN_TRUE : BOOLEAN_FALSE);
@@ -47,9 +41,7 @@ public class Formatter {
 
   public static String createList(ChatColor color, Object... args) {
     ChatColor[] colors = new ChatColor[args.length];
-    for (int i = 0; i < colors.length; i++) {
-      colors[i] = color;
-    }
+    Arrays.fill(colors, color);
     return createList(colors, args);
   }
 

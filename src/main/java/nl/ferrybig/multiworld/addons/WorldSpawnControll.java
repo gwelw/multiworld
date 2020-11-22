@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.addons;
 
 import nl.ferrybig.multiworld.data.DataHandler;
@@ -11,9 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-/**
- * @author Fernando
- */
 public class WorldSpawnControll extends AddonBase implements MultiworldAddon, Listener {
 
   public WorldSpawnControll(DataHandler data) {

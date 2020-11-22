@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import java.util.List;
@@ -13,9 +9,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * @author Fernando
- */
 public class PlayerHandler {
 
   private final DataHandler h;
@@ -26,13 +19,6 @@ public class PlayerHandler {
     this.log = h.getLogger();
   }
 
-  /**
-   * Move al the players from world 'from' to world 'to' whit as message 'warpOutMsg'
-   *
-   * @param from       The target world
-   * @param to         The destination world
-   * @param warpOutMsg The message to send to the players
-   */
   public void moveAllPlayers(World from, World to, String warpOutMsg) {
     if (from == to) {
       throw new IllegalArgumentException();
@@ -47,23 +33,10 @@ public class PlayerHandler {
     }
   }
 
-  /**
-   * Moves the speciefied player
-   *
-   * @param player the target player
-   * @param world  the value of location
-   */
-
   public void movePlayer(Player player, World world) {
     movePlayer(player, world.getSpawnLocation());
   }
 
-  /**
-   * Moves the speciefied player
-   *
-   * @param player the target player
-   * @param loc
-   */
   public void movePlayer(Player player, Location loc) {
     World world = loc.getWorld();
     Chunk chunk;

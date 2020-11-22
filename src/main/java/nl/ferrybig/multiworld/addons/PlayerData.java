@@ -4,31 +4,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-/**
- * The class that saves the inventories got from players
- *
- * @author Fernando
- */
 public class PlayerData extends Object implements Cloneable {
 
-  /**
-   * The inventory from the player
-   */
   private final ItemStack[] inventory;
-  /**
-   * The armor from the player
-   */
   private final ItemStack[] armor;
   private final int xp;
   private final int level;
   private final int onFire;
 
-  /**
-   * Makes this object
-   *
-   * @param arg1 the inventory object
-   * @param arg2 the Armor object
-   */
   private PlayerData(ItemStack[] arg1, ItemStack[] arg2, int xp, int level, int onFire) {
     this.inventory = arg1;
     this.armor = arg2;
@@ -37,12 +20,6 @@ public class PlayerData extends Object implements Cloneable {
     this.onFire = onFire;
   }
 
-  /**
-   * get the inventory and stats from a player
-   *
-   * @param player Player to get from
-   * @return The PlayerData object that have the inventory
-   */
   public static PlayerData getFromPlayer(Player player) {
     PlayerInventory inv = player.getInventory();
     ItemStack[] inventory = new ItemStack[inv.getContents().length];
@@ -57,11 +34,6 @@ public class PlayerData extends Object implements Cloneable {
         player.getLevel(), player.getFireTicks());
   }
 
-  /**
-   * place the invventory on the Player
-   *
-   * @param player player to put the data on
-   */
   public void putOnPlayer(Player player) {
     PlayerInventory inv = player.getInventory();
     inv.clear();

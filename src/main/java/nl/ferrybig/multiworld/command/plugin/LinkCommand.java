@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.plugin;
 
 import nl.ferrybig.multiworld.addons.AddonHandler;
@@ -18,9 +14,6 @@ import nl.ferrybig.multiworld.translation.message.MessageCache;
 import nl.ferrybig.multiworld.translation.message.PackedMessageData;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class LinkCommand extends Command {
 
   public static final PackedMessageData PATTERN_PORTAL_NETHER = MessageCache

@@ -13,12 +13,10 @@ import nl.ferrybig.multiworld.command.DebugLevel;
 import nl.ferrybig.multiworld.command.DefaultCommandStack;
 import nl.ferrybig.multiworld.command.DefaultMessageLogger;
 import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.MyLogger;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
 import nl.ferrybig.multiworld.exception.ConfigException;
-import nl.ferrybig.multiworld.worldgen.SimpleChunkGen;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,15 +28,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder {
 
   private static MultiWorldPlugin instance;
+  private static final Logger log = LoggerFactory.getLogger(MultiWorldPlugin.class);
   public CommandStackBuilder builder = this;
   private CommandHandler commandHandler;
   private DataHandler data = null;
   private boolean errorStatus = false;
-  private MyLogger log;
   private File pluginDir;
   private String version;
   private PlayerHandler playerHandler;
@@ -52,30 +52,16 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
 
   @Override
   public CommandStack build(CommandSender sender, DebugLevel level) {
-    Location loc;
+    Location location = null;
     if (sender instanceof Player) {
-      loc = ((Player) sender).getLocation();
+      location = ((Player) sender).getLocation();
     } else if (sender instanceof BlockCommandSender) {
-      loc = ((BlockCommandSender) sender).getBlock().getLocation();
-    } else {
-      loc = null;
+      location = ((BlockCommandSender) sender).getBlock().getLocation();
     }
+
     return DefaultCommandStack.builder(new DefaultMessageLogger(level, sender,
         ChatColor.translateAlternateColorCodes('&', "&9[&4MultiWorld&9] &3"))).setSender(sender)
-        .setLocation(loc).setPermissible(sender).build();
-  }
-
-  public void gc() {
-    WorldGenerator[] list = WorldGenerator.values();
-    for (WorldGenerator w : list) {
-      ChunkGenerator gen = WorldGenerator.getGen(w.name());
-      if (gen == null) {
-        continue;
-      }
-      if (gen instanceof SimpleChunkGen) {
-        ((SimpleChunkGen) gen).gc();
-      }
-    }
+        .setLocation(location).setPermissible(sender).build();
   }
 
   public MultiWorldAPI getApi() {
@@ -104,10 +90,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
 
   public AddonHandler getPluginHandler() {
     return pluginHandler;
-  }
-
-  public void log(String msg) {
-    this.log.info(msg);
   }
 
   @Override
@@ -145,16 +127,15 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
   @Override
   public void onDisable() {
     if (!this.errorStatus) {
-      this.log.info("Disabled."); //NOI18N
+      log.info("Disabled."); //NOI18N
       this.data.onShutdown();
       this.getPluginHandler().disableAll();
     } else {
+      this.getSLF4JLogger().trace("[MultiWorld] !!!     CRITICAL MALL FUNCTION     !!!");
       this.getServer().getLogger()
-          .severe("[MultiWorld] !!!     CRITICAL MALL FUNCTION     !!!"); //NOI18N
+          .severe("[MultiWorld] !!!          SHUTTING DOWN         !!!");
       this.getServer().getLogger()
-          .severe("[MultiWorld] !!!          SHUTTING DOWN         !!!"); //NOI18N
-      this.getServer().getLogger()
-          .severe("[MultiWorld] !!!               :(               !!!"); //NOI18N
+          .severe("[MultiWorld] !!!               :(               !!!");
     }
     this.commandHandler = null;
     this.data = null;
@@ -171,8 +152,7 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       this.pluginDir = this.getDataFolder();
       this.pluginDir.mkdir();
 
-      this.data = new DataHandler(this.getConfig(), this); //NOI18N
-      this.log = this.data.getLogger();
+      this.data = new DataHandler(this.getConfig(), this);
       this.playerHandler = new PlayerHandler(this.data);
       this.worldHandler = new WorldHandler(this.data);
       this.pluginHandler = new AddonHandler(this.data, this.version);
@@ -180,21 +160,16 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       this.commandHandler = new CommandHandler(this.data, this.playerHandler, this.worldHandler,
           this.reloadHandler, this.getPluginHandler(), this.getPluginHandler());
       this.pluginHandler.onSettingsChance();
-      this.log.info("v" + this.version + " enabled."); //NOI18N
+      log.info("v" + this.version + " enabled.");
     } catch (ConfigException e) {
-      this.getServer().getLogger()
-          .log(Level.SEVERE, "[MultiWorld] error while enabling:".concat(e.toString())); //NOI18N
-      this.getServer().getLogger().severe(
-          "[MultiWorld] plz check the configuration for any misplaced tabs, full error:"); //NOI18N
-      e.printStackTrace(System.err);
+      log.error("[MultiWorld] error while enabling:".concat(e.toString()));
+      log.error("[MultiWorld] plz check the configuration for any misplaced tabs, full error:");
       this.errorStatus = true;
       this.setEnabled(false);
     } catch (RuntimeException e) {
       this.getServer().getLogger()
-          .log(Level.SEVERE, "[MultiWorld] error while enabling:".concat(e.toString())); //NOI18N
-      this.getServer().getLogger()
-          .severe("[MultiWorld] plz report the full error to the author:"); //NOI18N
-      e.printStackTrace(System.err);
+          .log(Level.SEVERE, "[MultiWorld] error while enabling:".concat(e.toString()));
+      log.error("[MultiWorld] plz report the full error to the author:");
       this.errorStatus = true;
       this.setEnabled(false);
     }
@@ -204,8 +179,7 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
   public List<String> onTabComplete(CommandSender sender, Command command, String alias,
       String[] split) {
     split = Utils.parseArguments(split);
-    List<String> list = Arrays.asList(
+    return Arrays.asList(
         this.commandHandler.getOptionsForUnfinishedCommands(sender, command.getName(), split));
-    return list;
   }
 }

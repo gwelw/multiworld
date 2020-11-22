@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.world;
 
 import java.util.Arrays;
@@ -15,9 +11,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.ChatColor;
 
-/**
- * @author Fernando
- */
 public class ListCommand extends Command {
 
   private final DataHandler data;

@@ -17,35 +17,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 
-/**
- * the class that handle the use of portals between worlds
- *
- * @author Fernando
- */
 public abstract class PortalHandler implements Listener, MultiworldAddon, SettingsListener {
 
   public static final int END_PORTAL = 1;
   public static final int UNKNOWN_PORTAL = 0;
   public static final int NETHER_PORTAL = -1;
   private final DataHandler data;
-  /**
-   * The logger used for the logging messages
-   */
   private final MyLogger logger;
   private final boolean handleEndPortals;
-  /**
-   * is this plugin enabled
-   */
   private boolean enabled = false;
 
-  /**
-   * The default constructor
-   *
-   * @param d
-   * @param server
-   * @param logger
-   * @param handleEndPortals
-   */
   public PortalHandler(DataHandler d, Server server, MyLogger logger, boolean handleEndPortals) {
     this.data = d;
     this.logger = logger;
@@ -59,12 +40,7 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
     }
   }
 
-  /**
-   * Load the data
-   *
-   * @throws IllegalStateException When this obj isn't enabled
-   */
-  public void load() throws IllegalStateException {
+  public void load() {
     if (enabled == false) {
       throw new IllegalStateException();
     }

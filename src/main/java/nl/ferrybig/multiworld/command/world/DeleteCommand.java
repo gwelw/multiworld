@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.world;
 
 import nl.ferrybig.multiworld.command.ArgumentType;
@@ -15,9 +11,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class DeleteCommand extends Command {
 
   private final DataHandler d;

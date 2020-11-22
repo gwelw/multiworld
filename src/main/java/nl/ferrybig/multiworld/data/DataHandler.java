@@ -17,9 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-/**
- * @author Fernando
- */
 public final class DataHandler {
 
   public final static ConfigNode<ConfigurationSection> OPTIONS_MAIN_NODE = new ConfigNodeSection(
@@ -50,9 +47,6 @@ public final class DataHandler {
   private final MultiWorldPlugin plugin;
   private FileConfiguration config;
   private MyLogger logger;
-  /**
-   * Base difficulty
-   */
   private Difficulty difficulty;
   private boolean unloadWorldsOnDisable = false;
   private SpawnWorldControl spawn;
@@ -79,14 +73,7 @@ public final class DataHandler {
       }
     }
   };
-  /**
-   * Makes the object
-   * <p>
-   *
-   * @param config
-   * @param plugin The main plugin running this
-   * @throws ConfigException When there was an error
-   */
+
   public DataHandler(FileConfiguration config, MultiWorldPlugin plugin) throws ConfigException {
     this.config = config;
     this.plugin = plugin;

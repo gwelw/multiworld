@@ -48,6 +48,6 @@ public class ArgumentType {
 
   private interface MessageProvider {
 
-    public String getMessage();
+    String getMessage();
   }
 }

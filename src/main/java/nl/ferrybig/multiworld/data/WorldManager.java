@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import java.util.Arrays;
@@ -35,9 +31,6 @@ import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.ChunkGenerator;
 
-/**
- * @author Fernando
- */
 public class WorldManager implements WorldUtils {
 
   public final static ConfigNode<Difficulty> WORLD_DIFFICULTY = new DifficultyConfigNode(null,

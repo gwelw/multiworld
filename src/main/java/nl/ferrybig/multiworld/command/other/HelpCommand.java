@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.other;
 
 import java.util.HashMap;
@@ -23,9 +19,6 @@ import org.bukkit.help.HelpTopicComparator;
 import org.bukkit.help.IndexHelpTopic;
 import org.bukkit.util.ChatPaginator;
 
-/**
- * @author Fernando
- */
 public class HelpCommand extends Command {
 
   private final DataHandler data;

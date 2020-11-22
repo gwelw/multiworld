@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command;
 
 import java.util.Collection;
@@ -17,9 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.help.HelpTopic;
 
-/**
- * @author Fernando
- */
 public abstract class Command {
 
   public static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -33,13 +26,6 @@ public abstract class Command {
   private final String perm;
   private final String description;
 
-  /**
-   * The 1 arg contructor
-   * <p>
-   *
-   * @param perm        The permission that this command needs
-   * @param description
-   */
   public Command(String perm, String description) {
     this.perm = perm;
     this.description = description;

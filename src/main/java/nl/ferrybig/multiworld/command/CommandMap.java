@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command;
 
 import java.util.Collections;
@@ -12,9 +8,6 @@ import java.util.Set;
 import nl.ferrybig.multiworld.translation.Translation;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class CommandMap extends Command {
 
   private static final String[] nullString = new String[0];

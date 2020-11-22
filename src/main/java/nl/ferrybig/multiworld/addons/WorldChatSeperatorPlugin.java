@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.addons;
 
 import java.util.Iterator;
@@ -16,9 +12,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-/**
- * @author Fernando
- */
 public class WorldChatSeperatorPlugin implements Listener, MultiworldAddon {
 
   private final DataHandler d;
@@ -60,17 +53,11 @@ public class WorldChatSeperatorPlugin implements Listener, MultiworldAddon {
     }
   }
 
-  /**
-   * called when this plugin is disabled
-   */
   @Override
   public void onDisable() {
     this.isEnabled = false;
   }
 
-  /**
-   * called when this plugin is enabled
-   */
   @Override
   public void onEnable() {
     this.isEnabled = true;

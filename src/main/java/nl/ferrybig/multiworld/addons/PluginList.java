@@ -1,21 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.addons;
 
-/**
- * @author Fernando
- */
 public interface PluginList {
 
-  public boolean isLoaded(String plugin);
+  boolean isLoaded(String plugin);
 
-  public boolean isEnabled(String plugin);
+  boolean isEnabled(String plugin);
 
-  public String[] getPlugins();
+  String[] getPlugins();
 
-  public void disableAll();
+  void disableAll();
 
-  public boolean enabledInsideConfig(String plugin);
+  boolean enabledInsideConfig(String plugin);
 }

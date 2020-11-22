@@ -29,12 +29,6 @@ import nl.ferrybig.multiworld.data.ReloadHandler;
 import nl.ferrybig.multiworld.data.VersionHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
 
-/**
- * The class that handles the commands
- * <p>
- *
- * @author Fernando
- */
 public class CommandHandler extends CommandMap {
 
   public CommandHandler(DataHandler d, PlayerHandler p, WorldHandler w, ReloadHandler r,

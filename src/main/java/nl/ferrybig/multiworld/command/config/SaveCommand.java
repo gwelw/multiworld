@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.config;
 
 import nl.ferrybig.multiworld.command.Command;
@@ -11,9 +7,6 @@ import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 
-/**
- * @author Fernando
- */
 public class SaveCommand extends Command {
 
   private final ReloadHandler r;

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.wizards;
 
 import java.util.Collection;
@@ -10,9 +6,6 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 
-/**
- * @author Fernando
- */
 public class ChooseListPrompt extends MessagePrompt {
 
   private final String text;

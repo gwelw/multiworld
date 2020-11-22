@@ -4,7 +4,9 @@
  */
 package nl.ferrybig.multiworld;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
@@ -16,32 +18,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.util.ChatPaginator;
 
-/**
- * @author Fernando
- */
-public class Utils implements java.io.Serializable {
+public class Utils implements Serializable {
 
-  /**
-   * The start of al command permission nodes
-   */
-  public static final String COMMAND_STARTER = "command.";
-  /**
-   * The start of al the permission strings
-   */
-  public static final String PERMISSION_STARTER = "nl.ferrybig.multiworld.";
   private static final long serialVersionUID = 98487365L;
+  public static final String COMMAND_STARTER = "command.";
+  public static final String PERMISSION_STARTER = "nl.ferrybig.multiworld.";
 
   private Utils() {
   }
 
-  /**
-   * Can the follwing commandsender use the command?
-   * <p>
-   *
-   * @param sender  to test whit
-   * @param command The command to test
-   * @return
-   */
   public static boolean canUseCommand(CommandStack sender, String command) {
     if (!hasPermission(sender, COMMAND_STARTER.concat(command))) {
       sender.sendMessage(MessageType.ERROR, Translation.LACKING_PERMISSIONS);
@@ -69,13 +54,6 @@ public class Utils implements java.io.Serializable {
     return true;
   }
 
-  /**
-   * Gets the name of the input CommandSender
-   * <p>
-   *
-   * @param sender The CommandSender obj to get the name from
-   * @return The name of it
-   */
   public static String getPlayerName(CommandSender sender) {
     return sender.getName();
   }
@@ -90,14 +68,6 @@ public class Utils implements java.io.Serializable {
     return worldObj;
   }
 
-  /**
-   * Have the player the permission?
-   * <p>
-   *
-   * @param stack
-   * @param permission
-   * @return The result
-   */
   public static boolean hasPermission(CommandStack stack, String permission) {
     return stack.hasPermission(PERMISSION_STARTER + permission);
   }
@@ -109,7 +79,7 @@ public class Utils implements java.io.Serializable {
   public static String[] parseArguments(String[] list) {
     int numberOfArguments = list.length;
     boolean hasFoundToken = false;
-    ArrayList<String> argList = new ArrayList<String>(numberOfArguments);
+    ArrayList<String> argList = new ArrayList<>(numberOfArguments);
     String tmp = null;
     int index = 0;
     for (String i : list) {
@@ -143,29 +113,13 @@ public class Utils implements java.io.Serializable {
     sendMessage(s, msg, 5);
   }
 
-  /**
-   * Sends a command sender a message in a friendly way
-   * <p>
-   *
-   * @param s      the commandsender to send to
-   * @param msg    the message
-   * @param spaces The amount of spaces before the message if it doesn't fit
-   */
   public static void sendMessage(CommandSender s, String msg, int spaces) {
     char[] spaceChars = new char[spaces];
-    for (int i = 0; i < spaceChars.length; i++) {
-      spaceChars[i] = ' ';
-    }
+    Arrays.fill(spaceChars, ' ');
     String spaceString = new String(spaceChars);
     sendMessage(s, msg, spaceString, false);
   }
 
-  /**
-   * @param s                      the value of s
-   * @param msg                    the value of msg
-   * @param prefix                 the value of prefix
-   * @param addPrefixToFirstOutput the value of addPrefixToFirstOutput
-   */
   public static void sendMessage(CommandSender s, String msg, String prefix,
       boolean addPrefixToFirstOutput) {
     if (msg.contains("\n")) {
@@ -236,12 +190,11 @@ public class Utils implements java.io.Serializable {
   public static int countOccurrences(String haystack, char needle) {
     int count = 0;
     char[] contents = haystack.toCharArray();
-    for (int i = 0; i < contents.length; i++) {
-      if (contents[i] == needle) {
+    for (char content : contents) {
+      if (content == needle) {
         count++;
       }
     }
     return count;
   }
-
 }

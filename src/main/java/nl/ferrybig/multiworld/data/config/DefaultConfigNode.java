@@ -1,15 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @param <T> type of data this config node contains
- * @author Fernando
- */
 public class DefaultConfigNode<T> extends ConfigNode<T> {
 
   private final Class<T> type;

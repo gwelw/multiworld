@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.translation.message;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * @author ferrybig
- */
 public enum MessageCache {
   WORLD("%world%"),
   PLAYER("%player%"),
@@ -83,5 +75,4 @@ public enum MessageCache {
     }
 
   }
-
 }

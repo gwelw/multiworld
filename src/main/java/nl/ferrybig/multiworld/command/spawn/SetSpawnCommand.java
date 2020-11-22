@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.spawn;
 
 import nl.ferrybig.multiworld.command.Command;
@@ -14,9 +10,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.Location;
 
-/**
- * @author Fernando
- */
 public class SetSpawnCommand extends Command {
 
   private final PlayerHandler p;

@@ -9,12 +9,6 @@ import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 
-/**
- * The class that represents worlds
- * <p>
- *
- * @author Fernando
- */
 public class InternalWorld {
 
   private String worldName;

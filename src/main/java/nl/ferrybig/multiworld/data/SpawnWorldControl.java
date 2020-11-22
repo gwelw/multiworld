@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import java.util.HashMap;
@@ -10,9 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
-/**
- * @author Fernando
- */
 public class SpawnWorldControl {
 
   private final DataHandler data;

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.flag;
 
 import nl.ferrybig.multiworld.exception.InvalidFlagException;
@@ -18,9 +14,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class GetFlagCommand extends Command {
 
   private final DataHandler d;
@@ -58,7 +51,6 @@ public class GetFlagCommand extends Command {
         } catch (InvalidFlagException ex) {
           throw new RuntimeException(ex);
         }
-
       }
     }
   }
@@ -77,13 +69,6 @@ public class GetFlagCommand extends Command {
     }
   }
 
-  /**
-   * Show all flags set on world
-   * <p>
-   *
-   * @param world the world to show from
-   * @return an array of string containing the lines of the flags
-   */
   public String[] showWorldFlags(InternalWorld world) {
     FlagName[] flagsNames = FlagName.class.getEnumConstants();
     StringBuilder out = new StringBuilder();

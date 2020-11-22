@@ -2,9 +2,6 @@ package nl.ferrybig.multiworld.translation;
 
 import nl.ferrybig.multiworld.translation.message.PackedMessageData;
 
-/**
- * @author ferrybig
- */
 public enum Translation implements PackedMessageData {
   LACKING_PERMISSIONS("You don't have the required permissions!"),
   COMMAND_NOT_FOUND("Unknown command! Do \"/mw help\" for a list of commands."),
@@ -71,7 +68,7 @@ public enum Translation implements PackedMessageData {
   ;
   private final String humanText;
 
-  private Translation(String humanText) {
+  Translation(String humanText) {
     this.humanText = humanText;
   }
 
@@ -84,10 +81,6 @@ public enum Translation implements PackedMessageData {
     return humanText;
   }
 
-  /**
-   * @param prevFormat the value of prevFormat
-   * @return
-   */
   @Override
   public String transformMessage(String prevFormat) {
     return this.humanText;

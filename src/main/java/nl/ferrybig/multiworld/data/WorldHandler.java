@@ -17,9 +17,6 @@ import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-/**
- * @author ferrybig
- */
 public class WorldHandler {
 
   private final DataHandler data;

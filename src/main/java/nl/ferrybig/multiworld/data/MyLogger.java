@@ -5,13 +5,7 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-/**
- * The class used for logging
- * <p>
- *
- * @author Fernando
- */
-public class MyLogger extends Object {
+public class MyLogger {
 
   protected final Logger log;
   protected final String name;
@@ -19,8 +13,7 @@ public class MyLogger extends Object {
 
   public MyLogger(boolean debug, String name, Logger root) {
     this.debug = debug;
-    this.name = new StringBuilder(name.length() + 3).append("[").append(name).append("] ")
-        .toString();
+    this.name = "[" + name + "] ";
     log = root;
   }
 

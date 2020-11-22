@@ -1,57 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command;
 
 import nl.ferrybig.multiworld.translation.message.PackedMessageData;
 
-/**
- * @author Fernando
- */
 public interface MessageLogger {
+  
+  DebugLevel getDebugLevel();
+  
+  void sendMessage(MessageType type, String message);
 
-  /**
-   * Gets the debug level
-   * <p>
-   *
-   * @return
-   */
-  public DebugLevel getDebugLevel();
+  void sendMessage(MessageType type, PackedMessageData... message);
+  
+  void sendMessageUsage(String commandLabel, ArgumentType... types);
+  
+  void sendMessageBroadcast(MessageType type, String message);
 
-  /**
-   * Sends a normal message to an user
-   * <p>
-   *
-   * @param type    the type of message to pass to the higher layer, may be null
-   * @param message the message to send
-   * @param options
-   */
-  public void sendMessage(MessageType type, String message);
+  void sendMessageBroadcast(MessageType type, PackedMessageData... message);
 
-  public void sendMessage(MessageType type, PackedMessageData... message);
-
-  /**
-   * Sends the usage of the command for better processing inside other classes
-   * <p>
-   *
-   * @param commandLabel
-   * @param types
-   */
-  public void sendMessageUsage(String commandLabel, ArgumentType... types);
-
-  /**
-   * Sends a broadcast message to everone including the user user
-   * <p>
-   *
-   * @param type    the type of message to pass to the higher layer, may be null
-   * @param message the message to send
-   * @param options
-   */
-  public void sendMessageBroadcast(MessageType type, String message);
-
-  public void sendMessageBroadcast(MessageType type, PackedMessageData... message);
-
-  public void sendMessageDebug(String message, DebugLevel level);
+  void sendMessageDebug(String message, DebugLevel level);
 }

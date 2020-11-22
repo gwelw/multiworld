@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.command.flag;
 
 import nl.ferrybig.multiworld.exception.InvalidFlagException;
@@ -20,9 +16,6 @@ import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author Fernando
- */
 public class SetFlagCommand extends Command {
 
   private final DataHandler d;
