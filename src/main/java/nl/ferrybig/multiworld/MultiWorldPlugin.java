@@ -1,7 +1,6 @@
 package nl.ferrybig.multiworld;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,10 +16,7 @@ import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.MyLogger;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
-import nl.ferrybig.multiworld.data.WorldContainer;
 import nl.ferrybig.multiworld.data.WorldHandler;
-import nl.ferrybig.multiworld.metrics.Metrics;
-import nl.ferrybig.multiworld.metrics.Metrics.Graph;
 import nl.ferrybig.multiworld.worldgen.SimpleChunkGen;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;
@@ -183,7 +179,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       this.commandHandler = new CommandHandler(this.data, this.playerHandler, this.worldHandler,
           this.reloadHandler, this.getPluginHandler(), this.getPluginHandler());
       this.pluginHandler.onSettingsChance();
-      this.setupMetrics();
       this.log.info("v" + this.version + " enabled."); //NOI18N
     } catch (ConfigException e) {
       this.getServer().getLogger()
@@ -211,83 +206,5 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     List<String> list = Arrays.asList(
         this.commandHandler.getOptionsForUnfinishedCommands(sender, command.getName(), split));
     return list;
-  }
-
-  private void setupMetrics() {
-    try {
-      Metrics metrics = new Metrics(this);
-      Graph graph = metrics.createGraph("components used");
-      {
-        graph.addPlotter(new Metrics.Plotter("GameMode chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_GAMEMODE) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("NetherPortal chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_LINK_NETHER) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("EndPortal chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_LINK_END) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("WorldChatSeperator used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_WORLD_CHAT) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("EnderBlock used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_BLOCK_ENDER_CHESTS) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("WorldSpawnChancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_WORLD_SPAWN) ? 1 : 0;
-          }
-        });
-      }
-      graph = metrics.createGraph("Generators used");
-      for (final WorldGenerator gen : WorldGenerator.values()) {
-        graph.addPlotter(new Metrics.Plotter(gen.getName()) {
-          @Override
-          public int getValue() {
-            int returnValue = 0;
-            for (WorldContainer world : data.getWorldManager().getWorlds()) {
-              if (world.getWorld().getFullGeneratorName().equals(gen.name())) {
-                returnValue++;
-              }
-            }
-            return returnValue;
-          }
-        });
-      }
-      graph = metrics.createGraph("World Data");
-      {
-        graph.addPlotter(new Metrics.Plotter("Worlds Existing") {
-          @Override
-          public int getValue() {
-            return data.getWorldManager().getAllWorlds().length;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("Worlds Loaded") {
-          @Override
-          public int getValue() {
-            return data.getWorldManager().getWorlds(true).length;
-          }
-        });
-      }
-      metrics.start();
-    } catch (IOException e) {
-      // Failed to submit the stats :-(
-    }
   }
 }
