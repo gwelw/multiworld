@@ -1,7 +1,6 @@
 package nl.ferrybig.multiworld;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,10 +16,7 @@ import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.MyLogger;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
-import nl.ferrybig.multiworld.data.WorldContainer;
 import nl.ferrybig.multiworld.data.WorldHandler;
-import nl.ferrybig.multiworld.metrics.Metrics;
-import nl.ferrybig.multiworld.metrics.Metrics.Graph;
 import nl.ferrybig.multiworld.worldgen.SimpleChunkGen;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;
@@ -34,36 +30,15 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * The main class of the project
- * <p>
- *
- * @author Fernando
- */
 public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder {
 
   private static MultiWorldPlugin instance;
   public CommandStackBuilder builder = this;
   private CommandHandler commandHandler;
-  /**
-   * The configuration
-   */
   private DataHandler data = null;
-  /**
-   * was there any critical error?
-   */
   private boolean errorStatus = false;
-  /**
-   * The logger
-   */
   private MyLogger log;
-  /**
-   * The plugin directory
-   */
   private File pluginDir;
-  /**
-   * The version of the plugin that is running on the server
-   */
   private String version;
   private PlayerHandler playerHandler;
   private AddonHandler pluginHandler;
@@ -89,9 +64,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
         .setLocation(loc).setPermissible(sender).build();
   }
 
-  /**
-   * Tries to clean up multiworlds memory caches
-   */
   public void gc() {
     WorldGenerator[] list = WorldGenerator.values();
     for (WorldGenerator w : list) {
@@ -105,13 +77,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     }
   }
 
-  /**
-   * Gets the nl.ferrybig.multiworld api interface Notice that its better to cache the result of
-   * this since its a heavy call
-   * <p>
-   *
-   * @return the api interface
-   */
   public MultiWorldAPI getApi() {
     if (this.isEnabled()) {
       return new MultiWorldAPI(this);
@@ -127,14 +92,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     return this.data;
   }
 
-  /**
-   * Gets a chunk gen by name
-   * <p>
-   *
-   * @param worldName The name of the world
-   * @param id        the id of the gen to get
-   * @return The chunk gen of succces, or null on error
-   */
   @Override
   public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
     ChunkGenerator gen = WorldGenerator.getGen(id);
@@ -144,9 +101,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     return gen;
   }
 
-  /**
-   * @return the pluginHandler
-   */
   public AddonHandler getPluginHandler() {
     return pluginHandler;
   }
@@ -155,16 +109,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     this.log.info(msg);
   }
 
-  /**
-   * Called when there a command for this plugin
-   * <p>
-   *
-   * @param sender  The sender of the command
-   * @param cmd     The command itself
-   * @param cmdLine The raw command
-   * @param split   The parameters for the command
-   * @return if the command was ecuted succesfiully
-   */
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String cmdLine, String[] split) {
     split = Utils.parseArguments(split);
@@ -187,8 +131,7 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       arguments[0] = cmdLine;
       System.arraycopy(split, 0, arguments, 1, split.length);
       CommandStack stack = this.builder.build(sender, DebugLevel.NONE).editStack()
-          .setArguments(arguments).setCommandLabel(
-              "nl/ferrybig/multiworld").build();
+          .setArguments(arguments).setCommandLabel("nl/ferrybig/multiworld").build();
       this.pushCommandStack(stack);
     }
     return true;
@@ -236,7 +179,6 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
       this.commandHandler = new CommandHandler(this.data, this.playerHandler, this.worldHandler,
           this.reloadHandler, this.getPluginHandler(), this.getPluginHandler());
       this.pluginHandler.onSettingsChance();
-      this.setupMetrics();
       this.log.info("v" + this.version + " enabled."); //NOI18N
     } catch (ConfigException e) {
       this.getServer().getLogger()
@@ -264,83 +206,5 @@ public class MultiWorldPlugin extends JavaPlugin implements CommandStackBuilder 
     List<String> list = Arrays.asList(
         this.commandHandler.getOptionsForUnfinishedCommands(sender, command.getName(), split));
     return list;
-  }
-
-  private void setupMetrics() {
-    try {
-      Metrics metrics = new Metrics(this);
-      Graph graph = metrics.createGraph("components used");
-      {
-        graph.addPlotter(new Metrics.Plotter("GameMode chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_GAMEMODE) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("NetherPortal chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_LINK_NETHER) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("EndPortal chancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_LINK_END) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("WorldChatSeperator used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_WORLD_CHAT) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("EnderBlock used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_BLOCK_ENDER_CHESTS) ? 1 : 0;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("WorldSpawnChancer used") {
-          @Override
-          public int getValue() {
-            return data.getNode(DataHandler.OPTIONS_WORLD_SPAWN) ? 1 : 0;
-          }
-        });
-      }
-      graph = metrics.createGraph("Generators used");
-      for (final WorldGenerator gen : WorldGenerator.values()) {
-        graph.addPlotter(new Metrics.Plotter(gen.getName()) {
-          @Override
-          public int getValue() {
-            int returnValue = 0;
-            for (WorldContainer world : data.getWorldManager().getWorlds()) {
-              if (world.getWorld().getFullGeneratorName().equals(gen.name())) {
-                returnValue++;
-              }
-            }
-            return returnValue;
-          }
-        });
-      }
-      graph = metrics.createGraph("World Data");
-      {
-        graph.addPlotter(new Metrics.Plotter("Worlds Existing") {
-          @Override
-          public int getValue() {
-            return data.getWorldManager().getAllWorlds().length;
-          }
-        });
-        graph.addPlotter(new Metrics.Plotter("Worlds Loaded") {
-          @Override
-          public int getValue() {
-            return data.getWorldManager().getWorlds(true).length;
-          }
-        });
-      }
-      metrics.start();
-    } catch (IOException e) {
-      // Failed to submit the stats :-(
-    }
   }
 }
