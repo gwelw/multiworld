@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld;
+package nl.ferrybig.multiworld.exception;
 
 /**
  * Throws when it was unable to parse the flag ie, non existing

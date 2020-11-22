@@ -1,7 +1,7 @@
 package nl.ferrybig.multiworld.api.flag;
 
 import java.util.Locale;
-import nl.ferrybig.multiworld.InvalidFlagException;
+import nl.ferrybig.multiworld.exception.InvalidFlagException;
 
 /**
  * the flags to set on a world

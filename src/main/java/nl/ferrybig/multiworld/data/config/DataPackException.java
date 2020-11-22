@@ -6,7 +6,7 @@
 
 package nl.ferrybig.multiworld.data.config;
 
-import nl.ferrybig.multiworld.MultiWorldException;
+import nl.ferrybig.multiworld.exception.MultiWorldException;
 
 /**
  * @author ferrybig

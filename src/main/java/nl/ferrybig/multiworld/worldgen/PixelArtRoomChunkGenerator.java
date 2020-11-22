@@ -1,7 +1,7 @@
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.Random;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
 import org.bukkit.Material;

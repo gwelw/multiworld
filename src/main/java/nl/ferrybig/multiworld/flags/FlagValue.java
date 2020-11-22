@@ -5,7 +5,7 @@
 package nl.ferrybig.multiworld.flags;
 
 import java.util.Locale;
-import nl.ferrybig.multiworld.InvalidFlagValueException;
+import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 
 /**

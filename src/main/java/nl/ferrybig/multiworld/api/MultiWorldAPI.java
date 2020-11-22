@@ -4,7 +4,7 @@
  */
 package nl.ferrybig.multiworld.api;
 
-import nl.ferrybig.multiworld.ConfigException;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 

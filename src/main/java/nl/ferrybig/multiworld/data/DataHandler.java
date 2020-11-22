@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.data;
 
-import nl.ferrybig.multiworld.ConfigException;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.DebugLevel;

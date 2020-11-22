@@ -17,6 +17,7 @@ import nl.ferrybig.multiworld.data.MyLogger;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.worldgen.SimpleChunkGen;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;

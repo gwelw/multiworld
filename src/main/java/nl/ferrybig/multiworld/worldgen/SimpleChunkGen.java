@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import nl.ferrybig.multiworld.InvalidWorldGenOptionsException;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
 import org.bukkit.World;

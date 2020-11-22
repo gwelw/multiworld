@@ -9,6 +9,7 @@ import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.UnknownWorldException;
 import nl.ferrybig.multiworld.translation.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

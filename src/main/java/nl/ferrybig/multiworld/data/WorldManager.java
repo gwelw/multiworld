@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
 import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
 import nl.ferrybig.multiworld.api.events.WorldCreateEvent;

@@ -6,7 +6,7 @@
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.Locale;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.WorldType;
 

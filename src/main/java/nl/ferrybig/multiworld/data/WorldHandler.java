@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Locale;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.DebugLevel;
 import nl.ferrybig.multiworld.command.MessageType;

@@ -4,10 +4,10 @@
  */
 package nl.ferrybig.multiworld.command.world;
 
-import nl.ferrybig.multiworld.InvalidWorldGenException;
-import nl.ferrybig.multiworld.InvalidWorldGenOptionsException;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;

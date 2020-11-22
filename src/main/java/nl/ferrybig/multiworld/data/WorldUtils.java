@@ -4,7 +4,7 @@
  */
 package nl.ferrybig.multiworld.data;
 
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.flags.FlagValue;

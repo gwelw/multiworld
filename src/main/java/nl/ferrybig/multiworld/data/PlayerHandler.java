@@ -5,7 +5,7 @@
 package nl.ferrybig.multiworld.data;
 
 import java.util.List;
-import nl.ferrybig.multiworld.NotAPlayerException;
+import nl.ferrybig.multiworld.exception.NotAPlayerException;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

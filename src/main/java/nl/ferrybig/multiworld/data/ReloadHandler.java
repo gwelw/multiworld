@@ -4,7 +4,7 @@
  */
 package nl.ferrybig.multiworld.data;
 
-import nl.ferrybig.multiworld.ConfigException;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.addons.AddonHandler;
 
 /**

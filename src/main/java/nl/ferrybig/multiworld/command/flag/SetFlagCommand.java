@@ -4,8 +4,8 @@
  */
 package nl.ferrybig.multiworld.command.flag;
 
-import nl.ferrybig.multiworld.InvalidFlagException;
-import nl.ferrybig.multiworld.InvalidFlagValueException;
+import nl.ferrybig.multiworld.exception.InvalidFlagException;
+import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 import nl.ferrybig.multiworld.addons.AddonHandler;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.command.ArgumentType;

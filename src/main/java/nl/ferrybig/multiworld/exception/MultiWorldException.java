@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld;
+package nl.ferrybig.multiworld.exception;
 
 /**
  * just the base class for al the exceptions throws by this plugin

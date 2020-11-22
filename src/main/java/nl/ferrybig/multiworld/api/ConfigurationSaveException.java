@@ -4,7 +4,7 @@
  */
 package nl.ferrybig.multiworld.api;
 
-import nl.ferrybig.multiworld.MultiWorldException;
+import nl.ferrybig.multiworld.exception.MultiWorldException;
 
 /**
  * @author Fernando

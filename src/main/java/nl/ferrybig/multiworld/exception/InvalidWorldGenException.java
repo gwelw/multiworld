@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld;
+package nl.ferrybig.multiworld.exception;
 
 public class InvalidWorldGenException extends WorldGenException {
 

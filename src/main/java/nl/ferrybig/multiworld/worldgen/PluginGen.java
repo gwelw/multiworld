@@ -4,7 +4,7 @@
  */
 package nl.ferrybig.multiworld.worldgen;
 
-import nl.ferrybig.multiworld.InvalidWorldGenOptionsException;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

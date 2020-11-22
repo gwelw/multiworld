@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.worldgen;
 
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 
 /**

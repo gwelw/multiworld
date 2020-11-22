@@ -1,7 +1,7 @@
 package nl.ferrybig.multiworld.worldgen;
 
-import nl.ferrybig.multiworld.InvalidWorldGenException;
-import nl.ferrybig.multiworld.WorldGenException;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -123,7 +123,7 @@ public enum WorldGenerator implements ChunkGen {
   }
 
   public static WorldGenerator getGenByName(String gen)
-      throws nl.ferrybig.multiworld.InvalidWorldGenException {
+      throws InvalidWorldGenException {
     try {
       return WorldGenerator.valueOf(gen.toUpperCase());
     } catch (IllegalArgumentException e) {
