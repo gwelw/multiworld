@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen.populators;
 
 import java.util.Random;
@@ -16,9 +12,6 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * @author Fernando
- */
 public class DungeonPopulator extends BlockPopulator {
 
   @Override

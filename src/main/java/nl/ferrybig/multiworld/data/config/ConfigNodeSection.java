@@ -18,17 +18,17 @@ public class ConfigNodeSection extends ConfigNode<ConfigurationSection> {
   }
 
   @Override
-  protected ConfigurationSection unpack(Object rawConfigValue) throws DataPackException {
+  protected ConfigurationSection unpack(Object rawConfigValue) {
     return (ConfigurationSection) rawConfigValue;
   }
 
   @Override
   public ConfigurationSection get(ConfigurationSection from) {
-    ConfigurationSection conf = from.getConfigurationSection(configPath);
-    if (conf == null) {
-      conf = from.createSection(configPath);
+    ConfigurationSection configurationSection = from.getConfigurationSection(configPath);
+    if (configurationSection == null) {
+      configurationSection = from.createSection(configPath);
     }
-    return conf;
+    return configurationSection;
   }
 
   @Override

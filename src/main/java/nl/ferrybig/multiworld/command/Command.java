@@ -16,7 +16,7 @@ import org.bukkit.help.HelpTopic;
 public abstract class Command {
 
   public static final String[] EMPTY_STRING_ARRAY = new String[0];
-  public final static String RESET = new String(new char[]
+  public static final String RESET = new String(new char[]
       {
           ChatColor.COLOR_CHAR, 'z'
       });
@@ -115,13 +115,10 @@ public abstract class Command {
     return string.toString();
   }
 
-  public void excute(CommandStack stack) {
-    if (this.getPermissions() != null) {
-      if (!Utils.canUseCommand(stack, this.getPermissions())) {
-        return;
-      }
+  public void execute(CommandStack stack) {
+    if (this.getPermissions() == null || Utils.canUseCommand(stack, this.getPermissions())) {
+      this.runCommand(stack);
     }
-    this.runCommand(stack);
   }
 
   public String getPermissions() {
@@ -134,9 +131,8 @@ public abstract class Command {
   }
 
   protected final String[] calculateMissingArgumentsWorld(String worldName) {
-    Set<World> worlds = new HashSet<World>();
-    worlds.addAll(Bukkit.getWorlds());
-    Set<String> found = new HashSet<String>(worlds.size());
+    Set<World> worlds = new HashSet<>(Bukkit.getWorlds());
+    Set<String> found = new HashSet<>(worlds.size());
     String lowerName = worldName.toLowerCase();
     for (World world : worlds) {
       if (world.getName().toLowerCase().startsWith(lowerName)) {
@@ -155,7 +151,7 @@ public abstract class Command {
       otherPart = ":" + spl[1];
       // TODO: other logic
     }
-    Set<String> found = new HashSet<String>(WorldGenerator.values().length);
+    Set<String> found = new HashSet<>(WorldGenerator.values().length);
     for (WorldGenerator gen : WorldGenerator.values()) {
       if (!gen.mayInList()) {
         continue;
@@ -170,7 +166,7 @@ public abstract class Command {
   protected final String[] calculateMissingArgumentsPlayer(String playerName, Player executer) {
     Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
-    Set<String> found = new HashSet<String>(players.size());
+    Set<String> found = new HashSet<>(players.size());
     String lowerName = playerName.toLowerCase();
     for (Player player : players) {
       if (executer != null) {
@@ -188,7 +184,7 @@ public abstract class Command {
   protected final String[] calculateMissingArgumentsFlagName(String flagName) {
     FlagName[] flags = FlagName.values();
 
-    Set<String> found = new HashSet<String>(flags.length);
+    Set<String> found = new HashSet<>(flags.length);
     String lowerName = flagName.toLowerCase();
     for (FlagName flag : flags) {
       if (flag.name().toLowerCase().startsWith(lowerName)) {
@@ -236,13 +232,8 @@ public abstract class Command {
         } else {
           shortText = Command.this.description;
         }
-        StringBuilder sb = new StringBuilder();
 
-        sb.append(ChatColor.GOLD);
-        sb.append("Description: ");
-        sb.append(ChatColor.WHITE);
-        sb.append(Command.this.description);
-        fullText = sb.toString();
+        fullText = ChatColor.GOLD + "Description: " + ChatColor.WHITE + Command.this.description;
       }
 
       @Override

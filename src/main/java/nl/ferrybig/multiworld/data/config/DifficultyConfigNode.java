@@ -3,6 +3,7 @@ package nl.ferrybig.multiworld.data.config;
 import java.util.Locale;
 import org.bukkit.Difficulty;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 
 public class DifficultyConfigNode extends ConfigNode<Difficulty> {
 
@@ -22,21 +23,25 @@ public class DifficultyConfigNode extends ConfigNode<Difficulty> {
       return Difficulty.valueOf(configValue.toString().toUpperCase(Locale.ENGLISH));
     } catch (IllegalArgumentException err) {
       try {
-        switch (Integer.parseInt(configValue.toString())) {
-          case 0:
-            return Difficulty.PEACEFUL;
-          case 1:
-            return Difficulty.EASY;
-          case 2:
-            return Difficulty.NORMAL;
-          case 3:
-            return Difficulty.HARD;
-          default:
-            return Difficulty.EASY;
-        }
-      } catch (NumberFormatException er1) {
-        throw new DataPackException("Difficulty is in an illegal format!");
+        return getDifficulty(configValue);
+      } catch (NumberFormatException e) {
+        throw new DataPackException("Incorrect difficulty format");
       }
+    }
+  }
+
+  @NotNull
+  private Difficulty getDifficulty(Object configValue) {
+    switch (Integer.parseInt(configValue.toString())) {
+      case 0:
+        return Difficulty.PEACEFUL;
+      case 2:
+        return Difficulty.NORMAL;
+      case 3:
+        return Difficulty.HARD;
+      case 1:
+      default:
+        return Difficulty.EASY;
     }
   }
 }

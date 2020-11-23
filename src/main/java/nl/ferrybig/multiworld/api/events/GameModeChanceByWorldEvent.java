@@ -3,6 +3,7 @@ package nl.ferrybig.multiworld.api.events;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class GameModeChanceByWorldEvent extends MultiWorldEvent {
 
@@ -20,6 +21,7 @@ public class GameModeChanceByWorldEvent extends MultiWorldEvent {
     return handlers;
   }
 
+  @NotNull
   @Override
   public HandlerList getHandlers() {
     return handlers;

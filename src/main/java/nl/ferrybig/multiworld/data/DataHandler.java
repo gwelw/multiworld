@@ -1,6 +1,5 @@
 package nl.ferrybig.multiworld.data;
 
-import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.DebugLevel;
@@ -9,6 +8,7 @@ import nl.ferrybig.multiworld.data.config.ConfigNode;
 import nl.ferrybig.multiworld.data.config.ConfigNodeSection;
 import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 import nl.ferrybig.multiworld.data.config.DifficultyConfigNode;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.translation.Translation;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -16,61 +16,64 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DataHandler {
 
-  public final static ConfigNode<ConfigurationSection> OPTIONS_MAIN_NODE = new ConfigNodeSection(
+  private static final Logger log = LoggerFactory.getLogger(DataHandler.class);
+
+  public static final ConfigNode<ConfigurationSection> OPTIONS_MAIN_NODE = new ConfigNodeSection(
       "options");
-  public final static DefaultConfigNode<Boolean> OPTIONS_BLOCK_ENDER_CHESTS = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_BLOCK_ENDER_CHESTS = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "blockEnderChestInCrea", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_LINK_NETHER = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_LINK_NETHER = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "useportalhandler", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_LINK_END = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_LINK_END = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "useEndPortalHandler", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_WORLD_CHAT = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_WORLD_CHAT = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "useWorldChatSeperator", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_GAMEMODE = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_GAMEMODE = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "usecreativemode", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_GAMEMODE_INV = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_GAMEMODE_INV = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "usecreativemodeinv", true, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_WORLD_SPAWN = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_WORLD_SPAWN = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "useWorldSpawnHandler", false, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_CRAFTBUKKIT_HOOKS = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_CRAFTBUKKIT_HOOKS = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "craftbukkitHooks", true, Boolean.class);
-  public final static DefaultConfigNode<Boolean> OPTIONS_DEBUG = new DefaultConfigNode<Boolean>(
+  public static final DefaultConfigNode<Boolean> OPTIONS_DEBUG = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "debug", false, Boolean.class);
-  public final static ConfigNode<Difficulty> OPTIONS_DIFFICULTY = new DifficultyConfigNode(
+  public static final ConfigNode<Difficulty> OPTIONS_DIFFICULTY = new DifficultyConfigNode(
       OPTIONS_MAIN_NODE, "difficulty", Difficulty.NORMAL);
-  public final static DefaultConfigNode<String> OPTIONS_LOCALE = new DefaultConfigNode<String>(
+  public static final DefaultConfigNode<String> OPTIONS_LOCALE = new DefaultConfigNode<>(
       OPTIONS_MAIN_NODE, "locale", "en_US", String.class);
+
   private final WorldUtils worlds;
   private final MultiWorldPlugin plugin;
+
   private FileConfiguration config;
-  private MyLogger logger;
   private Difficulty difficulty;
   private boolean unloadWorldsOnDisable = false;
   private SpawnWorldControl spawn;
   private BukkitTask saveTask = null;
   private int configSaveFailed = 0;
-  private final Runnable saver = new Runnable() {
-    @Override
-    public void run() {
-      CommandStack console = DataHandler.this.getPlugin().builder
-          .build(Bukkit.getConsoleSender(), DebugLevel.NONE);
-      try {
-        save();
-        console.sendMessageBroadcast(MessageType.SUCCES, Translation.MULTIWORLD_SAVE_SUCCES);
-        configSaveFailed = 0;
-      } catch (ConfigException ex) {
-        configSaveFailed++;
-        if (configSaveFailed < 3) {
-          console.sendMessageBroadcast(MessageType.ERROR, Translation.MULTIWORLD_SAVE_FAIL_RETRY);
-          scheduleSave(20 * 10);
-        } else {
-          console.sendMessageBroadcast(MessageType.ERROR, Translation.MULTIWORLD_SAVE_FAIL);
-        }
-        ex.printStackTrace();
+
+  private final Runnable saver = () -> {
+    CommandStack console = DataHandler.this.getPlugin().builder
+        .build(Bukkit.getConsoleSender(), DebugLevel.NONE);
+    try {
+      save();
+      console.sendMessageBroadcast(MessageType.SUCCESS, Translation.MULTIWORLD_SAVE_SUCCES);
+      configSaveFailed = 0;
+    } catch (ConfigException ex) {
+      configSaveFailed++;
+      if (configSaveFailed < 3) {
+        console.sendMessageBroadcast(MessageType.ERROR, Translation.MULTIWORLD_SAVE_FAIL_RETRY);
+        scheduleSave(20 * 10);
+      } else {
+        console.sendMessageBroadcast(MessageType.ERROR, Translation.MULTIWORLD_SAVE_FAIL);
       }
+      ex.printStackTrace();
     }
   };
 
@@ -100,20 +103,10 @@ public final class DataHandler {
     return this.worlds;
   }
 
-  /**
-   * Get the main nl.ferrybig.multiworld plugin
-   * <p>
-   *
-   * @return The plugin
-   */
   public MultiWorldPlugin getPlugin() {
     return this.plugin;
   }
 
-  /**
-   * Called when nl.ferrybig.multiworld is shutdown, performs auto saving if needed, 6 tries fail
-   * reducanty
-   */
   public void onShutdown() {
     if (this.saveTask == null) {
       return;
@@ -125,7 +118,7 @@ public final class DataHandler {
     while (configSaveFailed < 6 && !saved) {
       try {
         save();
-        console.sendMessageBroadcast(MessageType.SUCCES, Translation.MULTIWORLD_SAVE_SUCCES);
+        console.sendMessageBroadcast(MessageType.SUCCESS, Translation.MULTIWORLD_SAVE_SUCCES);
         saved = true;
       } catch (ConfigException ex) {
         console
@@ -150,7 +143,7 @@ public final class DataHandler {
         + "# spawnGroup: used to set withs worlds have what spawn, difficult to use. see official site for details");
     ConfigurationSection l1;
     l1 = this.config.createSection("worlds");
-    this.worlds.saveWorlds(l1, logger, this.spawn);
+    this.worlds.saveWorlds(l1, this.spawn);
     if (this.spawn != null) {
       this.spawn.save(config.createSection("spawnGroup"));
     }
@@ -166,8 +159,7 @@ public final class DataHandler {
       this.plugin.reloadConfig();
       this.config = this.plugin.getConfig();
     }
-    this.logger = new MyLogger(getNode(OPTIONS_DEBUG), "MultiWorld", this.getPlugin().getLogger());
-    this.logger.fine("config loaded");
+    log.debug("config loaded");
     this.difficulty = getNode(OPTIONS_DIFFICULTY);
 
     /* locale setting */
@@ -205,18 +197,14 @@ public final class DataHandler {
       if (spawnGroup == null) {
         this.config.set("spawnGroup.defaultGroup.world", Bukkit.getWorlds().get(0).getName());
       }
-      this.spawn = new SpawnWorldControl(spawnGroup, this);
+      this.spawn = new SpawnWorldControl(spawnGroup);
 
     }
     ConfigurationSection worldList = this.config.getConfigurationSection("worlds");
     if (worldList != null) {
-      worlds.loadWorlds(worldList, this.logger, this.difficulty, this.spawn);
+      worlds.loadWorlds(worldList, this.difficulty, this.spawn);
     }
     this.save();
-  }
-
-  public MyLogger getLogger() {
-    return this.logger;
   }
 
   @Override
@@ -225,7 +213,7 @@ public final class DataHandler {
         + "worlds=" + worlds
         + ", config=" + config
         + ", plugin=" + plugin
-        + ", logger=" + logger
+        + ", logger=" + log
         + ", difficulty=" + difficulty
         + ", unloadWorldsOnDisable=" + unloadWorldsOnDisable
         + '}';

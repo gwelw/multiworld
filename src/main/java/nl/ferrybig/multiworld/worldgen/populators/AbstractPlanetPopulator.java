@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen.populators;
 
 import nl.ferrybig.multiworld.worldgen.BlockConstants;
@@ -11,35 +7,21 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.generator.BlockPopulator;
 
-/**
- * The abstract class thats the base class of al planet gens
- *
- * @author Fernando
- */
 public abstract class AbstractPlanetPopulator extends BlockPopulator implements BlockConstants {
 
-  /**
-   * Numbers used to make X^2 faster
-   */
   public static final int[] SQUARES =
       {
           0, 1, 4, 9, 16,
-          25, 36, 49, 64, 81, 100, 121, 144, 169, 196,
-          225, 256, 289, 324, 361,
-          400, 441, 484, 529, 576,
-          625, 676, 729, 784, 841,
-          900
+          25, 36, 49, 64, 81, 100,
+          121, 144, 169, 196, 225,
+          256, 289, 324, 361, 400,
+          441, 484, 529, 576, 625,
+          676, 729, 784, 841, 900
       };
 
-  /**
-   * Makes the input positive
-   *
-   * @param i the input
-   * @return The positive input
-   */
   private int makePositive(int i) {
     if (i < 0) {
-      return 0 - i;
+      return -i;
     }
     return i;
   }

@@ -11,5 +11,5 @@ public interface ExternalChunkGen {
 
   ChunkGenerator getGen();
 
-  Environment getEnvoiment();
+  Environment getEnvironment();
 }

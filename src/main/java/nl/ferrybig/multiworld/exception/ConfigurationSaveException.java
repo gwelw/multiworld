@@ -1,6 +1,4 @@
-package nl.ferrybig.multiworld.api;
-
-import nl.ferrybig.multiworld.exception.MultiWorldException;
+package nl.ferrybig.multiworld.exception;
 
 public class ConfigurationSaveException extends MultiWorldException {
 

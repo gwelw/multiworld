@@ -13,5 +13,4 @@ public class DataPackException extends MultiWorldException {
   public DataPackException(String msg, Throwable cause) {
     super(msg, cause);
   }
-
 }

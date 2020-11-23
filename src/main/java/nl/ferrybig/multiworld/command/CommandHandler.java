@@ -38,17 +38,17 @@ public class CommandHandler extends CommandMap {
 
   private static HashMap<String, Command> createCommandMap(DataHandler data, PlayerHandler player,
       WorldHandler worlds, ReloadHandler reload, AddonHandler plugin, VersionHandler debugger) {
-    HashMap<String, Command> h = new HashMap<String, Command>(30, 0.9f);
+    HashMap<String, Command> h = new HashMap<>(30, 0.9f);
     h.put("help", new HelpCommand(data));
     h.put("goto", new GotoCommand(data, player, worlds));
     h.put("create", new CreateCommand(data));
-    h.put("load", new LoadWorldCommand(data, worlds));
+    h.put("load", new LoadWorldCommand(worlds));
     h.put("unload", new UnloadWorldCommand(data, worlds));
-    h.put("delete", new DeleteCommand(data, worlds));
+    h.put("delete", new DeleteCommand(data));
     h.put("generators", new ListWorldGensCommand());
     h.put("move", new MoveCommand(data, player, worlds));
-    h.put("save", new SaveCommand(data, reload));
-    h.put("reload", new LoadCommand(data, reload));
+    h.put("save", new SaveCommand(reload));
+    h.put("reload", new LoadCommand(reload));
     h.put("debug", new DebugCommand(debugger));
     h.put("list", new ListCommand(data));
     h.put("setflag", new SetFlagCommand(data, plugin, worlds));
@@ -64,7 +64,7 @@ public class CommandHandler extends CommandMap {
   }
 
   private static Map<String, String> getAliassesMap() {
-    HashMap<String, String> h = new HashMap<String, String>(22, 0.9f);
+    HashMap<String, String> h = new HashMap<>(22, 0.9f);
     h.put("gens", "listgens");
     h.put("list-gens", "listgens");
 
@@ -97,5 +97,4 @@ public class CommandHandler extends CommandMap {
     h.put("ss", "setspawn");
     return h;
   }
-
 }

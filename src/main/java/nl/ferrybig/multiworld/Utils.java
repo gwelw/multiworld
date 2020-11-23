@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld;
 
 import java.io.Serializable;
@@ -90,7 +86,9 @@ public class Utils implements Serializable {
           numberOfArguments--;
           tmp = i.concat(" ");
         } else {
-          argList.add(index++, tmp.concat(i).replaceAll("\"\"", "\u0000").replaceAll("\"", "")
+          argList.add(index++, tmp.concat(i)
+              .replaceAll("\"\"", "\u0000")
+              .replaceAll("\"", "")
               .replaceAll("\u0000", "\""));
           tmp = null;
         }
@@ -98,8 +96,10 @@ public class Utils implements Serializable {
         numberOfArguments--;
         tmp = tmp + i + " ";
       } else {
-        argList.add(index++,
-            i.replaceAll("\"\"", "\u0000").replaceAll("\"", "").replaceAll("\u0000", "\""));
+        argList.add(index++, i
+            .replaceAll("\"\"", "\u0000")
+            .replaceAll("\"", "")
+            .replaceAll("\u0000", "\""));
       }
     }
     if (tmp != null) {

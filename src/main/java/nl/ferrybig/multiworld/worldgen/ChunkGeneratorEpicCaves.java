@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.List;
 import java.util.Random;
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.populators.DungeonPopulator;
 import nl.ferrybig.multiworld.worldgen.populators.GlowstonePopulator;
@@ -20,9 +15,6 @@ import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-/**
- * @author Fernando
- */
 public class ChunkGeneratorEpicCaves extends MultiWorldChunkGen {
 
   final double scale = 32.0; //how far apart the tops of the hills are
@@ -81,7 +73,7 @@ public class ChunkGeneratorEpicCaves extends MultiWorldChunkGen {
   }
 
   @Override
-  public void makeWorld(InternalWorld options) throws WorldGenException {
+  public void makeWorld(InternalWorld options) {
     options.setWorldGen(this);
   }
 }

@@ -16,7 +16,7 @@ public enum FlagName {
   private final String userFriendlyName;
   private final boolean defaultState;
 
-  private FlagName(String name, boolean defaultState) {
+  FlagName(String name, boolean defaultState) {
     userFriendlyName = name;
     this.defaultState = defaultState;
   }

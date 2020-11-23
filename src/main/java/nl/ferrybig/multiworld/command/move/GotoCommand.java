@@ -64,7 +64,7 @@ public class GotoCommand extends Command {
         warpLoc.setZ(z);
       }
       p.movePlayer(targetPlayer, warpLoc);
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_MOVE_MESSAGE_SUCCES,
           MessageCache.PLAYER.get(targetPlayer.getName()),
           MessageCache.WORLD.get(warpLoc.getWorld().getName()));

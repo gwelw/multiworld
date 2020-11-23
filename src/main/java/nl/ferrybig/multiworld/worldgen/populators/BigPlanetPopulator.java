@@ -25,35 +25,27 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-/**
- * The populator that makes the big planets
- *
- * @author Fernando
- */
 public class BigPlanetPopulator extends AbstractPlanetPopulator {
 
   /**
    * The main block where an planet from exists
    */
-  public static final Material[] ALLOWED_BLOCKS =
-      {
-          STONE, DIRT, COBBLESTONE, SANDSTONE
-      };
+  public static final Material[] ALLOWED_BLOCKS = {
+      STONE, DIRT, COBBLESTONE, SANDSTONE
+  };
   /**
    * The materials where the top layer of an planet from exists
    */
-  public static final Material[] TOP_LAYER_BLOCK =
-      {
-          GRASS, NETHERRACK, SOUL_SAND, SAND
-      };
+  public static final Material[] TOP_LAYER_BLOCK = {
+      GRASS, NETHERRACK, SOUL_SAND, SAND
+  };
   /**
    * The special blocks only at the middle of an planet
    */
-  public static final Material[] SPECIAL_BLOCKS =
-      {
-          AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE, LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK,
-          DIAMOND_BLOCK, LAPIS_BLOCK, EMERALD_BLOCK
-      };
+  public static final Material[] SPECIAL_BLOCKS = {
+      AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE, LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK,
+      DIAMOND_BLOCK, LAPIS_BLOCK, EMERALD_BLOCK
+  };
   /**
    * The maximum size of an planet
    */
@@ -105,6 +97,5 @@ public class BigPlanetPopulator extends AbstractPlanetPopulator {
         this.populateDepth--;
       }
     }
-
   }
 }

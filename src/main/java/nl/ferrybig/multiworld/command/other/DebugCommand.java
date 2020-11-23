@@ -19,27 +19,26 @@ public class DebugCommand extends Command {
 
   @Override
   public void runCommand(CommandStack stack) {
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "Now printing debug information");
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "MultiWorld version: " + this.debug.getVersion());
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "Bukkit version: " + Bukkit.getVersion());
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "");
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "--<[Modules]>--");
-    stack.sendMessage(MessageType.HIDDEN_SUCCES,
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "Now printing debug information");
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "MultiWorld version: " + this.debug.getVersion());
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "Bukkit version: " + Bukkit.getVersion());
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "");
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "--<[Modules]>--");
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS,
         Formatter.createList(ChatColor.WHITE, "State", "pluginName"));
     for (String plugin : debug.getPlugins()) {
-      stack.sendMessage(MessageType.HIDDEN_SUCCES,
-          Formatter.createList(
-              (debug.isLoaded(plugin) ? (debug.isEnabled(plugin) ? "Working" : "Loaded")
-                  : "Unloaded"),
-              plugin));
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS,
+          Formatter.createList((debug.isLoaded(plugin)
+              ? (debug.isEnabled(plugin) ? "Working" : "Loaded")
+              : "Unloaded"), plugin));
     }
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "");
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, "--<[CommandStacks]>--");
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "");
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "--<[CommandStacks]>--");
     CommandStack tmp = stack;
     do {
       StringBuilder sb = new StringBuilder();
       sb.append(tmp.getClass().getCanonicalName());
-      sb.append("\n - /").append(String.valueOf(tmp.getCommandLabel()));
+      sb.append("\n - /").append(tmp.getCommandLabel());
       sb.append(' ');
       String[] args = tmp.getArguments();
       if (args != null) {
@@ -52,7 +51,7 @@ public class DebugCommand extends Command {
         }
         sb.append(']');
       }
-      stack.sendMessage(MessageType.HIDDEN_SUCCES, sb.toString());
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, sb.toString());
     }
     while ((tmp = tmp.getParent()) != null);
   }

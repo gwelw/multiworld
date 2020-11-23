@@ -11,6 +11,9 @@ public class Formatter {
   private static final String BOOLEAN_FALSE = ChatColor.RED + "False";
   private static final String UNKNOWN_FLAG = ChatColor.GOLD + "Unknown";
 
+  private Formatter() {
+  }
+
   public static String printBoolean(boolean b) {
     return (b ? BOOLEAN_TRUE : BOOLEAN_FALSE);
   }

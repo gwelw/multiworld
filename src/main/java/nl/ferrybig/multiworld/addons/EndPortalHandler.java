@@ -1,7 +1,6 @@
 package nl.ferrybig.multiworld.addons;
 
 import nl.ferrybig.multiworld.data.DataHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityPortalEvent;
@@ -10,7 +9,7 @@ import org.bukkit.event.player.PlayerPortalEvent;
 public class EndPortalHandler extends PortalHandler {
 
   public EndPortalHandler(DataHandler data) {
-    super(data, Bukkit.getServer(), data.getLogger(), true);
+    super(data, true);
   }
 
   @EventHandler(priority = EventPriority.LOWEST)

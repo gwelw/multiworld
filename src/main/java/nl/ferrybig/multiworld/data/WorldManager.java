@@ -1,24 +1,25 @@
 package nl.ferrybig.multiworld.data;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
 import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
 import nl.ferrybig.multiworld.api.events.WorldCreateEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.data.config.ConfigNode;
 import nl.ferrybig.multiworld.data.config.DifficultyConfigNode;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.flags.FlagMap;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import nl.ferrybig.multiworld.worldgen.NullGen;
@@ -30,15 +31,18 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.ChunkGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldManager implements WorldUtils {
 
-  public final static ConfigNode<Difficulty> WORLD_DIFFICULTY = new DifficultyConfigNode(null,
+  private static final Logger log = LoggerFactory.getLogger(WorldManager.class);
+  public static final ConfigNode<Difficulty> WORLD_DIFFICULTY = new DifficultyConfigNode(null,
       "difficulty", Difficulty.NORMAL);
   private final Map<String, WorldContainer> worlds;
 
   public WorldManager() {
-    this.worlds = new HashMap<String, WorldContainer>();
+    this.worlds = new HashMap<>();
   }
 
   @Override
@@ -51,14 +55,14 @@ public class WorldManager implements WorldUtils {
     if (name == null) {
       throw new IllegalArgumentException("Name may not be null");
     }
-    WorldContainer w = this.getWorldMeta(name, mustBeLoaded);
-    if (w == null) {
+    WorldContainer worldContainer = this.getWorldMeta(name, mustBeLoaded);
+    if (worldContainer == null) {
       return null;
     }
-    if (!mustBeLoaded) {
-      return w.getWorld();
+    if (mustBeLoaded) {
+      return worldContainer.isLoaded() ? worldContainer.getWorld() : null;
     } else {
-      return w.isLoaded() ? w.getWorld() : null;
+      return worldContainer.getWorld();
     }
   }
 
@@ -73,8 +77,7 @@ public class WorldManager implements WorldUtils {
 
   @Override
   public boolean isWorldExisting(String world) {
-    WorldContainer w = this.getWorldMeta(world, false);
-    return w != null;
+    return getWorldMeta(world, false) != null;
   }
 
   @Override
@@ -92,14 +95,12 @@ public class WorldManager implements WorldUtils {
   public WorldContainer[] getWorlds() {
     List<World> loadedWorlds = Bukkit.getWorlds();
     Collection<WorldContainer> registeredWorlds = this.worlds.values();
-    Set<WorldContainer> output = new HashSet<WorldContainer>();
+    Set<WorldContainer> output = new HashSet<>();
 
-    for (World i : loadedWorlds) {
-      output.add(this.getWorldMeta(i.getName(), false));
+    for (World world : loadedWorlds) {
+      output.add(this.getWorldMeta(world.getName(), false));
     }
-    for (WorldContainer i : registeredWorlds) {
-      output.add(i);
-    }
+    output.addAll(registeredWorlds);
 
     int size = output.size();
     WorldContainer[] array = new WorldContainer[size];
@@ -113,7 +114,7 @@ public class WorldManager implements WorldUtils {
     }
     List<World> loadedWorlds = Bukkit.getWorlds();
     Collection<WorldContainer> registeredWorlds = this.worlds.values();
-    Set<InternalWorld> output = new HashSet<InternalWorld>();
+    Set<InternalWorld> output = new HashSet<>();
 
     for (World i : loadedWorlds) {
       output.add(this.getInternalWorld(i.getName(), false));
@@ -127,14 +128,6 @@ public class WorldManager implements WorldUtils {
     return output.toArray(array);
   }
 
-  /**
-   * Sets an flag on a world
-   * <p>
-   *
-   * @param world the world to set on
-   * @param flag  The flag to affect
-   * @param value The new value
-   */
   @Override
   public void setFlag(String world, FlagName flag, FlagValue value) {
     this.setFlag(world, flag, value, false);
@@ -157,36 +150,23 @@ public class WorldManager implements WorldUtils {
         world.getWorld().setAutoSave(value.getAsBoolean());
       }
     }
-    if (!isStartingUp) {
-      if (value != FlagValue.UNKNOWN) {
-        new FlagChanceEvent(w, flag, value.getAsBoolean(flag)).call();
-      }
+    if (!isStartingUp && value != FlagValue.UNKNOWN) {
+      new FlagChanceEvent(w, flag, value.getAsBoolean(flag)).call();
     }
   }
 
-  /**
-   * Gets an flag from the specified world
-   * <p>
-   *
-   * @param worldName
-   * @param flag      The flag to return
-   * @return The value of the specified flag
-   */
   @Override
   public FlagValue getFlag(String worldName, FlagName flag) {
-    WorldContainer w = this.getWorldMeta(worldName, false);
-    if (w.isLoaded()) {
-      InternalWorld world = w.getWorld();
+    WorldContainer worldContainer = this.getWorldMeta(worldName, false);
+    if (worldContainer.isLoaded()) {
+      InternalWorld world = worldContainer.getWorld();
       switch (flag) {
-        case SPAWNMONSTER: {
+        case SPAWNMONSTER:
           return FlagValue.fromBoolean(world.getWorld().getAllowMonsters());
-        }
-        case SPAWNANIMAL: {
+        case SPAWNANIMAL:
           return FlagValue.fromBoolean(world.getWorld().getAllowAnimals());
-        }
-        case REMEMBERSPAWN: {
+        case REMEMBERSPAWN:
           return FlagValue.fromBoolean(world.getWorld().getKeepSpawnInMemory());
-        }
         case CREATIVEWORLD: {
           FlagValue flagValue = world.getFlags().get(flag);
           if (flagValue == null) {
@@ -195,27 +175,19 @@ public class WorldManager implements WorldUtils {
           }
           return flagValue;
         }
-        case SAVEON: {
+        case SAVEON:
           return FlagValue.fromBoolean(world.getWorld().isAutoSave());
-        }
         case RECIEVECHAT:
-        case SENDCHAT: {
-          return world.getFlags().containsKey(flag) ? world.getFlags().get(flag) : FlagValue.TRUE;
-        }
-        case PVP: {
+        case SENDCHAT:
+          return world.getFlags().getOrDefault(flag, FlagValue.TRUE);
+        case PVP:
           return FlagValue.fromBoolean(world.getWorld().getPVP());
-        }
         default:
           throw new RuntimeException("Cannot find that flag");
       }
     } else {
-      if (w.getWorld().getFlags().containsKey(flag)) {
-        return w.getWorld().getFlags().get(flag);
-      } else {
-        return FlagValue.UNKNOWN;
-      }
+      return worldContainer.getWorld().getFlags().getOrDefault(flag, FlagValue.UNKNOWN);
     }
-
   }
 
   @Override
@@ -236,11 +208,11 @@ public class WorldManager implements WorldUtils {
 
   @Override
   public boolean deleteWorld(String world) {
-    WorldContainer w = this.getWorldMeta(world, false);
-    if (w == null) {
+    WorldContainer worldContainer = this.getWorldMeta(world, false);
+    if (worldContainer == null) {
       return false;
     }
-    if (w.isLoaded()) {
+    if (worldContainer.isLoaded()) {
       return false;
     }
     this.worlds.remove(world.toLowerCase());
@@ -249,7 +221,6 @@ public class WorldManager implements WorldUtils {
 
   @Override
   public boolean unloadWorld(String world) {
-
     if (Bukkit.unloadWorld(world, true)) {
       this.worlds.get(world.toLowerCase(Locale.ENGLISH)).setLoaded(false);
       return true;
@@ -260,39 +231,32 @@ public class WorldManager implements WorldUtils {
     }
   }
 
-  /**
-   * @param name the value of name
-   * @return
-   */
   @Override
   public World loadWorld(String name) {
-    WorldContainer option = this.worlds.get(name.toLowerCase(Locale.ENGLISH));
-    if (option.isLoaded()) {
+    WorldContainer worldContainer = this.worlds.get(name.toLowerCase(Locale.ENGLISH));
+    if (worldContainer.isLoaded()) {
       return Bukkit.getWorld(name);
     }
-    InternalWorld world = option.getWorld();
+    InternalWorld world = worldContainer.getWorld();
     WorldCreator creator = WorldCreator.name(world.getName()).type(world.getType())
         .seed(world.getSeed()).environment(world.getEnv());
     if (world.getGen() != null) {
       creator = creator.generator(world.getGen());
     }
-    World bukkitWorld = null;
+    World bukkitWorld;
     try {
       bukkitWorld = Bukkit.createWorld(creator);
     } finally {
-      option.setLoaded(Bukkit.getWorld(name) != null);
+      worldContainer.setLoaded(Bukkit.getWorld(name) != null);
     }
     if (bukkitWorld == null) {
       return null;
     }
-    bukkitWorld.setDifficulty(option.getWorld().getDifficulty());
-    Iterator<Map.Entry<FlagName, FlagValue>> i = world.getFlags().entrySet().iterator();
-    while (i.hasNext()) {
-      Map.Entry<FlagName, FlagValue> next = i.next();
-      if (next.getValue() == FlagValue.UNKNOWN) {
-        continue;
+    bukkitWorld.setDifficulty(worldContainer.getWorld().getDifficulty());
+    for (Map.Entry<FlagName, FlagValue> next : world.getFlags().entrySet()) {
+      if (next.getValue() != FlagValue.UNKNOWN) {
+        this.setFlag(name, next.getKey(), next.getValue(), true);
       }
-      this.setFlag(name, next.getKey(), next.getValue(), true);
     }
     return bukkitWorld;
   }
@@ -304,103 +268,69 @@ public class WorldManager implements WorldUtils {
 
   @Override
   public WorldContainer getWorldMeta(String world, boolean mustLoad) {
-    WorldContainer w = worlds.get(world.toLowerCase(Locale.ENGLISH));
-    if (w == null) {
-      World tmp = Bukkit.getWorld(world);
-      if (tmp == null) {
+    WorldContainer worldContainer = worlds.get(world.toLowerCase(Locale.ENGLISH));
+    if (worldContainer == null) {
+      World bukkitWorld = Bukkit.getWorld(world);
+      if (bukkitWorld == null) {
         return null;
       }
-      ChunkGenerator tmp1 = tmp.getGenerator();
-      if (tmp1 != null) {
-        w = this.addWorld(
-            new InternalWorld(tmp.getName(), tmp.getSeed(), tmp.getEnvironment(), NullGen.get(),
-                tmp1.getClass().getName(),
-                new FlagMap(),
-                "NULLGEN", null, null, tmp.getDifficulty(), tmp.getWorldType()), true);
+      ChunkGenerator chunkGenerator = bukkitWorld.getGenerator();
+      if (chunkGenerator != null) {
+        worldContainer = this.addWorld(
+            new InternalWorld(bukkitWorld.getName(), bukkitWorld.getSeed(),
+                bukkitWorld.getEnvironment(), NullGen.get(),
+                chunkGenerator.getClass().getName(), new FlagMap(),
+                "NULLGEN", null, null, bukkitWorld.getDifficulty(), bukkitWorld.getWorldType()),
+            true);
       } else {
-        w = this.addWorld(
-            new InternalWorld(tmp.getName(), tmp.getSeed(), tmp.getEnvironment(), null, "",
+        worldContainer = this.addWorld(
+            new InternalWorld(bukkitWorld.getName(), bukkitWorld.getSeed(),
+                bukkitWorld.getEnvironment(), null, "",
                 new FlagMap(),
-                tmp.getEnvironment().name(), tmp.getDifficulty()), true);
+                bukkitWorld.getEnvironment().name(), bukkitWorld.getDifficulty()), true);
       }
     }
-    return w;
+    return worldContainer;
   }
 
-  /**
-   * Copy the flags from world 1 to another world.
-   * <p>
-   *
-   * @param fromWorld
-   * @param destinationWorld
-   * @throws ConfigException
-   */
   private void copyFlags(InternalWorld fromWorld, InternalWorld destinationWorld) {
-    Iterator<Map.Entry<FlagName, FlagValue>> i = fromWorld.getFlags().entrySet().iterator();
-    while (i.hasNext()) {
-      Map.Entry<FlagName, FlagValue> next = i.next();
+    for (Map.Entry<FlagName, FlagValue> next : fromWorld.getFlags().entrySet()) {
       this.setFlag(destinationWorld.getName(), next.getKey(), next.getValue(), true);
     }
   }
 
-  /**
-   * Sets the nether portal from world "fromworld" to be redirected to "toworld"
-   * <p>
-   *
-   * @param fromWorld
-   * @param toWorld
-   * @return
-   */
   @Override
   public boolean setPortal(String fromWorld, String toWorld) {
-    if (fromWorld == null) {
-      throw new NullPointerException("Param fromWorld may not be null");
-    }
-    WorldContainer w1 = this.getWorldMeta(fromWorld, false);
-    WorldContainer w2;
-    if (toWorld == null) {
-      w2 = null;
-    } else {
-      w2 = this.getWorldMeta(toWorld, false);
-    }
-    if (w1 == null) {
+    checkNotNull(fromWorld, "fromWorld mustn't be null");
+
+    WorldContainer fromWorldContainer = this.getWorldMeta(fromWorld, false);
+    WorldContainer toWorldContainer = toWorld == null ? null : getWorldMeta(toWorld, false);
+
+    if (fromWorldContainer == null) {
       return false;
     }
-    if (w2 == null) {
-      w1.getWorld().setPortalLink(null);
+    if (toWorldContainer == null) {
+      fromWorldContainer.getWorld().setPortalLink(null);
     } else {
-      w1.getWorld().setPortalLink(w2.getWorld().getName());
+      fromWorldContainer.getWorld().setPortalLink(toWorldContainer.getWorld().getName());
     }
     return true;
   }
 
-  /**
-   * Sets the end portal from world "fromworld" to be redirected to "toworld"
-   * <p>
-   *
-   * @param fromWorld
-   * @param toWorld
-   * @return
-   */
   @Override
   public boolean setEndPortal(String fromWorld, String toWorld) {
-    if (fromWorld == null) {
-      throw new NullPointerException("Param fromWorld may not be null");
-    }
-    WorldContainer w1 = this.getWorldMeta(fromWorld, false);
-    WorldContainer w2;
-    if (toWorld == null) {
-      w2 = null;
-    } else {
-      w2 = this.getWorldMeta(toWorld, false);
-    }
-    if (w1 == null) {
+    checkNotNull(fromWorld, "fromWorld mustn't be null");
+
+    WorldContainer fromWorldContainer = this.getWorldMeta(fromWorld, false);
+    WorldContainer toWorldContainer = toWorld == null ? null : getWorldMeta(toWorld, false);
+
+    if (fromWorldContainer == null) {
       return false;
     }
-    if (w2 == null) {
-      w1.getWorld().setEndLink("");
+    if (toWorldContainer == null) {
+      fromWorldContainer.getWorld().setEndLink("");
     } else {
-      w1.getWorld().setEndLink(w2.getWorld().getName());
+      fromWorldContainer.getWorld().setEndLink(toWorldContainer.getWorld().getName());
     }
     return true;
   }
@@ -413,15 +343,14 @@ public class WorldManager implements WorldUtils {
 
   @Override
   public MultiWorldWorldData[] getAllWorlds() {
-
     return getWorlds();
   }
 
   @Override
-  public void saveWorlds(ConfigurationSection worldSection, MyLogger log, SpawnWorldControl spawn) {
+  public void saveWorlds(ConfigurationSection worldSection, SpawnWorldControl spawn) {
     ConfigurationSection l2;
     ConfigurationSection l3;
-    for (WorldContainer i : new TreeSet<WorldContainer>(new Comparator<WorldContainer>() {
+    for (WorldContainer i : new TreeSet<>(new Comparator<WorldContainer>() {
       @Override
       public int compare(WorldContainer t, WorldContainer t1) {
         return t.getName()
@@ -430,14 +359,13 @@ public class WorldManager implements WorldUtils {
     }) {
       private static final long serialVersionUID = 1L;
 
-
       {
         addAll(Arrays.asList(getWorlds()));
       }
     }) {
       InternalWorld w = i.getWorld();
       if (!Utils.checkWorldName(w.getName())) {
-        log.warning("Was not able to save world named: " + w.getName());
+        log.warn("Was not able to save world named: {}", w.getName());
         continue;
       }
       if (WorldGenerator.NULLGEN.getName().equals(w.getFullGeneratorName())) {
@@ -476,85 +404,73 @@ public class WorldManager implements WorldUtils {
   }
 
   @Override
-  public void loadWorlds(ConfigurationSection worldList, MyLogger logger, Difficulty baseDifficulty,
+  public void loadWorlds(ConfigurationSection worlds, Difficulty difficulty,
       SpawnWorldControl spawn) {
-    Iterator<String> list = worldList.getValues(false).keySet().iterator();
-    while (list.hasNext()) {
-      String worldName = list.next();
-      if (!worldList.isConfigurationSection(worldName)) {
-        logger.warning(worldName + " = not a valid world, sorry");
-        continue;
-      }
-      try {
-        ConfigurationSection world = worldList.getConfigurationSection(worldName);
+    for (String worldName : worlds.getValues(false).keySet()) {
+      if (worlds.isConfigurationSection(worldName)) {
+        try {
+          ConfigurationSection world = worlds.getConfigurationSection(worldName);
 
-        /* Get the seed */
-        long seed = world.getLong("seed", 0L);
+          long seed = world.getLong("seed", 0L);
+          WorldGenerator gen = WorldGenerator
+              .valueOf(world.getString("worldgen", "NORMAL").toUpperCase());
+          String options = world.getString("options", "");
 
-        /* Get the world gen */
-        WorldGenerator gen = WorldGenerator
-            .valueOf(world.getString("worldgen", "NORMAL").toUpperCase());
-
-        /* Get the options to pass to world gen */
-        String options = world.getString("options", "");
-
-        /* Get the flags set on the world */
-        FlagMap flags = new FlagMap();
-        ConfigurationSection flagList = world.getConfigurationSection("flags");
-        if (flagList != null) {
-          FlagName[] flagNames = FlagName.class.getEnumConstants();
-          for (FlagName flagName : flagNames) {
-            if (!flagList.isBoolean(flagName.name())) {
-              continue;
+          FlagMap flags = new FlagMap();
+          ConfigurationSection flagList = world.getConfigurationSection("flags");
+          if (flagList != null) {
+            FlagName[] flagNames = FlagName.class.getEnumConstants();
+            for (FlagName flagName : flagNames) {
+              if (!flagList.isBoolean(flagName.name())) {
+                continue;
+              }
+              flags.put(flagName, FlagValue.fromBoolean(flagList.getBoolean(flagName.name())));
             }
-            flags.put(flagName, FlagValue.fromBoolean(flagList.getBoolean(flagName.name())));
           }
-        }
-        String portal = world.getString("netherportal", "");
-        String endPortal = world.getString("endportal", "");
+          String portal = world.getString("netherportal", "");
+          String endPortal = world.getString("endportal", "");
 
-        /* Lets configure the internal world object */
-        InternalWorld worldData = new InternalWorld();
-        worldData.setWorldName(worldName);
-        worldData.setWorldSeed(seed);
-        worldData.setFullGeneratorName(gen.getName());
-        worldData.setPortalLink(portal);
-        worldData.setEndLink(endPortal);
-        worldData.setFlags(flags);
-        worldData.setOptions(options);
-        {
+          InternalWorld worldData = new InternalWorld();
+          worldData.setWorldName(worldName);
+          worldData.setWorldSeed(seed);
+          worldData.setFullGeneratorName(gen.getName());
+          worldData.setPortalLink(portal);
+          worldData.setEndLink(endPortal);
+          worldData.setFlags(flags);
+          worldData.setOptions(options);
+
           Difficulty diff = WORLD_DIFFICULTY.get(world);
           worldData.setDifficulty(diff);
-        }
 
-        /* Passes the object to the world gens for further chances, like other world types */
-        gen.makeWorld(worldData);
-        if (worldData.getEnv() == null) {
-          continue;
-        }
-
-        /* Loads the world at the mem of server */
-        this.createWorld(worldData);
-        if (world.getBoolean("autoload", true)) {
-          this.loadWorld(worldData.getName()).setDifficulty(worldData.getDifficulty());
-        }
-        if (spawn != null) {
-          String spawnGroup = world.getString("spawnGroup", "defaultGroup");
-          if (!spawn.registerWorldSpawn(worldName, spawnGroup)) {
-            world.set("spawnGroup", "defaultGroup");
-            spawn.registerWorldSpawn(worldName, "defaultGroup");
+          gen.makeWorld(worldData);
+          if (worldData.getEnv() == null) {
+            continue;
           }
+
+          /* Loads the world at the mem of server */
+          this.createWorld(worldData);
+          if (world.getBoolean("autoload", true)) {
+            this.loadWorld(worldData.getName()).setDifficulty(worldData.getDifficulty());
+          }
+          if (spawn != null) {
+            String spawnGroup = world.getString("spawnGroup", "defaultGroup");
+            if (!spawn.registerWorldSpawn(worldName, spawnGroup)) {
+              world.set("spawnGroup", "defaultGroup");
+              spawn.registerWorldSpawn(worldName, "defaultGroup");
+            }
+          }
+        } catch (IllegalArgumentException e) {
+          worlds.set(worldName, null);
+          log.warn("Invalid world: {}", worldName);
+        } catch (WorldGenException e) {
+          worlds.set(worldName, null);
+          log.warn("Invalid world gen used for world {} : {}", worldName, e.getMessage());
+        } catch (Exception err) {
+          log.warn(this.getClass().getName(), "load", err,
+              "Some error with '" + worldName + "': " + err.getMessage());
         }
-      } catch (IllegalArgumentException err) {
-        worldList.set(worldName, null);
-        logger.warning("Invalid world: " + worldName);
-      } catch (WorldGenException err) {
-        worldList.set(worldName, null);
-        logger.warning(
-            "Invalid world gen used for world '" + worldName + "': " + err.getLocalizedMessage());
-      } catch (Exception err) {
-        logger.throwing(this.getClass().getName(), "load", err,
-            "Some error with '" + worldName + "': " + err.getLocalizedMessage());
+      } else {
+        log.warn("{} not a valid world, sorry", worldName);
       }
     }
   }

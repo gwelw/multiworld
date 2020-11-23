@@ -1,25 +1,28 @@
 package nl.ferrybig.multiworld.data;
 
-import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.addons.AddonHandler;
+import nl.ferrybig.multiworld.exception.ConfigException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReloadHandler {
 
-  private final DataHandler d;
-  private final AddonHandler p;
+  private static final Logger log = LoggerFactory.getLogger(ReloadHandler.class);
 
-  public ReloadHandler(DataHandler data, AddonHandler plugins) {
-    this.d = data;
-    this.p = plugins;
+  private final DataHandler dataHandler;
+  private final AddonHandler addonHandler;
+
+  public ReloadHandler(DataHandler dataHandler, AddonHandler addonHandler) {
+    this.dataHandler = dataHandler;
+    this.addonHandler = addonHandler;
   }
 
   public boolean reload() {
     try {
-      this.d.load();
-      this.p.onSettingsChance();
+      this.dataHandler.load();
+      this.addonHandler.onSettingsChance();
     } catch (ConfigException e) {
-      this.d.getLogger()
-          .throwing("nl.ferrybig.multiworld.data.ReloadHandler", "reload", e);
+      log.error(e.getMessage());
       return false;
     }
     return true;
@@ -27,9 +30,9 @@ public class ReloadHandler {
 
   public boolean save() {
     try {
-      this.d.save();
+      this.dataHandler.save();
     } catch (ConfigException e) {
-      this.d.getLogger().throwing("nl.ferrybig.multiworld.data.ReloadHandler", "save", e);
+      log.error(e.getMessage());
       return false;
     }
     return true;

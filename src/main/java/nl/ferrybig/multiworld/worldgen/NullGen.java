@@ -4,11 +4,6 @@ import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
 import org.bukkit.World;
 
-/**
- * The dummy gen thats used when it find an world created by another plugin than this
- *
- * @author Fernando
- */
 public class NullGen extends SimpleChunkGen {
 
   private static NullGen INSTANCE = new NullGen();

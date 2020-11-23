@@ -8,12 +8,11 @@ import nl.ferrybig.multiworld.command.MessageType;
 public class FlagListCommand extends Command {
 
   public FlagListCommand() {
-    super("flaglist", "gets al flags on the server");
+    super("flaglist", "gets all flags on the server");
   }
 
   @Override
   public void runCommand(CommandStack stack) {
-    stack.sendMessage(MessageType.SUCCES, FlagName.makeFlagList());
+    stack.sendMessage(MessageType.SUCCESS, FlagName.makeFlagList());
   }
-
 }

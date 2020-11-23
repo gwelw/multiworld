@@ -1,5 +1,7 @@
 package nl.ferrybig.multiworld.command.other;
 
+import static org.bukkit.help.HelpTopicComparator.helpTopicComparatorInstance;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +17,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.help.HelpTopic;
-import org.bukkit.help.HelpTopicComparator;
 import org.bukkit.help.IndexHelpTopic;
 import org.bukkit.util.ChatPaginator;
 
@@ -51,16 +52,16 @@ public class HelpCommand extends Command {
       H[1][(j + 1)] = j;
       H[0][(j + 1)] = INF;
     }
-    Map<Character, Integer> sd = new HashMap<Character, Integer>();
+    Map<Character, Integer> sd = new HashMap<>();
     for (char Letter : (s1 + s2).toCharArray()) {
-      if (!sd.containsKey(Character.valueOf(Letter))) {
-        sd.put(Character.valueOf(Letter), Integer.valueOf(0));
+      if (!sd.containsKey(Letter)) {
+        sd.put(Letter, 0);
       }
     }
     for (int i = 1; i <= s1Len; i++) {
       int DB = 0;
       for (int j = 1; j <= s2Len; j++) {
-        int i1 = sd.get(Character.valueOf(s2.charAt(j - 1))).intValue();
+        int i1 = sd.get(s2.charAt(j - 1));
         int j1 = DB;
         if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
           H[(i + 1)][(j + 1)] = H[i][j];
@@ -72,7 +73,7 @@ public class HelpCommand extends Command {
         H[(i + 1)][(j + 1)] = Math
             .min(H[(i + 1)][(j + 1)], H[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
       }
-      sd.put(Character.valueOf(s1.charAt(i - 1)), Integer.valueOf(i));
+      sd.put(s1.charAt(i - 1), i);
     }
     return H[(s1Len + 1)][(s2Len + 1)];
   }
@@ -93,7 +94,7 @@ public class HelpCommand extends Command {
     } else if (NumberUtils.isDigits(args[(args.length - 1)])) {
       command = StringUtils.join(ArrayUtils.subarray(args, 0, args.length - 1), " ");
       try {
-        pageNumber = NumberUtils.createInteger(args[(args.length - 1)]).intValue();
+        pageNumber = NumberUtils.createInteger(args[(args.length - 1)]);
       } catch (NumberFormatException exception) {
         pageNumber = 1;
       }
@@ -139,22 +140,21 @@ public class HelpCommand extends Command {
     }
     header.append(ChatColor.YELLOW);
     header.append("---------");
-    stack.sendMessage(MessageType.HIDDEN_SUCCES, header.toString());
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS, header.toString());
     for (String line : page.getLines()) {
-      stack.sendMessage(MessageType.HIDDEN_SUCCES, line);
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, line);
     }
   }
 
   protected HelpTopic findPossibleMatches(String searchString, CommandStack stack) {
     int maxDistance = searchString.length() / 5 + 3;
-    Set<HelpTopic> possibleMatches = new TreeSet<HelpTopic>(
-        HelpTopicComparator.helpTopicComparatorInstance());
+    Set<HelpTopic> possibleMatches = new TreeSet<>(helpTopicComparatorInstance());
 
     if (searchString.startsWith("/")) {
       searchString = searchString.substring(1);
     }
     if (searchString.isEmpty()) {
-      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().m
+      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().commands
           .entrySet()) {
         String trimmedTopic = command.getKey();
         if (!trimmedTopic.equals("snowman")) {
@@ -163,7 +163,7 @@ public class HelpCommand extends Command {
         }
       }
     } else {
-      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().m
+      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().commands
           .entrySet()) {
         String trimmedTopic = command.getKey();
         if (!trimmedTopic.equals("snowman")) {

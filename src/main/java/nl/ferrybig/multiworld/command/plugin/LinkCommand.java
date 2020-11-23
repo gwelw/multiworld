@@ -54,7 +54,7 @@ public class LinkCommand extends Command {
       }
       portal.add(split[0], null);
       stack.sendMessageBroadcast(
-          MessageType.SUCCES,
+          MessageType.SUCCESS,
           Translation.COMMAND_LINK_REMOVE_LINK,
           MessageCache.WORLD.get(split[0]),
           this.usedPattern
@@ -75,7 +75,7 @@ public class LinkCommand extends Command {
         return;
       }
       portal.add(split[0], split[1]);
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_LINK_SET_LINK,
           MessageCache.WORLD.get(split[0]),
           MessageCache.TARGET.get(split[1]),

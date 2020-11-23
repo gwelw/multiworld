@@ -53,7 +53,7 @@ public class UnloadWorldCommand extends Command {
         Translation.WORLD_UNLOADING_START,
         MessageCache.WORLD.get(worldName));
     if (this.worlds.unloadWorld(worldName)) {
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.WORLD_UNLOADING_END,
           MessageCache.WORLD.get(worldName));
     } else {

@@ -1,16 +1,11 @@
 package nl.ferrybig.multiworld.worldgen;
 
+import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
 import nl.ferrybig.multiworld.exception.WorldGenException;
-import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 
-/**
- * the main class to get world genarators
- *
- * @author Fernando
- */
 public enum WorldGenerator implements ChunkGen {
   /**
    * the normal mc world constant
@@ -57,52 +52,51 @@ public enum WorldGenerator implements ChunkGen {
   LARGEBIOMES(new WorldTypeBasedGenerator(WorldType.LARGE_BIOMES), "LargeBiomes",
       "Uses another generator to generate a Large Biomes world"),
   SUPERFLAT(new WorldTypeBasedGenerator(WorldType.FLAT), "SuperFlat",
-      "Uses minecraft superflat methode to create a world"),
-  ;
+      "Uses minecraft superflat methode to create a world");
   private final ChunkGen generator;
   private final String name;
   private final String destr;
   private final Boolean mayShowUP;
   private final SpeedLevel speed;
 
-  private WorldGenerator(ChunkGen gen) {
+  WorldGenerator(ChunkGen gen) {
     this(gen, gen.toString(), "INVALID DESTR", true, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(World.Environment type) {
+  WorldGenerator(World.Environment type) {
     this(new DefaultGen(type), type.name(), "INVALID DESTR", true, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(ChunkGen gen, String name, String destr) {
+  WorldGenerator(ChunkGen gen, String name, String destr) {
     this(gen, name, destr, true, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(World.Environment type, String name, String destr) {
+  WorldGenerator(World.Environment type, String name, String destr) {
     this(new DefaultGen(type), name, destr, true, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(ChunkGen gen, String name, String destr, SpeedLevel speed) {
+  WorldGenerator(ChunkGen gen, String name, String destr, SpeedLevel speed) {
     this(gen, name, destr, true, speed);
   }
 
-  private WorldGenerator(World.Environment type, String name, String destr, SpeedLevel speed) {
+  WorldGenerator(World.Environment type, String name, String destr, SpeedLevel speed) {
     this(new DefaultGen(type), name, destr, true, speed);
   }
 
-  private WorldGenerator(World.Environment type, String name, String destr, boolean visable) {
+  WorldGenerator(World.Environment type, String name, String destr, boolean visable) {
     this(new DefaultGen(type), name, destr, visable, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(ChunkGen gen, String name, String destr, boolean visable) {
+  WorldGenerator(ChunkGen gen, String name, String destr, boolean visable) {
     this(gen, name, destr, visable, SpeedLevel.UNKNOWN);
   }
 
-  private WorldGenerator(World.Environment type, String name, String destr, boolean visable,
+  WorldGenerator(World.Environment type, String name, String destr, boolean visable,
       SpeedLevel speed) {
     this(new DefaultGen(type), name, destr, visable, speed);
   }
 
-  private WorldGenerator(ChunkGen gen, String name, String destr, boolean visable,
+  WorldGenerator(ChunkGen gen, String name, String destr, boolean visable,
       SpeedLevel speed) {
     this.generator = gen;
     this.name = name;
@@ -151,27 +145,14 @@ public enum WorldGenerator implements ChunkGen {
     return this.mayShowUP;
   }
 
-  /**
-   * gets the name of this world gen
-   *
-   * @return the name
-   */
   public String getName() {
     return this.name;
   }
 
-  /**
-   * gets the description of this world gen
-   *
-   * @return the description
-   */
   public String getDestr() {
     return this.destr;
   }
 
-  /**
-   * @return the speed
-   */
   public SpeedLevel getSpeed() {
     return speed;
   }

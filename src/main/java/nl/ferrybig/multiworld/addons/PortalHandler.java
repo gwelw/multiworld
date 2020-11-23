@@ -1,12 +1,10 @@
 package nl.ferrybig.multiworld.addons;
 
-import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
-import nl.ferrybig.multiworld.data.MyLogger;
+import nl.ferrybig.multiworld.exception.ConfigException;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class PortalHandler implements Listener, MultiworldAddon, SettingsListener {
 
@@ -23,13 +23,12 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
   public static final int UNKNOWN_PORTAL = 0;
   public static final int NETHER_PORTAL = -1;
   private final DataHandler data;
-  private final MyLogger logger;
+  private final Logger log = LoggerFactory.getLogger(PortalHandler.class);
   private final boolean handleEndPortals;
   private boolean enabled = false;
 
-  public PortalHandler(DataHandler d, Server server, MyLogger logger, boolean handleEndPortals) {
+  public PortalHandler(DataHandler d, boolean handleEndPortals) {
     this.data = d;
-    this.logger = logger;
     this.handleEndPortals = handleEndPortals;
   }
 
@@ -41,11 +40,11 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
   }
 
   public void load() {
-    if (enabled == false) {
+    if (!enabled) {
       throw new IllegalStateException();
     }
 
-    this.logger.info("[PortalHandler] loaded!");
+    this.log.info("[PortalHandler] loaded!");
   }
 
   /**
@@ -54,12 +53,12 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
    * @throws ConfigException       When there was a configuration error
    * @throws IllegalStateException When it wasn't enabled
    */
-  public void save() throws ConfigException, IllegalStateException {
-    if (enabled == false) {
+  public void save() throws ConfigException {
+    if (!enabled) {
       throw new IllegalStateException();
     }
     this.data.save();
-    this.logger.info("[PortalHandler] saved!");
+    this.log.info("[PortalHandler] saved!");
   }
   /*
    * Is this enabled
@@ -79,7 +78,7 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
    */
   @Override
   public void onDisable() {
-    if (enabled == false) {
+    if (!enabled) {
       throw new IllegalStateException();
     }
     enabled = false;
@@ -90,7 +89,7 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
    */
   @Override
   public void onEnable() {
-    if (enabled == true) {
+    if (enabled) {
       throw new IllegalStateException("Already loaded");
     }
     this.enabled = true;
@@ -122,12 +121,12 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
       return;
     }
     int mapType = this.getPortalType(event.getFrom());
-    this.logger.fine(
+    log.debug(
         "[PortalHandler] got portal " + mapType + " for location " + event.getFrom().toVector()
             .toString() + ".");
     if (this.handleEndPortals) {
       if ((mapType == END_PORTAL)) {
-        this.logger.fine("[PortalHandler] got PortalType.END.");
+        log.debug("[PortalHandler] got PortalType.END.");
         InternalWorld from = this.data.getWorldManager()
             .getInternalWorld(event.getFrom().getWorld().getName(), true);
         String toWorldString = from.getEndPortalWorld();
@@ -157,13 +156,13 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
             }
           }
         }
-        this.logger.fine(
+        log.debug(
             "[PortalHandler] [PortalType.END] used for entity " + event.getEntityType().toString()
                 .toLowerCase() + " to get to world " + toWorldString);
       }
     } else {
       if ((!this.handleEndPortals) && (mapType == NETHER_PORTAL)) {
-        this.logger.fine("[PortalHandler] got PortalType.NETHER.");
+        log.debug("[PortalHandler] got PortalType.NETHER.");
         String toWorldString = this.data.getWorldManager()
             .getInternalWorld(event.getFrom().getWorld().getName(), true).getPortalWorld();
         if (!toWorldString.isEmpty()) {
@@ -191,7 +190,7 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
             event.setTo(to);
           }
         }
-        this.logger.fine(
+        log.debug(
             "[PortalHandler] [PortalType.NETHER] used for user " + event.getEntityType().toString()
                 .toLowerCase() + " to get to world " + toWorldString);
       }

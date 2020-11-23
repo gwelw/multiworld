@@ -1,11 +1,13 @@
 package nl.ferrybig.multiworld.data.config;
 
-import nl.ferrybig.multiworld.MultiWorldPlugin;
-import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.MyLogger;
+import java.util.Objects;
 import org.bukkit.configuration.ConfigurationSection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ConfigNode<T> {
+
+  private static final Logger log = LoggerFactory.getLogger(ConfigNode.class);
 
   protected final String configPath;
   protected final T defaultValue;
@@ -37,30 +39,18 @@ public abstract class ConfigNode<T> {
       return false;
     }
     @SuppressWarnings(value = "unchecked") final DefaultConfigNode<?> other = (DefaultConfigNode<?>) obj;
-    if ((this.configPath == null) ? (other.configPath != null)
-        : !this.configPath.equals(other.configPath)) {
+    if (!Objects.equals(this.configPath, other.configPath)) {
       return false;
     }
-    if (this.defaultValue != other.defaultValue && (this.defaultValue == null || !this.defaultValue
-        .equals(other.defaultValue))) {
-      return false;
-    }
-    return true;
+    return Objects.equals(this.defaultValue, other.defaultValue);
   }
 
   public T get(ConfigurationSection from) {
-    MyLogger logger = null;
-    DataHandler d = MultiWorldPlugin.getInstance().getDataManager();
-    if (d != null) {
-      logger = d.getLogger();
-    }
     if (this.parent != null) {
       from = this.parent.get(from);
     }
     if (!from.contains(configPath)) {
-      if (logger != null) {
-        logger.fine("Adding missing config node: " + this.getFullPath());
-      }
+      log.debug("Adding missing config node: " + this.getFullPath());
       this.set1(from, pack(defaultValue));
       return defaultValue;
     } else {
@@ -69,11 +59,9 @@ public abstract class ConfigNode<T> {
       try {
         return this.unpack(get);
       } catch (DataPackException error) {
-        if (logger != null) {
-          logger.warning("Error with node \"" + this.getFullPath()
-              + "\" plz fix it, it has been replaced by the default value, cause was: " + error
-              .getMessage());
-        }
+        log.warn("Error with node \"" + this.getFullPath()
+            + "\" plz fix it, it has been replaced by the default value, cause was: " + error
+            .getMessage());
         this.set1(from, this.pack(defaultValue));
         return defaultValue;
       }

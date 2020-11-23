@@ -1,16 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen.populators;
 
 import org.bukkit.generator.BlockPopulator;
 
-/**
- * The class to get al the chunk gens
- *
- * @author Fernando
- */
 public enum Populators {
   SNOW(new SnowPopulator()),
   PLANET(new SmallPlanetPopulator()),
@@ -19,7 +10,7 @@ public enum Populators {
   MYCELIUM(new MyceliumPopulator());
   protected final BlockPopulator populator;
 
-  private Populators(BlockPopulator pop) {
+  Populators(BlockPopulator pop) {
     this.populator = pop;
   }
 

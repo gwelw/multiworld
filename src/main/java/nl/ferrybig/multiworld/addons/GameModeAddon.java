@@ -10,7 +10,6 @@ import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
 import nl.ferrybig.multiworld.api.events.GameModeChanceByWorldEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.MyLogger;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -22,24 +21,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class GameModeAddon implements Listener, MultiworldAddon {
 
-  private final MyLogger log;
+  private final Logger log = LoggerFactory.getLogger(GameModeAddon.class);
+  ;
   private final DataHandler data;
   private HashMap<UUID, PlayerData> creativePlayers;
   private HashMap<UUID, RemovePlayerTask> tasks;
   private boolean isEnabled = false;
 
   public GameModeAddon(DataHandler d) {
-
-    this.log = d.getLogger();
     this.data = d;
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPlayerJoin(PlayerJoinEvent event) {
-    this.log.finest("Got PlayerJoinEvent");//NOI18N
+    log.trace("Got PlayerJoinEvent");
     if (this.tasks.containsKey(event.getPlayer().getUniqueId())) {
       Bukkit.getScheduler().cancelTask(this.tasks.get(event.getPlayer().getUniqueId()).getTaskId());
       this.tasks.remove(event.getPlayer().getUniqueId());
@@ -50,14 +50,14 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
 
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPlayerQuit(PlayerQuitEvent event) {
-    this.log.finest("Got PlayerQuitEvent");//NOI18N
+    log.trace("Got PlayerQuitEvent");
     Player player = event.getPlayer();
     this.tasks.put(player.getUniqueId(), new RemovePlayerTask(player));
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPlayerChanceWorld(PlayerChangedWorldEvent event) {
-    this.log.finest("Got PlayerChanceWorldEvent");//NOI18N
+    log.trace("Got PlayerChanceWorldEvent");
     this.reloadPlayer(event.getPlayer(), event.getPlayer().getWorld());
   }
 
@@ -90,12 +90,11 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     }
     player.setGameMode(GameMode.SURVIVAL);
     new GameModeChanceByWorldEvent(player, GameMode.SURVIVAL).call();
-    this.log.fine(
-        "Chancing " + player.getDisplayName() + " game mode back to GameMode.SURVIVAL");//NOI18N
+    log.trace("Chancing " + player.getDisplayName() + " game mode back to GameMode.SURVIVAL");
   }
 
   private boolean isAffected(Player player) {
-    return Utils.hasPermission(player, "creativemode");//NOI18N
+    return Utils.hasPermission(player, "creativemode");
   }
 
   private void checkAndAddPlayer(Player player, World toWorld) {
@@ -116,8 +115,7 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     }
     player.setGameMode(GameMode.CREATIVE);
     new GameModeChanceByWorldEvent(player, GameMode.CREATIVE).call();
-    this.log
-        .fine("Chancing " + player.getDisplayName() + " game mode to GameMode.CREATIVE");//NOI18N
+    log.trace("Chancing " + player.getDisplayName() + " game mode to GameMode.CREATIVE");
   }
 
   public void reloadPlayer(Player player, World toWorld) {
@@ -139,12 +137,12 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
   @Override
   public void onDisable() {
     Iterator<Map.Entry<UUID, PlayerData>> loop = this.creativePlayers.entrySet().iterator();
-    Map.Entry<UUID, PlayerData> data;
+    Map.Entry<UUID, PlayerData> playerDataEntry;
     while (loop.hasNext()) {
-      data = loop.next();
-      Player player = Bukkit.getPlayer(data.getKey());
+      playerDataEntry = loop.next();
+      Player player = Bukkit.getPlayer(playerDataEntry.getKey());
       if (player != null) {
-        this.removePlayerAction(player, data.getValue());
+        this.removePlayerAction(player, playerDataEntry.getValue());
       }
     }
     for (RemovePlayerTask task : this.tasks.values()) {
@@ -158,14 +156,11 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
 
   @Override
   public void onEnable() {
-    this.tasks = new HashMap<UUID, RemovePlayerTask>(Math.min(20, Bukkit.getMaxPlayers()));
-    this.creativePlayers = new HashMap<UUID, PlayerData>(Math.min(20, Bukkit.getMaxPlayers()));
-    Bukkit.getScheduler().scheduleSyncDelayedTask(MultiWorldPlugin.getInstance(), new Runnable() {
-      @Override
-      public void run() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-          checkAndAddPlayer(player, player.getWorld());
-        }
+    this.tasks = new HashMap<>(Math.min(20, Bukkit.getMaxPlayers()));
+    this.creativePlayers = new HashMap<>(Math.min(20, Bukkit.getMaxPlayers()));
+    Bukkit.getScheduler().scheduleSyncDelayedTask(MultiWorldPlugin.getInstance(), () -> {
+      for (Player player : Bukkit.getOnlinePlayers()) {
+        checkAndAddPlayer(player, player.getWorld());
       }
     });
     this.isEnabled = true;

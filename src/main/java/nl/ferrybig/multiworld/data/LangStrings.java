@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.data;
 
 import java.io.BufferedInputStream;
@@ -15,10 +11,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import org.bukkit.plugin.Plugin;
 
-/**
- * @author Fernando
- * @deprecated Will be removed in the future update to make place for a better translation system
- */
 @Deprecated
 public class LangStrings {
 
@@ -82,14 +74,8 @@ public class LangStrings {
     }
 
     @Override
-    public ResourceBundle newBundle(String baseName,
-        Locale locale,
-        String format,
-        ClassLoader loader,
-        boolean reload)
-        throws IllegalAccessException,
-        InstantiationException,
-        IOException {
+    public ResourceBundle newBundle(String baseName, Locale locale, String format,
+        ClassLoader loader, boolean reload) throws IOException {
       ResourceBundle bundle = null;
       if (format.equals("properties")) {
         String bundleName = toBundleName(baseName, locale);

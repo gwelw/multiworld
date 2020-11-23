@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.List;
 import java.util.Random;
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.populators.LiquidPopulator;
 import nl.ferrybig.multiworld.worldgen.populators.OrePopulator;
@@ -20,20 +15,8 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-/**
- * @author Fernando
- */
 public class FlyingIslandsGenerator extends ChunkGenerator implements ChunkGen {
 
-  /**
-   * @param x        X co-ordinate of the block to be set in the array
-   * @param y        Y co-ordinate of the block to be set in the array
-   * @param z        Z co-ordinate of the block to be set in the array
-   * @param chunk    An array containing the Block id's of all the blocks in the chunk. The first
-   *                 offset is the block section number. There are 16 block sections, stacked
-   *                 vertically, each of which 16 by 16 by 16 blocks.
-   * @param material The material to set the block to.
-   */
   private void setBlock(int x, int y, int z, ChunkData chunk, Material material) {
     chunk.setBlock(x, y, z, material);
   }
@@ -179,7 +162,7 @@ public class FlyingIslandsGenerator extends ChunkGenerator implements ChunkGen {
   }
 
   @Override
-  public void makeWorld(InternalWorld options) throws WorldGenException {
+  public void makeWorld(InternalWorld options) {
     options.setWorldGen(this);
   }
 }

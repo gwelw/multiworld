@@ -2,32 +2,23 @@ package nl.ferrybig.multiworld.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
-import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
+import java.util.Random;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 
-/**
- * This worldgen makes chunks of the type flat
- *
- * @author Fernando
- */
 public class FlatLandChunkGenerator extends SimpleChunkGen {
 
-  private final Map<String, Byte> heightMap = new HashMap<String, Byte>();
+  private final Map<String, Byte> heightMap = new HashMap<>();
 
   @Override
-  public org.bukkit.Location getFixedSpawnLocation(World world, java.util.Random random) {
+  public Location getFixedSpawnLocation(World world, Random random) {
     return null;
   }
 
-  /**
-   * makes the internal chunk that wil be copied to the new chunks made
-   *
-   * @param w
-   * @return
-   */
   @Override
   protected ChunkMaker makeChunk(World w) {
     ChunkMaker chunk = new ChunkMaker(w.getMaxHeight());
@@ -40,12 +31,6 @@ public class FlatLandChunkGenerator extends SimpleChunkGen {
     return chunk;
   }
 
-  /**
-   * Makes the world and save the height
-   *
-   * @param world the o<code>InternalWorld</code> obj to modify
-   * @throws InvalidWorldGenOptionsException If the world dont give valid options
-   */
   @Override
   public void makeWorld(InternalWorld world) throws InvalidWorldGenOptionsException {
     super.makeWorld(world);

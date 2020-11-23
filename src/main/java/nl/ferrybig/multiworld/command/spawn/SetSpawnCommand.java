@@ -32,7 +32,7 @@ public class SetSpawnCommand extends Command {
     }
     boolean succes = l.getWorld().setSpawnLocation(l.getBlockX(), l.getBlockY(), l.getBlockZ());
     if (succes) {
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_SETSPAWN_SUCCESS,
           MessageCache.custom("%x%", String.valueOf(l.getBlockX())),
           MessageCache.custom("%y%", String.valueOf(l.getBlockY())),

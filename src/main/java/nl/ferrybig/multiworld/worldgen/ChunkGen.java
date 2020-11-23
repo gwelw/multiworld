@@ -1,7 +1,7 @@
 package nl.ferrybig.multiworld.worldgen;
 
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 
 /**
  * The interface that all the world genarators implement
@@ -16,5 +16,5 @@ public interface ChunkGen {
    * @param options The options this world have
    * @throws WorldGenException
    */
-  public void makeWorld(InternalWorld options) throws WorldGenException;
+  void makeWorld(InternalWorld options) throws WorldGenException;
 }

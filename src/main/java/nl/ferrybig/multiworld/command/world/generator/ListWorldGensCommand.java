@@ -20,9 +20,9 @@ public class ListWorldGensCommand extends Command {
       if (!g.mayInList()) {
         continue;
       }
-      stack.sendMessage(MessageType.HIDDEN_SUCCES, g.getName());
-      stack.sendMessage(MessageType.HIDDEN_SUCCES, "+- " + g.getDestr());
-      stack.sendMessage(MessageType.HIDDEN_SUCCES, "+- " + Formatter.printSpeed(g.getSpeed()));
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, g.getName());
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, "+- " + g.getDestr());
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, "+- " + Formatter.printSpeed(g.getSpeed()));
     }
   }
 }

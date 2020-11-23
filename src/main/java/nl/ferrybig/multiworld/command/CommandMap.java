@@ -11,21 +11,21 @@ import org.bukkit.command.CommandSender;
 public class CommandMap extends Command {
 
   private static final String[] nullString = new String[0];
-  public final Map<String, Command> m;
-  public final Map<String, String> aliasses;
+  public final Map<String, Command> commands;
+  public final Map<String, String> aliases;
 
-  public CommandMap(String permissions, Map<String, Command> h, Map<String, String> aliasses) {
+  public CommandMap(String permissions, Map<String, Command> commands, Map<String, String> aliases) {
     super(permissions, "Base command");
-    this.m = Collections.<String, Command>unmodifiableMap(h);
-    this.aliasses = aliasses;
+    this.commands = Collections.unmodifiableMap(commands);
+    this.aliases = aliases;
   }
 
   private void parseCommand(CommandStack sender, String name) {
-    Command cmd = this.m.get(name);
+    Command cmd = this.commands.get(name);
     if (cmd != null) {
-      cmd.excute(sender);
-    } else if (aliasses != null) {
-      String newName = aliasses.get(name);
+      cmd.execute(sender);
+    } else if (aliases != null) {
+      String newName = aliases.get(name);
       if (newName != null) {
         this.parseCommand(sender, newName);
       } else {
@@ -60,37 +60,36 @@ public class CommandMap extends Command {
     if (commandName.equalsIgnoreCase("nl/ferrybig/multiworld") || commandName
         .equalsIgnoreCase("mw")) {
       if (split.length == 0) {
-        Set<String> commands = this.m.keySet();
+        Set<String> commands = this.commands.keySet();
         return commands.toArray(new String[commands.size()]);
       } else if (split.length == 1) {
-        Set<String> commands = new HashSet<String>();
-        commands.addAll(this.m.keySet());
-        Set<String> found = new HashSet<String>(commands.size());
+        Set<String> commands = new HashSet<>(this.commands.keySet());
+        Set<String> found = new HashSet<>(commands.size());
         String lowerName = split[0].toLowerCase();
         for (String command : commands) {
           if (command.toLowerCase(Locale.ENGLISH).startsWith(lowerName)) {
             found.add(command);
           }
         }
-        return found.toArray(new String[found.size()]);
+        return found.toArray(new String[0]);
 
       } else {
-        if (this.aliasses.containsKey(split[0].toLowerCase())) {
-          split[0] = this.aliasses.get(split[0].toLowerCase());
+        if (this.aliases.containsKey(split[0].toLowerCase())) {
+          split[0] = this.aliases.get(split[0].toLowerCase());
         }
-        if (this.m.containsKey(split[0].toLowerCase())) {
-          Command command = this.m.get(split[0].toLowerCase());
+        if (this.commands.containsKey(split[0].toLowerCase())) {
+          Command command = this.commands.get(split[0].toLowerCase());
           return command
               .calculateMissingArguments(sender, commandName, this.removeFirstFromArray(split));
         }
         return nullString;
       }
     } else {
-      if (this.aliasses.containsKey(commandName)) {
-        commandName = this.aliasses.get(commandName);
+      if (this.aliases.containsKey(commandName)) {
+        commandName = this.aliases.get(commandName);
       }
-      if (this.m.containsKey(commandName)) {
-        Command command = this.m.get(commandName);
+      if (this.commands.containsKey(commandName)) {
+        Command command = this.commands.get(commandName);
         return command
             .calculateMissingArguments(sender, commandName, this.removeFirstFromArray(split));
       }

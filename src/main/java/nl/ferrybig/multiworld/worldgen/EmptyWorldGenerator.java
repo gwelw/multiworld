@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.ArrayList;
@@ -13,14 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
-/**
- * @author Fernando
- */
 public class EmptyWorldGenerator extends SimpleChunkGen {
 
   @Override
   public List<BlockPopulator> getDefaultPopulators(World world) {
-    List<BlockPopulator> list = new ArrayList<BlockPopulator>();
+    List<BlockPopulator> list = new ArrayList<>();
     list.add(new BlockPopulator() {
 
       @Override

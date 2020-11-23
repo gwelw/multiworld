@@ -1,46 +1,49 @@
 package nl.ferrybig.multiworld.addons;
 
+import java.util.StringJoiner;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AddonHolder<T extends MultiworldAddon> implements MultiworldAddon, SettingsListener {
 
+  private static final Logger log = LoggerFactory.getLogger(AddonHolder.class);
+
+  private final DataHandler dataHandler;
   private final Class<T> type;
   private final String name;
-  private final DataHandler data;
   private final DefaultConfigNode<Boolean> updateNode;
   private T addon = null;
 
-  public AddonHolder(Class<T> type, String name, DataHandler data,
+  public AddonHolder(Class<T> type, String name, DataHandler dataHandler,
       DefaultConfigNode<Boolean> updateNode) {
-    if (type == null || name == null || data == null) {
+    if (type == null || name == null || dataHandler == null) {
       throw new NullPointerException("null not accepted as param");
     }
     this.type = type;
     this.name = name;
-    this.data = data;
+    this.dataHandler = dataHandler;
     this.updateNode = updateNode;
-
   }
 
   @Override
   public void onDisable() {
     assert getAddon() != null;
-    this.data.getLogger().fine("Disabling plugin \"" + type.getSimpleName() + "\"");
+    log.debug("Disabling plugin {}", type.getSimpleName());
     this.getAddon().onDisable();
   }
 
   @Override
   public void onEnable() {
-
     if (this.getAddon() == null) {
       try {
-        this.addon = type.getConstructor(DataHandler.class).newInstance(this.data);
+        this.addon = type.getConstructor(DataHandler.class).newInstance(this.dataHandler);
         assert getAddon() != null;
-        this.data.getLogger().fine("Loaded plugin \"" + type.getSimpleName() + "\"");
+        log.debug("Loaded plugin {}", type.getSimpleName());
         if (this.getAddon() instanceof Listener) {
           Bukkit.getServer().getPluginManager()
               .registerEvents((Listener) this.getAddon(), MultiWorldPlugin.getInstance());
@@ -49,7 +52,7 @@ public class AddonHolder<T extends MultiworldAddon> implements MultiworldAddon, 
         throw new RuntimeException("Mistake from delevoper: " + ex.toString(), ex);
       }
     }
-    this.data.getLogger().fine("Enabling plugin \"" + type.getSimpleName() + "\"");
+    log.debug("Enabling plugin {}", type.getSimpleName());
     this.getAddon().onEnable();
   }
 
@@ -79,27 +82,25 @@ public class AddonHolder<T extends MultiworldAddon> implements MultiworldAddon, 
     }
   }
 
-  /**
-   * @return the name
-   */
   public String getName() {
     return name;
   }
 
   @Override
   public String toString() {
-    return "AddonHolder{" + "addon=" + getAddon() + ", type=" + type + ", name=" + name
-        + ", updateNode=" + updateNode + '}';
+    return new StringJoiner(", ", AddonHolder.class.getSimpleName() + "[", "]")
+        .add("type=" + type)
+        .add("name='" + name + "'")
+        .add("updateNode=" + updateNode)
+        .add("addon=" + addon)
+        .toString();
   }
 
-  /**
-   * @return the addon
-   */
   public T getAddon() {
     return addon;
   }
 
   boolean isEnabledInsideConfig() {
-    return this.data.getNode(this.updateNode);
+    return this.dataHandler.getNode(this.updateNode);
   }
 }

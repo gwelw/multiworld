@@ -19,14 +19,14 @@ public enum MessageCache {
   private final CachingMap cache;
   private final String replacePattern;
 
-  private MessageCache(String replacePattern) {
+  MessageCache(String replacePattern) {
     this.replacePattern = replacePattern;
     this.cache = new CachingMap(10);
   }
 
   public static PackedMessageData custom(final String pattern, final String data) {
     return new PackedMessageData() {
-      String binary = pattern + "\n" + data;
+      final String binary = pattern + "\n" + data;
 
       @Override
       public String getBinary() {
@@ -41,23 +41,19 @@ public enum MessageCache {
   }
 
   public PackedMessageData get(final String data) {
-    PackedMessageData tmp = this.cache.get(data);
-    if (tmp == null) {
-      this.cache.put(data, tmp = new PackedMessageData() {
-        String binary = MessageCache.this.replacePattern + "\n" + data;
+    return this.cache.computeIfAbsent(data, d -> new PackedMessageData() {
+      final String binary = MessageCache.this.replacePattern + "\n" + d;
 
-        @Override
-        public String getBinary() {
-          return binary;
-        }
+      @Override
+      public String getBinary() {
+        return binary;
+      }
 
-        @Override
-        public String transformMessage(String prevFormat) {
-          return prevFormat.replace(MessageCache.this.replacePattern, data);
-        }
-      });
-    }
-    return tmp;
+      @Override
+      public String transformMessage(String prevFormat) {
+        return prevFormat.replace(MessageCache.this.replacePattern, d);
+      }
+    });
   }
 
   private static class CachingMap extends LinkedHashMap<String, PackedMessageData> {

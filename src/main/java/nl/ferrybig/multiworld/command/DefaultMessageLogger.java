@@ -46,7 +46,7 @@ public class DefaultMessageLogger implements MessageLogger {
     StringBuilder builder = new StringBuilder();
     if (type != null) {
       switch (type) {
-        case SUCCES:
+        case SUCCESS:
           builder.append(succesPrefix);
           break;
         case ERROR:

@@ -29,7 +29,7 @@ public class SpawnCommand extends Command {
     if (sender instanceof Player) {
       Player player = (Player) sender;
       player.teleport(player.getWorld().getSpawnLocation());
-      stack.sendMessage(MessageType.SUCCES, Translation.COMMAND_SPAWN_SUCCES);
+      stack.sendMessage(MessageType.SUCCESS, Translation.COMMAND_SPAWN_SUCCES);
     } else {
       stack.sendMessage(MessageType.ERROR, Translation.COMMAND_SPAWN_FAIL_CONSOLE);
     }

@@ -8,20 +8,19 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class EnderChestBlokker implements MultiworldAddon, Listener {
+public class EnderChestBlocker implements MultiworldAddon, Listener {
 
   final DataHandler data;
   private boolean enabled = false;
 
-  public EnderChestBlokker(DataHandler data) {
+  public EnderChestBlocker(DataHandler data) {
     this.data = data;
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onBlockPlace(BlockPlaceEvent evt) {
     if (enabled) {
-      if (this.data.getWorldManager()
-          .getFlag(evt.getPlayer().getWorld().getName(), FlagName.CREATIVEWORLD).getAsBoolean()) {
+      if (this.data.getWorldManager().getFlag(evt.getPlayer().getWorld().getName(), FlagName.CREATIVEWORLD).getAsBoolean()) {
         if (evt.getBlockPlaced().getType() == Material.ENDER_CHEST) {
           evt.setCancelled(true);
         }

@@ -3,31 +3,28 @@ package nl.ferrybig.multiworld.command.config;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.ReloadHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 
 public class SaveCommand extends Command {
 
-  private final ReloadHandler r;
-  private final DataHandler d;
+  private final ReloadHandler reloadHandler;
 
-  public SaveCommand(DataHandler data, ReloadHandler reload) {
-    super("save", "Saves data from nl.ferrybig.multiworld to the disk");
-    this.d = data;
-    this.r = reload;
+  public SaveCommand(ReloadHandler reload) {
+    super("save", "Saves multiworld data to the disk");
+    this.reloadHandler = reload;
   }
 
   @Override
   public void runCommand(CommandStack stack) {
     if (this.saveCommand()) {
-      stack.sendMessageBroadcast(MessageType.SUCCES, Translation.COMMAND_SAVE_SUCCES);
+      stack.sendMessageBroadcast(MessageType.SUCCESS, Translation.COMMAND_SAVE_SUCCES);
     } else {
       stack.sendMessageBroadcast(MessageType.ERROR, Translation.COMMAND_SAVE_FAIL);
     }
   }
 
   private boolean saveCommand() {
-    return this.r.save();
+    return this.reloadHandler.save();
   }
 }

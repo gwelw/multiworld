@@ -1,15 +1,13 @@
 package nl.ferrybig.multiworld.command.world;
 
-import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
-import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.MyLogger;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenException;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import nl.ferrybig.multiworld.worldgen.WorldGenerator;
@@ -18,12 +16,9 @@ import org.bukkit.command.CommandSender;
 public class CreateCommand extends Command {
 
   private final DataHandler data;
-  private final MyLogger log;
-
   public CreateCommand(DataHandler data) {
     super("world.create", "Creates a new world");
     this.data = data;
-    this.log = data.getLogger();
   }
 
   @Override
@@ -64,13 +59,13 @@ public class CreateCommand extends Command {
       }
       long seed = (new java.util.Random()).nextLong();
       WorldGenerator env = WorldGenerator.NORMAL;
-      String genOptions = ""; //NOI18N
+      String genOptions = "";
       String genName;
       try {
         if (args.length > 1) {
 
           genName = args[1];
-          int index = genName.indexOf(':'); //NOI18N
+          int index = genName.indexOf(':');
           if (index != -1) {
             genOptions = genName.substring(index + 1);
             genName = genName.substring(0, index);
@@ -106,18 +101,9 @@ public class CreateCommand extends Command {
       try {
         if (this.data.getWorldManager().makeWorld(args[0], env, seed, genOptions)) {
           this.data.scheduleSave();
-          stack.sendMessage(MessageType.SUCCES, Translation.COMMAND_CREATE_SUCCES,
+          stack.sendMessage(MessageType.SUCCESS, Translation.COMMAND_CREATE_SUCCES,
               MessageCache.WORLD.get(args[0]));
         }
-      } catch (InvalidWorldGenOptionsException error) {
-        stack.sendMessageBroadcast(
-            MessageType.ERROR,
-            Translation.COMMAND_CREATE_GET_PRE_ERROR,
-            MessageCache.custom("%error%", error.getMessage()));
-        stack.sendMessage(
-            MessageType.ERROR,
-            Translation.COMMAND_CREATE_GET_ERROR,
-            MessageCache.custom("%error%", error.getMessage()));
       } catch (WorldGenException error) {
         stack.sendMessageBroadcast(
             MessageType.ERROR,

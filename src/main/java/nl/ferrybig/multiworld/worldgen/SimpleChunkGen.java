@@ -1,39 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
 
-/**
- * the gen that gives support for worlds thats exsts only from 1 chunk
- *
- * @author Fernando
- */
 public abstract class SimpleChunkGen extends MultiWorldChunkGen implements ChunkGen {
 
   protected final Map<UUID, ChunkMaker> chunk = new HashMap<>();
 
-  /**
-   * Shapes the basic shape of the chunk
-   *
-   * @param world  The world to make for
-   * @param random The random to use
-   * @param x      The x of the chunk
-   * @param z      The Z of the chunk
-   * @param biomes
-   * @return The bytes of the chunk data
-   */
   @Override
   public ChunkData generateChunkData(World world,
       Random random,
@@ -57,12 +38,6 @@ public abstract class SimpleChunkGen extends MultiWorldChunkGen implements Chunk
     return tmp.toChunkData(this.createChunkData(world));
   }
 
-  /**
-   * Makes the basic shape of chunk
-   *
-   * @param world
-   * @return
-   */
   protected abstract ChunkMaker makeChunk(World world);
 
   @Override
@@ -73,10 +48,6 @@ public abstract class SimpleChunkGen extends MultiWorldChunkGen implements Chunk
   @Override
   public boolean canSpawn(World world, int x, int z) {
     return true;
-  }
-
-  public void gc() {
-    this.chunk.clear();
   }
 
   public Biome getBiome() {

@@ -4,7 +4,6 @@ import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
@@ -12,12 +11,10 @@ import org.bukkit.command.CommandSender;
 
 public class LoadWorldCommand extends Command {
 
-  private final DataHandler data;
   private final WorldHandler worlds;
 
-  public LoadWorldCommand(DataHandler data, WorldHandler worlds) {
+  public LoadWorldCommand(WorldHandler worlds) {
     super("world.load", "Loads a world");
-    this.data = data;
     this.worlds = worlds;
   }
 
@@ -52,8 +49,8 @@ public class LoadWorldCommand extends Command {
     stack.sendMessageBroadcast(null,
         Translation.WORLD_LOADING_START,
         MessageCache.WORLD.get(worldName));
-    if (this.worlds.loadWorld(worldName, stack) != null) {
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+    if (this.worlds.loadWorld(worldName) != null) {
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.WORLD_LOADING_END,
           MessageCache.WORLD.get(worldName));
     } else {

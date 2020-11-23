@@ -120,7 +120,7 @@ public class DefaultCommandStack implements CommandStack {
     private Permissible permissions;
 
     private Builder(CommandStack main, boolean editStack) {
-      this((MessageLogger) main);
+      this(main);
       if (editStack) {
         parent = main.getParent();
       } else {

@@ -18,7 +18,6 @@ public class WorldContainer implements MultiWorldWorldData {
   public WorldContainer(InternalWorld world, boolean loaded) {
     this.world = world;
     this.loaded = loaded;
-
   }
 
   public InternalWorld getWorld() {
@@ -35,14 +34,15 @@ public class WorldContainer implements MultiWorldWorldData {
   }
 
   public void setLoaded(boolean loaded) {
-    if (this.loaded != loaded) {
-      if (loaded) {
-        new WorldLoadEvent(this).call();
-      } else {
-        new WorldUnloadEvent(this).call();
-      }
-      this.loaded = loaded;
+    if (this.loaded == loaded) {
+      return;
     }
+    if (loaded) {
+      new WorldLoadEvent(this).call();
+    } else {
+      new WorldUnloadEvent(this).call();
+    }
+    this.loaded = loaded;
   }
 
   @Override
@@ -66,7 +66,6 @@ public class WorldContainer implements MultiWorldWorldData {
   public boolean getOptionValue(FlagName flag) {
     return MultiWorldPlugin.getInstance().getDataManager().getWorldManager()
         .getFlag(this.getName(), flag).getAsBoolean(flag);
-
   }
 
   @Override

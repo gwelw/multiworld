@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen.populators;
 
 import java.util.Random;
@@ -10,11 +6,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.generator.BlockPopulator;
 
-/**
- * The base class for al <code>BlockPopulators</code> that works only on the surface
- *
- * @author Fernando
- */
 public abstract class SurfacePopulator extends BlockPopulator {
 
   @Override

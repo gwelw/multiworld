@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.Locale;
-import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.WorldGenException;
 import org.bukkit.WorldType;
 
-/**
- * @author ferrybig
- */
 public class WorldTypeBasedGenerator extends MultiWorldChunkGen {
 
   private final WorldType type;

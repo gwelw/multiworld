@@ -5,7 +5,6 @@ import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.WorldHandler;
 import nl.ferrybig.multiworld.data.WorldUtils;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
@@ -13,11 +12,11 @@ import org.bukkit.command.CommandSender;
 
 public class DeleteCommand extends Command {
 
-  private final DataHandler d;
+  private final DataHandler dataHandler;
 
-  public DeleteCommand(DataHandler data, WorldHandler worlds) {
+  public DeleteCommand(DataHandler dataHandler) {
     super("world.delete", "Deletes a world from the MultiWorld index");
-    this.d = data;
+    this.dataHandler = dataHandler;
   }
 
   @Override
@@ -39,7 +38,7 @@ public class DeleteCommand extends Command {
           ArgumentType.TARGET_WORLD);
       return;
     }
-    WorldUtils manager = d.getWorldManager();
+    WorldUtils manager = dataHandler.getWorldManager();
     String targetWorld = stack.getArguments()[0];
     if (manager.getWorldMeta(targetWorld, false) == null) {
       stack.sendMessage(MessageType.ERROR,
@@ -48,7 +47,7 @@ public class DeleteCommand extends Command {
       return;
     }
     if (manager.isWorldLoaded(targetWorld)) {
-      d.getPlugin().pushCommandStack(stack.newStack().setArguments(new String[]
+      dataHandler.getPlugin().pushCommandStack(stack.newStack().setArguments(new String[]
           {
               "unload", targetWorld
           }).build());
@@ -60,8 +59,8 @@ public class DeleteCommand extends Command {
         Translation.COMMAND_DELETE_START,
         MessageCache.WORLD.get(targetWorld));
     if (manager.deleteWorld(targetWorld)) {
-      this.d.scheduleSave();
-      stack.sendMessageBroadcast(MessageType.SUCCES,
+      this.dataHandler.scheduleSave();
+      stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_DELETE_SUCCESS,
           MessageCache.WORLD.get(targetWorld));
     } else {

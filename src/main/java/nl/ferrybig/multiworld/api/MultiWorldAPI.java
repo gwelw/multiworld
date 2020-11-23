@@ -4,6 +4,7 @@ import java.util.Objects;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.exception.ConfigException;
+import nl.ferrybig.multiworld.exception.ConfigurationSaveException;
 
 public class MultiWorldAPI {
 

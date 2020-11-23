@@ -4,17 +4,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class PlayerData extends Object implements Cloneable {
+public class PlayerData implements Cloneable {
 
-  private final ItemStack[] inventory;
+  private final ItemStack[] inventoryContent;
   private final ItemStack[] armor;
   private final int xp;
   private final int level;
   private final int onFire;
 
-  private PlayerData(ItemStack[] arg1, ItemStack[] arg2, int xp, int level, int onFire) {
-    this.inventory = arg1;
-    this.armor = arg2;
+  private PlayerData(ItemStack[] inventoryContent, ItemStack[] armor, int xp, int level, int onFire) {
+    this.inventoryContent = inventoryContent;
+    this.armor = armor;
     this.xp = xp;
     this.level = level;
     this.onFire = onFire;
@@ -35,14 +35,13 @@ public class PlayerData extends Object implements Cloneable {
   }
 
   public void putOnPlayer(Player player) {
-    PlayerInventory inv = player.getInventory();
-    inv.clear();
-    inv.setContents(this.inventory.clone());
-    inv.setArmorContents(this.armor.clone());
+    PlayerInventory inventory = player.getInventory();
+    inventory.clear();
+    inventory.setContents(this.inventoryContent.clone());
+    inventory.setArmorContents(this.armor.clone());
     player.setLevel(level);
     player.setTotalExperience(xp);
     player.setFireTicks(onFire);
-
   }
 
   @Override

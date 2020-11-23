@@ -2,8 +2,8 @@ package nl.ferrybig.multiworld.command;
 
 public enum MessageType {
   ERROR,
-  SUCCES,
+  SUCCESS,
   HIDDEN_ERROR,
-  HIDDEN_SUCCES,
+  HIDDEN_SUCCESS,
   NORMAL;
 }

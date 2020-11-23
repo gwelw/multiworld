@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
-import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World.Environment;
@@ -13,9 +9,6 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
-/**
- * @author Fernando
- */
 public class PluginGen extends MultiWorldChunkGen {
 
   private final Environment environment;
@@ -27,9 +20,9 @@ public class PluginGen extends MultiWorldChunkGen {
 
   @Override
   public void makeWorld(InternalWorld options) throws InvalidWorldGenOptionsException {
-    String genId = ""; //NOI18N
+    String genId = "";
     String pluginName = options.getOptions();
-    int index = pluginName.indexOf(':'); //NOI18N
+    int index = pluginName.indexOf(':');
     if (index != -1) {
       genId = pluginName.substring(index + 1);
       pluginName = pluginName.substring(0, index);

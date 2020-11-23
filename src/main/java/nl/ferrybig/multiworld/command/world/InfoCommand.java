@@ -12,11 +12,11 @@ import org.bukkit.command.CommandSender;
 
 public class InfoCommand extends Command {
 
-  private final WorldHandler w;
+  private final WorldHandler worldHandler;
 
-  public InfoCommand(WorldHandler w) {
+  public InfoCommand(WorldHandler worldHandler) {
     super("info", "Shows information about a world");
-    this.w = w;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -44,9 +44,9 @@ public class InfoCommand extends Command {
           ArgumentType.TARGET_WORLD);
       return;
     }
-    if (w.isWorldExistingAndSendMessage(worldName, stack)) {
-      InternalWorld worldObj = this.w.getWorld(worldName, false);
-      stack.sendMessage(MessageType.HIDDEN_SUCCES,
+    if (worldHandler.isWorldExistingAndSendMessage(worldName, stack)) {
+      InternalWorld worldObj = this.worldHandler.getWorld(worldName, false);
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS,
           Translation.COMMAND_INFO_DATA,
           MessageCache.WORLD.get(worldObj.getName()),
           MessageCache.SEED.get(String.valueOf(worldObj.getSeed())),

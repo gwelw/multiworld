@@ -3,6 +3,7 @@ package nl.ferrybig.multiworld.api.events;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class FlagChanceEvent extends MultiWorldEvent {
 
@@ -18,10 +19,7 @@ public class FlagChanceEvent extends MultiWorldEvent {
     this.newValue = newValue;
   }
 
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
-
+  @NotNull
   @Override
   public HandlerList getHandlers() {
     return handlers;

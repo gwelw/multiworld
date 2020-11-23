@@ -1,8 +1,8 @@
 package nl.ferrybig.multiworld.flags;
 
 import java.util.Locale;
-import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 import nl.ferrybig.multiworld.api.flag.FlagName;
+import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 
 public enum FlagValue {
   UNKNOWN(false), FALSE(false), TRUE(true);
@@ -35,10 +35,6 @@ public enum FlagValue {
   }
 
   public boolean getAsBoolean(FlagName forFlag) {
-    if (this == UNKNOWN) {
-      return forFlag.getDefaultState();
-    } else {
-      return this.getAsBoolean();
-    }
+    return this == UNKNOWN ? forFlag.getDefaultState() : this.getAsBoolean();
   }
 }

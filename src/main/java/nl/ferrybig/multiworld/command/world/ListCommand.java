@@ -1,7 +1,6 @@
 package nl.ferrybig.multiworld.command.world;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
@@ -22,17 +21,12 @@ public class ListCommand extends Command {
 
   @Override
   public void runCommand(CommandStack stack) {
-    stack.sendMessage(MessageType.SUCCES, Translation.COMMAND_LIST_HEADER);
+    stack.sendMessage(MessageType.SUCCESS, Translation.COMMAND_LIST_HEADER);
     InternalWorld[] worlds = this.data.getWorldManager().getWorlds(false);
-    Arrays.sort(worlds, new Comparator<InternalWorld>() {
+    Arrays.sort(worlds, (t, t1) -> t.getName().compareToIgnoreCase(t1.getName()));
 
-      @Override
-      public int compare(InternalWorld t, InternalWorld t1) {
-        return t.getName().compareToIgnoreCase(t1.getName());
-      }
-    });
     for (InternalWorld world : worlds) {
-      stack.sendMessage(MessageType.HIDDEN_SUCCES,
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS,
           Translation.COMMAND_LIST_DATA,
           MessageCache.WORLD.get(world.getName()),
           MessageCache.custom("%loaded%",

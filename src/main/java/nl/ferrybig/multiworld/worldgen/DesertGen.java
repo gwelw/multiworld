@@ -7,23 +7,20 @@ package nl.ferrybig.multiworld.worldgen;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
 import nl.ferrybig.multiworld.exception.WorldGenException;
-import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-/**
- * @author Fernando
- */
 public class DesertGen extends MultiWorldChunkGen {
 
   final double scale = 64.0; //how far apart the tops of the hills are
-  private final Map<String, Short> heightMapMax = new HashMap<String, Short>();
-  private final Map<String, Short> heightMapMin = new HashMap<String, Short>();
+  private final Map<String, Short> heightMapMax = new HashMap<>();
+  private final Map<String, Short> heightMapMin = new HashMap<>();
 
   @Override
   public void makeWorld(InternalWorld world) throws WorldGenException {

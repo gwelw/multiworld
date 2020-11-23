@@ -4,11 +4,11 @@ import nl.ferrybig.multiworld.data.DataHandler;
 
 public abstract class AddonBase implements MultiworldAddon {
 
-  protected final DataHandler data;
+  protected final DataHandler dataHandler;
   private boolean isEnabled;
 
-  public AddonBase(DataHandler data) {
-    this.data = data;
+  public AddonBase(DataHandler dataHandler) {
+    this.dataHandler = dataHandler;
   }
 
   @Override

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.addons;
 
 import java.util.HashMap;
@@ -9,31 +5,28 @@ import java.util.Map;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 
-/**
- * @author Fernando
- */
 public class AddonMap implements SettingsListener, PluginList {
 
   private final DataHandler data;
-  Map<String, AddonHolder<?>> pluginMap = new HashMap<String, AddonHolder<?>>();
+  Map<String, AddonHolder<?>> pluginMap = new HashMap<>();
 
   public AddonMap(DataHandler data) {
 
     this.data = data;
-    this.addPlugin(WorldChatSeperatorPlugin.class, "WorldChatSeperatorPlugin",
+    this.addPlugin(WorldChatSeparatorPlugin.class, "WorldChatSeperatorPlugin",
         DataHandler.OPTIONS_WORLD_CHAT);
     this.addPlugin(NetherPortalHandler.class, "NetherPortalHandler",
         DataHandler.OPTIONS_LINK_NETHER);
     this.addPlugin(EndPortalHandler.class, "EndPortalHandler", DataHandler.OPTIONS_LINK_END);
     this.addPlugin(GameModeAddon.class, "GameModeChancer", DataHandler.OPTIONS_GAMEMODE);
-    this.addPlugin(EnderChestBlokker.class, "EnderChestBlokker",
+    this.addPlugin(EnderChestBlocker.class, "EnderChestBlocker",
         DataHandler.OPTIONS_BLOCK_ENDER_CHESTS);
-    this.addPlugin(WorldSpawnControll.class, "WorldSpawnHandler", DataHandler.OPTIONS_WORLD_SPAWN);
+    this.addPlugin(WorldSpawnControl.class, "WorldSpawnHandler", DataHandler.OPTIONS_WORLD_SPAWN);
   }
 
   private <T extends MultiworldAddon> void addPlugin(Class<T> type, String name,
       DefaultConfigNode<Boolean> config) {
-    pluginMap.put(name.toUpperCase(), new AddonHolder<T>(type, name, data, config));
+    pluginMap.put(name.toUpperCase(), new AddonHolder<>(type, name, data, config));
   }
 
   public AddonHolder<?> getPlugin(String plugin) {
@@ -86,5 +79,4 @@ public class AddonMap implements SettingsListener, PluginList {
   public boolean enabledInsideConfig(String plugin) {
     return getPlugin(plugin).isEnabledInsideConfig();
   }
-
 }

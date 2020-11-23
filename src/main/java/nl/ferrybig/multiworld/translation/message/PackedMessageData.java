@@ -18,5 +18,4 @@ public interface PackedMessageData {
   String transformMessage(String prevFormat);
 
   String getBinary();
-
 }

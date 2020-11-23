@@ -1,7 +1,5 @@
 package nl.ferrybig.multiworld.command.flag;
 
-import nl.ferrybig.multiworld.exception.InvalidFlagException;
-import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 import nl.ferrybig.multiworld.addons.AddonHandler;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.command.ArgumentType;
@@ -11,6 +9,8 @@ import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.data.WorldHandler;
+import nl.ferrybig.multiworld.exception.InvalidFlagException;
+import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
@@ -62,7 +62,7 @@ public class SetFlagCommand extends Command {
         this.d.getWorldManager().setFlag(world.getName(), flag, valueTo);
         this.d.scheduleSave();
         stack.sendMessageBroadcast(
-            MessageType.SUCCES,
+            MessageType.SUCCESS,
             Translation.COMMAND_SETFLAG_SUCCES,
             MessageCache.FLAG.get(flag.toString()),
             MessageCache.FLAG_VALUE.get(valueTo.toString()));

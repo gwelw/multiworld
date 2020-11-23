@@ -5,17 +5,12 @@ import nl.ferrybig.multiworld.data.VersionHandler;
 
 public final class AddonHandler implements VersionHandler, SettingsListener {
 
-  private final DataHandler data;
   private final String version;
-
   private final AddonMap plugins;
 
-
-  public AddonHandler(DataHandler d, String version) {
+  public AddonHandler(DataHandler dataHandler, String version) {
     this.version = version;
-    this.data = d;
-    this.plugins = new AddonMap(data);
-
+    this.plugins = new AddonMap(dataHandler);
   }
 
   @Override

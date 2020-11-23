@@ -1,6 +1,5 @@
 package nl.ferrybig.multiworld.command.flag;
 
-import nl.ferrybig.multiworld.exception.InvalidFlagException;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.chat.Formatter;
 import nl.ferrybig.multiworld.command.ArgumentType;
@@ -10,6 +9,7 @@ import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.data.WorldHandler;
+import nl.ferrybig.multiworld.exception.InvalidFlagException;
 import nl.ferrybig.multiworld.translation.Translation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -32,19 +32,19 @@ public class GetFlagCommand extends Command {
       stack.sendMessageUsage(stack.getCommandLabel(), ArgumentType.valueOf("getflag"),
           ArgumentType.TARGET_WORLD, ArgumentType.valueOf("<flag>"));
     } else {
-      if (split[1].equals("*")) //NOI18N
+      if (split[1].equals("*"))
       {
-        stack.sendMessage(MessageType.HIDDEN_SUCCES, Translation.COMMAND_GETFLAG_SUCCESS);
+        stack.sendMessage(MessageType.HIDDEN_SUCCESS, Translation.COMMAND_GETFLAG_SUCCESS);
         for (String txt : this
             .showWorldFlags(this.d.getWorldManager().getInternalWorld(split[0], true))) {
-          stack.sendMessage(MessageType.SUCCES, txt);
+          stack.sendMessage(MessageType.SUCCESS, txt);
         }
       } else {
         FlagName flag;
         try {
           flag = FlagName.getFlagFromString(split[1]);
           if (w.isWorldExistingAndSendMessage(split[0], stack)) {
-            stack.sendMessage(MessageType.SUCCES,
+            stack.sendMessage(MessageType.SUCCESS,
                 ChatColor.GREEN + flag.toString() + ChatColor.WHITE + " = " + Formatter
                     .printFlag(this.d.getWorldManager().getFlag(split[0], flag)));
           }

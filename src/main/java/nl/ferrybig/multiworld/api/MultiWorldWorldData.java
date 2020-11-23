@@ -1,6 +1,7 @@
 package nl.ferrybig.multiworld.api;
 
 import nl.ferrybig.multiworld.api.flag.FlagName;
+import nl.ferrybig.multiworld.exception.ConfigurationSaveException;
 import org.bukkit.World;
 
 public interface MultiWorldWorldData {

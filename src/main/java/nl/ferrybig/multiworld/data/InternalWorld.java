@@ -1,6 +1,7 @@
 package nl.ferrybig.multiworld.data;
 
-import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import org.bukkit.Bukkit;
@@ -16,7 +17,7 @@ public class InternalWorld {
   private World.Environment worldType = World.Environment.NORMAL;
   private ChunkGenerator worldGen;
   private String options;
-  private EnumMap<FlagName, FlagValue> flags;
+  private Map<FlagName, FlagValue> flags;
   private String fullGeneratorName;
   private String portalLink;
   private String endLink;
@@ -27,20 +28,20 @@ public class InternalWorld {
   }
 
   public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, EnumMap<FlagName, FlagValue> map, String fullGeneratorName,
+      String options, Map<FlagName, FlagValue> map, String fullGeneratorName,
       Difficulty difficulty) {
     this(name, seed, env, gen, options, map, fullGeneratorName, "", "", difficulty);
   }
 
   public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, EnumMap<FlagName, FlagValue> map, String fullGeneratorName, String link,
+      String options, Map<FlagName, FlagValue> map, String fullGeneratorName, String link,
       String endLink, Difficulty difficulty) {
     this(name, seed, env, gen, options, map, fullGeneratorName, link, endLink, difficulty,
         WorldType.NORMAL);
   }
 
   public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, EnumMap<FlagName, FlagValue> map, String fullGeneratorName, String link,
+      String options, Map<FlagName, FlagValue> map, String fullGeneratorName, String link,
       String endLink, Difficulty difficulty, WorldType type) {
     this.worldName = name;
     this.worldSeed = seed;
@@ -90,11 +91,11 @@ public class InternalWorld {
     return this.portalLink;
   }
 
-  public EnumMap<FlagName, FlagValue> getFlags() {
+  public Map<FlagName, FlagValue> getFlags() {
     return flags;
   }
 
-  public void setFlags(EnumMap<FlagName, FlagValue> flags) {
+  public void setFlags(Map<FlagName, FlagValue> flags) {
     this.flags = flags;
   }
 
@@ -161,9 +162,6 @@ public class InternalWorld {
     return this.endLink;
   }
 
-  /**
-   * @return the difficulty
-   */
   public Difficulty getDifficulty() {
     return difficulty;
   }
@@ -181,8 +179,7 @@ public class InternalWorld {
       return false;
     }
     final InternalWorld other = (InternalWorld) obj;
-    if ((this.worldName == null) ? (other.worldName != null)
-        : !this.worldName.equals(other.worldName)) {
+    if (!Objects.equals(this.worldName, other.worldName)) {
       return false;
     }
     if (this.worldSeed != other.worldSeed) {
@@ -191,31 +188,25 @@ public class InternalWorld {
     if (this.worldType != other.worldType) {
       return false;
     }
-    if (this.worldGen != other.worldGen && (this.worldGen == null || !this.worldGen
-        .equals(other.worldGen))) {
+    if (!Objects.equals(this.worldGen, other.worldGen)) {
       return false;
     }
-    if ((this.options == null) ? (other.options != null) : !this.options.equals(other.options)) {
+    if (!Objects.equals(this.options, other.options)) {
       return false;
     }
-    if (this.flags != other.flags && (this.flags == null || !this.flags.equals(other.flags))) {
+    if (!Objects.equals(this.flags, other.flags)) {
       return false;
     }
-    if ((this.fullGeneratorName == null) ? (other.fullGeneratorName != null)
-        : !this.fullGeneratorName.equals(other.fullGeneratorName)) {
+    if (!Objects.equals(this.fullGeneratorName, other.fullGeneratorName)) {
       return false;
     }
-    if ((this.portalLink == null) ? (other.portalLink != null)
-        : !this.portalLink.equals(other.portalLink)) {
+    if (!Objects.equals(this.portalLink, other.portalLink)) {
       return false;
     }
-    if ((this.endLink == null) ? (other.endLink != null) : !this.endLink.equals(other.endLink)) {
+    if (!Objects.equals(this.endLink, other.endLink)) {
       return false;
     }
-    if (this.difficulty != other.difficulty) {
-      return false;
-    }
-    return true;
+    return this.difficulty == other.difficulty;
   }
 
   @Override
