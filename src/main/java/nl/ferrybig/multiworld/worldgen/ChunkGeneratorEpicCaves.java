@@ -17,7 +17,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 public class ChunkGeneratorEpicCaves extends MultiWorldChunkGen {
 
-  final double scale = 32.0; //how far apart the tops of the hills are
+  private static final double SCALE = 32.0; //how far apart the tops of the hills are
   SimplexOctaveGenerator gen;
 
   @Override
@@ -43,17 +43,17 @@ public class ChunkGeneratorEpicCaves extends MultiWorldChunkGen {
     if (this.gen == null) {
       gen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
       gen.setScale(1
-          / scale); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
+          / SCALE); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
     }
     ChunkMaker chunk = new ChunkMaker(world.getMaxHeight());
     double threshold = 0.0; //scroll down to see what happens when you play with this.
     for (int x = 0; x < 16; x++) {
-      int real_x = x + chunkX * 16;
+      int realX = x + chunkX * 16;
       for (int z = 0; z < 16; z++) {
-        int real_z = z + chunkZ * 16;
+        int realZ = z + chunkZ * 16;
         int grassCounter = 0;
         for (int y = 255; y > 0; y--) {
-          if (gen.noise(real_x, y, real_z, 0.5, 0.5) > threshold) {
+          if (gen.noise(realX, y, realZ, 0.5, 0.5) > threshold) {
             if (grassCounter == 0) {
               chunk.setBlock(x, y, z, Material.GRASS);
             } else if (grassCounter < 3) {

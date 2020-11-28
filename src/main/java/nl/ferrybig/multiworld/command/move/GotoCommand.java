@@ -5,7 +5,6 @@ import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
@@ -17,15 +16,13 @@ import org.bukkit.entity.Player;
 
 public class GotoCommand extends Command {
 
-  private final DataHandler h;
-  private final PlayerHandler p;
-  private final WorldHandler w;
+  private final PlayerHandler playerHandler;
+  private final WorldHandler worldHandler;
 
-  public GotoCommand(DataHandler h, PlayerHandler p, WorldHandler w) {
+  public GotoCommand(PlayerHandler playerHandler, WorldHandler worldHandler) {
     super("goto", "Warps yourself to a other world");
-    this.h = h;
-    this.p = p;
-    this.w = w;
+    this.playerHandler = playerHandler;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -40,7 +37,7 @@ public class GotoCommand extends Command {
         return;
       }
       Player targetPlayer = (Player) stack.getSender();
-      InternalWorld worldObj = w.getWorld(args[0], true);
+      InternalWorld worldObj = worldHandler.getWorld(args[0], true);
       if (worldObj == null) {
         stack.sendMessage(MessageType.ERROR, Translation.WORLD_NOT_FOUND,
             MessageCache.WORLD.get(args[0]));
@@ -63,7 +60,7 @@ public class GotoCommand extends Command {
         warpLoc.setY(y);
         warpLoc.setZ(z);
       }
-      p.movePlayer(targetPlayer, warpLoc);
+      playerHandler.movePlayer(targetPlayer, warpLoc);
       stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_MOVE_MESSAGE_SUCCES,
           MessageCache.PLAYER.get(targetPlayer.getName()),

@@ -11,7 +11,7 @@ public class LoadCommand extends Command {
   private final ReloadHandler reloadHandler;
 
   public LoadCommand(ReloadHandler reloadHandler) {
-    super("load", "Reloads the nl.ferrybig.multiworld configuration file");
+    super("load", "Reloads the multiworld configuration file");
     this.reloadHandler = reloadHandler;
   }
 

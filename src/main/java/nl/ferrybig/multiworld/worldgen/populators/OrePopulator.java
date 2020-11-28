@@ -43,11 +43,10 @@ public class OrePopulator extends BlockPopulator {
         continue;
       }
       // Place ore
-      for (BlockFace counter : new BlockFace[]
-          {
-              BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH,
-              BlockFace.UP, BlockFace.SELF
-          }) {
+      BlockFace[] blockFaces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH,
+          BlockFace.SOUTH, BlockFace.UP, BlockFace.SELF};
+
+      for (BlockFace counter : blockFaces) {
         Block tmp = mainBlock.getRelative(counter);
         if (tmp.getType() == Material.STONE) {
           tmp.setType(mat);

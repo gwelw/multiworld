@@ -2,6 +2,7 @@ package nl.ferrybig.multiworld.data;
 
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
+import nl.ferrybig.multiworld.api.events.WorldEvent;
 import nl.ferrybig.multiworld.api.events.WorldLoadEvent;
 import nl.ferrybig.multiworld.api.events.WorldUnloadEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
@@ -37,19 +38,18 @@ public class WorldContainer implements MultiWorldWorldData {
     if (this.loaded == loaded) {
       return;
     }
-    if (loaded) {
-      new WorldLoadEvent(this).call();
-    } else {
-      new WorldUnloadEvent(this).call();
-    }
+
+    WorldEvent worldEvent = loaded ? new WorldLoadEvent(this) : new WorldUnloadEvent(this);
+    worldEvent.call();
+
     this.loaded = loaded;
   }
 
   @Override
   public World getBukkitWorld() {
-    World w = Bukkit.getWorld(this.getName());
-    this.setLoaded(w != null);
-    return w;
+    World bukkitWorld = Bukkit.getWorld(this.getName());
+    this.setLoaded(bukkitWorld != null);
+    return bukkitWorld;
   }
 
   @Override

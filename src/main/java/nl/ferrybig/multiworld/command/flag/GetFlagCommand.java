@@ -16,13 +16,13 @@ import org.bukkit.command.CommandSender;
 
 public class GetFlagCommand extends Command {
 
-  private final DataHandler d;
-  private final WorldHandler w;
+  private final DataHandler dataHandler;
+  private final WorldHandler worldHandler;
 
-  public GetFlagCommand(DataHandler data, WorldHandler w) {
+  public GetFlagCommand(DataHandler data, WorldHandler worldHandler) {
     super("getflag", "Gets the value of a block");
-    this.d = data;
-    this.w = w;
+    this.dataHandler = data;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -36,17 +36,17 @@ public class GetFlagCommand extends Command {
       {
         stack.sendMessage(MessageType.HIDDEN_SUCCESS, Translation.COMMAND_GETFLAG_SUCCESS);
         for (String txt : this
-            .showWorldFlags(this.d.getWorldManager().getInternalWorld(split[0], true))) {
+            .showWorldFlags(this.dataHandler.getWorldManager().getInternalWorld(split[0], true))) {
           stack.sendMessage(MessageType.SUCCESS, txt);
         }
       } else {
         FlagName flag;
         try {
           flag = FlagName.getFlagFromString(split[1]);
-          if (w.isWorldExistingAndSendMessage(split[0], stack)) {
+          if (worldHandler.isWorldExistingAndSendMessage(split[0], stack)) {
             stack.sendMessage(MessageType.SUCCESS,
                 ChatColor.GREEN + flag.toString() + ChatColor.WHITE + " = " + Formatter
-                    .printFlag(this.d.getWorldManager().getFlag(split[0], flag)));
+                    .printFlag(this.dataHandler.getWorldManager().getFlag(split[0], flag)));
           }
         } catch (InvalidFlagException ex) {
           throw new RuntimeException(ex);
@@ -75,7 +75,8 @@ public class GetFlagCommand extends Command {
     for (FlagName flag : flagsNames) {
       out.append("#").append(ChatColor.GREEN).append(flag.toString()).append(ChatColor.WHITE)
           .append(" = ")
-          .append(Formatter.printFlag(this.d.getWorldManager().getFlag(world.getName(), flag)));
+          .append(Formatter.printFlag(this.dataHandler
+              .getWorldManager().getFlag(world.getName(), flag)));
     }
     return out.toString().split("\\#");
   }

@@ -31,14 +31,13 @@ import org.bukkit.World;
 
 public class SmallPlanetPopulator extends AbstractPlanetPopulator {
 
-  public static final Material[] ALLOWED_BLOCKS = {
-      AIR, STONE, DIRT, COBBLESTONE, OAK_PLANKS, NETHERRACK, GLASS, OAK_LOG, BRICKS, CLAY
-  };
+  protected static final Material[] ALLOWED_BLOCKS = {AIR, STONE, DIRT, COBBLESTONE, OAK_PLANKS,
+      NETHERRACK, GLASS, OAK_LOG, BRICKS, CLAY};
 
-  public static final Material[] TOP_LAYER_BLOCK = {GRASS, GLOWSTONE, OAK_LOG, GLASS, SANDSTONE};
+  protected static final Material[] TOP_LAYER_BLOCK = {GRASS, GLOWSTONE, OAK_LOG, GLASS, SANDSTONE};
 
-  public static final Material[] SPECIAL_BLOCKS = {
-      AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE, LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK,
+  protected static final Material[] SPECIAL_BLOCKS = {AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE,
+      LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK,
       DIAMOND_BLOCK, LAPIS_BLOCK, EMERALD_BLOCK
   };
 

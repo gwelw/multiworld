@@ -17,14 +17,14 @@ public class PlayerHandler {
   private static final Logger log = LoggerFactory.getLogger(PlayerHandler.class);
 
   public void moveAllPlayers(World from, World to, String warpOutMsg) {
-    checkArgument(from == to, "From and to location must be differenet!");
+    checkArgument(from == to, "From and to location must be different!");
 
     List<Player> playerList = from.getPlayers();
     Player[] players = new Player[playerList.size()];
-    for (Player tmp : playerList.toArray(players)) {
-      this.movePlayer(tmp, to);
-      if (!"".equals(warpOutMsg)) {
-        tmp.sendMessage(warpOutMsg);
+    for (Player player : playerList.toArray(players)) {
+      this.movePlayer(player, to);
+      if (!warpOutMsg.isBlank()) {
+        player.sendMessage(warpOutMsg);
       }
     }
   }

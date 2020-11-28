@@ -1,11 +1,18 @@
 package nl.ferrybig.multiworld.command;
 
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.getLastColors;
+
 import java.util.Arrays;
 import java.util.Set;
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.translation.message.PackedMessageData;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -15,47 +22,37 @@ import org.bukkit.permissions.Permissible;
 public class DefaultMessageLogger implements MessageLogger {
 
   public static final String DEFAULT_PREFIX =
-      ChatColor.GOLD + "[" + ChatColor.GREEN + "MultiWorld" + ChatColor.GOLD + "] "
-          + ChatColor.WHITE;
-  private final DebugLevel level;
-  private final String prefix;
-  private final CommandSender reciever;
-  private final String errorPrefix;
-  private final String succesPrefix;
+      GOLD + "[" + GREEN + "MultiWorld" + GOLD + "] " + WHITE;
 
-  public DefaultMessageLogger(DebugLevel level, CommandSender reciever, String prefix) {
-    this(level, reciever, prefix, ChatColor.RED.toString(), ChatColor.GREEN.toString());
+  private final String prefix;
+  private final CommandSender receiver;
+  private final String errorPrefix;
+  private final String successPrefix;
+
+  public DefaultMessageLogger(CommandSender receiver, String prefix) {
+    this(receiver, prefix, RED.toString(), GREEN.toString());
   }
 
-  public DefaultMessageLogger(DebugLevel level, CommandSender reciever, String prefix,
-      String errorPrefix, String succesPrefix) {
-    this.level = level;
-    this.reciever = reciever;
+  public DefaultMessageLogger(CommandSender receiver, String prefix,
+      String errorPrefix, String successPrefix) {
+    this.receiver = receiver;
     this.prefix = prefix;
     this.errorPrefix = errorPrefix;
-    this.succesPrefix = succesPrefix;
-  }
-
-  @Override
-  public DebugLevel getDebugLevel() {
-    return this.level;
+    this.successPrefix = successPrefix;
   }
 
   @Override
   public void sendMessage(MessageType type, String message) {
     StringBuilder builder = new StringBuilder();
     if (type != null) {
-      switch (type) {
-        case SUCCESS:
-          builder.append(succesPrefix);
-          break;
-        case ERROR:
-          builder.append(errorPrefix);
-          break;
+      if (type == MessageType.SUCCESS) {
+        builder.append(successPrefix);
+      } else if (type == MessageType.ERROR) {
+        builder.append(errorPrefix);
       }
     }
-    builder.append(message.replace(Command.RESET, ChatColor.getLastColors(prefix)));
-    Utils.sendMessage(reciever, builder.toString(), prefix, true);
+    builder.append(message.replace(Command.RESET, getLastColors(prefix)));
+    Utils.sendMessage(receiver, builder.toString(), prefix, true);
   }
 
   @Override
@@ -69,20 +66,20 @@ public class DefaultMessageLogger implements MessageLogger {
   }
 
   public void sendMessageBroadcast(MessageType type, String message, boolean sendToConsole) {
-    message = message.replace(Command.RESET, ChatColor.getLastColors(prefix));
-    String result = prefix + reciever.getName() + ": " + message;
-    if (reciever instanceof BlockCommandSender && ((BlockCommandSender) reciever).getBlock()
+    message = message.replace(Command.RESET, getLastColors(prefix));
+    String result = prefix + receiver.getName() + ": " + message;
+    if (receiver instanceof BlockCommandSender && ((BlockCommandSender) receiver).getBlock()
         .getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
-      reciever.getServer().getConsoleSender().sendMessage(result);
+      receiver.getServer().getConsoleSender().sendMessage(result);
       return;
     }
-    Set<Permissible> users = reciever.getServer().getPluginManager()
+    Set<Permissible> users = receiver.getServer().getPluginManager()
         .getPermissionSubscriptions(Server.BROADCAST_CHANNEL_ADMINISTRATIVE);
     String colored =
-        prefix + ChatColor.GRAY + ChatColor.ITALIC + "[" + reciever.getName() + ": " + ChatColor
-            .getLastColors(prefix) + message + ChatColor.GRAY + ChatColor.ITALIC + "]";
-    if (!(reciever instanceof ConsoleCommandSender)) {
-      reciever.sendMessage(prefix + message);
+        prefix + GRAY + ITALIC + "[" + receiver.getName() + ": " + getLastColors(prefix) + message
+            + GRAY + ITALIC + "]";
+    if (!(receiver instanceof ConsoleCommandSender)) {
+      receiver.sendMessage(prefix + message);
     }
     for (Permissible user : users) {
       if (user instanceof CommandSender) {
@@ -93,7 +90,7 @@ public class DefaultMessageLogger implements MessageLogger {
 
           }
           target.sendMessage(result);
-        } else if (target != reciever) {
+        } else if (target != receiver) {
           target.sendMessage(colored);
         }
       }
@@ -104,14 +101,6 @@ public class DefaultMessageLogger implements MessageLogger {
   public void sendMessageBroadcast(MessageType type, PackedMessageData... message) {
     this.sendMessageBroadcast(type, this.transformMessage(message),
         !Arrays.asList(message).contains(PackedMessageData.NO_CONSOLE_MESSAGE));
-  }
-
-  @Override
-  public void sendMessageDebug(String message, DebugLevel level) {
-    if (this.getDebugLevel().getLevel() <= level.getLevel()) {
-      // Debugger can log this message
-      this.sendMessage(null, "[" + level.name() + "] " + message);
-    }
   }
 
   @Override
@@ -133,5 +122,4 @@ public class DefaultMessageLogger implements MessageLogger {
     }
     return process;
   }
-
 }

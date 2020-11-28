@@ -20,7 +20,7 @@ public class EnderChestBlocker implements MultiworldAddon, Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onBlockPlace(BlockPlaceEvent evt) {
     if (enabled) {
-      if (this.data.getWorldManager().getFlag(evt.getPlayer().getWorld().getName(), FlagName.CREATIVEWORLD).getAsBoolean()) {
+      if (this.data.getWorldManager().getFlag(evt.getPlayer().getWorld().getName(), FlagName.CREATIVE_WORLD).getAsBoolean()) {
         if (evt.getBlockPlaced().getType() == Material.ENDER_CHEST) {
           evt.setCancelled(true);
         }

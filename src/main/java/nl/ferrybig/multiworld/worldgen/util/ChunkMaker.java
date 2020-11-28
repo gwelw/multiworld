@@ -27,19 +27,19 @@ public final class ChunkMaker implements Cloneable, Serializable {
   }
 
   private void checkAccess(int x, int y, int z) {
-    if ((x < 0) || (x >= 16)) {
+    if (x < 0 || x >= 16) {
       throw new IllegalArgumentException("X must be 0 <= x < 16");
     }
-    if ((y < 0) || (y >= this.ySize)) {
+    if (y < 0 || y >= this.ySize) {
       throw new IllegalArgumentException("Y must be 0 <= x < 128");
     }
-    if ((z < 0) || (z >= 16)) {
+    if (z < 0 || z >= 16) {
       throw new IllegalArgumentException("Z must be 0 <= x < 16");
     }
   }
 
   private void checkSelection(int x1, int y1, int z1, int x2, int y2, int z2) {
-    if ((x1 > x2) || (y1 > y2) || (z1 > z2)) {
+    if (x1 > x2 || y1 > y2 || z1 > z2) {
       throw new IllegalArgumentException("the first point must be smaller than the second");
     }
   }
@@ -48,14 +48,12 @@ public final class ChunkMaker implements Cloneable, Serializable {
     this.checkSelection(loc1.x, loc1.y, loc1.z, loc2.x, loc2.y, loc2.z);
   }
 
-  private void checkPointers(Pointer... list) {
-    for (Pointer p : list) {
-      this.checkPointer(p);
-    }
+  private void checkPointers(Pointer... pointers) {
+    Arrays.stream(pointers).forEach(this::checkPointer);
   }
 
-  private void checkPointer(Pointer p) {
-    if (p.getMainChunk() != this) {
+  private void checkPointer(Pointer pointer) {
+    if (pointer.getMainChunk() != this) {
       throw new IllegalArgumentException("The given pointer does not point to this chunk");
     }
   }
@@ -78,7 +76,6 @@ public final class ChunkMaker implements Cloneable, Serializable {
     this.setB(loc.x, loc.y, loc.z, block);
   }
 
-
   private Material getB(int x, int y, int z) {
     if (chunk[y >> 4] == null) {
       return Material.AIR;
@@ -97,18 +94,18 @@ public final class ChunkMaker implements Cloneable, Serializable {
     return this.getB(loc.x, loc.y, loc.z);
   }
 
-
-  private void action(Pointer loc1, Pointer loc2, ChunkHelper c) {
+  private void action(Pointer loc1, Pointer loc2, ChunkHelper chunkHelper) {
     this.checkPointers(loc1, loc2);
     this.checkSelection(loc1, loc2);
     for (int x = loc1.getX(); x <= loc2.getX(); x++) {
       for (int z = loc1.getZ(); z <= loc2.getZ(); z++) {
         for (int y = loc1.getY(); y <= loc2.getY(); y++) {
-          c.run(new Pointer(x, y, z), loc2, loc1);
+          chunkHelper.run(new Pointer(x, y, z), loc2, loc1);
         }
       }
     }
   }
+
   public void cuboid(int x1, int y1, int z1, int x2, int y2, int z2, Material block) {
     this.cuboid(this.getPointer(x1, y1, z1), this.getPointer(x2, y2, z2), block);
   }
@@ -202,9 +199,7 @@ public final class ChunkMaker implements Cloneable, Serializable {
     private static final long serialVersionUID = 56874873276L;
 
     public final int x;
-
     public final int y;
-
     public final int z;
 
     public Pointer() {
@@ -247,14 +242,14 @@ public final class ChunkMaker implements Cloneable, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-      if (obj == null) {
+    public boolean equals(Object object) {
+      if (object == null) {
         return false;
       }
-      if (getClass() != obj.getClass()) {
+      if (getClass() != object.getClass()) {
         return false;
       }
-      final Pointer other = (Pointer) obj;
+      final Pointer other = (Pointer) object;
       if (this.x != other.x) {
         return false;
       }

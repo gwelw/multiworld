@@ -4,14 +4,14 @@ import java.util.Locale;
 import nl.ferrybig.multiworld.exception.InvalidFlagException;
 
 public enum FlagName {
-  SPAWNMONSTER("SpawnMonster", true),
-  SPAWNANIMAL("SpawnAnimal", true),
+  SPAWN_MONSTER("SpawnMonster", true),
+  SPAWN_ANIMAL("SpawnAnimal", true),
   PVP("PvP", true),
-  REMEMBERSPAWN("RememberSpawn", true),
-  CREATIVEWORLD("CreativeWorld", false),
-  SAVEON("SaveOn", true),
-  RECIEVECHAT("RecieveChat", true),
-  SENDCHAT("SendChat", true);
+  REMEMBER_SPAWN("RememberSpawn", true),
+  CREATIVE_WORLD("CreativeWorld", false),
+  SAVE_ON("SaveOn", true),
+  RECEIVE_CHAT("RecieveChat", true),
+  SEND_CHAT("SendChat", true);
 
   private final String userFriendlyName;
   private final boolean defaultState;

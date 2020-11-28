@@ -15,10 +15,11 @@ import org.bukkit.command.CommandSender;
 
 public class CreateCommand extends Command {
 
-  private final DataHandler data;
-  public CreateCommand(DataHandler data) {
+  private final DataHandler dataHandler;
+
+  public CreateCommand(DataHandler dataHandler) {
     super("world.create", "Creates a new world");
-    this.data = data;
+    this.dataHandler = dataHandler;
   }
 
   @Override
@@ -51,7 +52,7 @@ public class CreateCommand extends Command {
             MessageCache.WORLD.get(args[0]));
         return;
       }
-      if (data.getWorldManager().getInternalWorld(args[0], false) != null) {
+      if (dataHandler.getWorldManager().getInternalWorld(args[0], false) != null) {
         stack.sendMessage(MessageType.ERROR,
             Translation.COMMAND_CREATE_WORLD_EXISTS,
             MessageCache.WORLD.get(args[0]));
@@ -99,8 +100,8 @@ public class CreateCommand extends Command {
           MessageCache.GENERATOR_OPTION.get(genOptions),
           MessageCache.SEED.get(String.valueOf(seed)));
       try {
-        if (this.data.getWorldManager().makeWorld(args[0], env, seed, genOptions)) {
-          this.data.scheduleSave();
+        if (this.dataHandler.getWorldManager().makeWorld(args[0], env, seed, genOptions)) {
+          this.dataHandler.scheduleSave();
           stack.sendMessage(MessageType.SUCCESS, Translation.COMMAND_CREATE_SUCCES,
               MessageCache.WORLD.get(args[0]));
         }

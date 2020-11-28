@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class PlayerData implements Cloneable {
+public class PlayerData {
 
   private final ItemStack[] inventoryContent;
   private final ItemStack[] armor;
@@ -42,10 +42,5 @@ public class PlayerData implements Cloneable {
     player.setLevel(level);
     player.setTotalExperience(xp);
     player.setFireTicks(onFire);
-  }
-
-  @Override
-  public PlayerData clone() throws CloneNotSupportedException {
-    return (PlayerData) super.clone();
   }
 }

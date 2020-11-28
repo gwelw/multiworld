@@ -20,9 +20,9 @@ public class FlatLandChunkGenerator extends SimpleChunkGen {
   }
 
   @Override
-  protected ChunkMaker makeChunk(World w) {
-    ChunkMaker chunk = new ChunkMaker(w.getMaxHeight());
-    int seeLevel = w.getSeaLevel();
+  protected ChunkMaker makeChunk(World world) {
+    ChunkMaker chunk = new ChunkMaker(world.getMaxHeight());
+    int seeLevel = world.getSeaLevel();
     int lowestDirt = seeLevel - 3;
     chunk.cuboid(0, 0, 0, 15, 0, 15, Material.BEDROCK);
     chunk.cuboid(0, 1, 0, 15, lowestDirt - 1, 15, Material.STONE);
@@ -44,8 +44,8 @@ public class FlatLandChunkGenerator extends SimpleChunkGen {
     }
     try {
       byte number = Byte.parseByte(options);
-      if (number > 127 || number < 0) {
-        throw new InvalidWorldGenOptionsException("Argument must be lower than 128");
+      if (number < 0) {
+        throw new InvalidWorldGenOptionsException("Argument must be greater than zero");
       }
       return number;
     } catch (NumberFormatException e) {

@@ -22,21 +22,21 @@ import org.bukkit.util.ChatPaginator;
 
 public class HelpCommand extends Command {
 
-  private final DataHandler data;
+  private final DataHandler dataHandler;
 
-  public HelpCommand(DataHandler data) {
-    super("help", "Gets help for nl.ferrybig.multiworld");
-    this.data = data;
+  public HelpCommand(DataHandler dataHandler) {
+    super("help", "Gets help for multiworld");
+    this.dataHandler = dataHandler;
   }
 
   protected static int damerauLevenshteinDistance(String s1, String s2) {
-    if ((s1 == null) && (s2 == null)) {
+    if (s1 == null && s2 == null) {
       return 0;
     }
-    if ((s1 != null) && (s2 == null)) {
+    if (s1 != null && s2 == null) {
       return s1.length();
     }
-    if ((s1 == null) && (s2 != null)) {
+    if (s1 == null && s2 != null) {
       return s2.length();
     }
     int s1Len = s1.length();
@@ -67,11 +67,10 @@ public class HelpCommand extends Command {
           H[(i + 1)][(j + 1)] = H[i][j];
           DB = j;
         } else {
-          H[(i + 1)][(j + 1)] = (Math.min(H[i][j], Math.min(H[(i + 1)][j], H[i][(j + 1)])) + 1);
+          H[i + 1][j + 1] = Math.min(H[i][j], Math.min(H[i + 1][j], H[i][j + 1])) + 1;
         }
 
-        H[(i + 1)][(j + 1)] = Math
-            .min(H[(i + 1)][(j + 1)], H[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
+        H[i + 1][j + 1] = Math.min(H[i + 1][j + 1], H[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
       }
       sd.put(s1.charAt(i - 1), i);
     }
@@ -80,8 +79,8 @@ public class HelpCommand extends Command {
 
   @Override
   public void runCommand(CommandStack stack) {
-    if (this.data.getPlugin().getServer().getHelpMap().getIgnoredPlugins()
-        .contains(this.data.getPlugin().getDescription().getName())) {
+    if (this.dataHandler.getPlugin().getServer().getHelpMap().getIgnoredPlugins()
+        .contains(this.dataHandler.getPlugin().getDescription().getName())) {
       stack.sendMessage(MessageType.ERROR, Translation.COMMAND_HELP_TURNED_OFF);
       return;
     }
@@ -154,7 +153,8 @@ public class HelpCommand extends Command {
       searchString = searchString.substring(1);
     }
     if (searchString.isEmpty()) {
-      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().commands
+      for (Map.Entry<String, Command> command : this.dataHandler.getPlugin()
+          .getCommandHandler().commands
           .entrySet()) {
         String trimmedTopic = command.getKey();
         if (!trimmedTopic.equals("snowman")) {
@@ -163,7 +163,8 @@ public class HelpCommand extends Command {
         }
       }
     } else {
-      for (Map.Entry<String, Command> command : this.data.getPlugin().getCommandHandler().commands
+      for (Map.Entry<String, Command> command : this.dataHandler.getPlugin()
+          .getCommandHandler().commands
           .entrySet()) {
         String trimmedTopic = command.getKey();
         if (!trimmedTopic.equals("snowman")) {

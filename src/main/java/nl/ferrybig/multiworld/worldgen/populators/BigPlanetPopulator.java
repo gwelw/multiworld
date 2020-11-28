@@ -27,49 +27,19 @@ import org.bukkit.World;
 
 public class BigPlanetPopulator extends AbstractPlanetPopulator {
 
-  /**
-   * The main block where an planet from exists
-   */
-  public static final Material[] ALLOWED_BLOCKS = {
-      STONE, DIRT, COBBLESTONE, SANDSTONE
-  };
-  /**
-   * The materials where the top layer of an planet from exists
-   */
-  public static final Material[] TOP_LAYER_BLOCK = {
-      GRASS, NETHERRACK, SOUL_SAND, SAND
-  };
-  /**
-   * The special blocks only at the middle of an planet
-   */
-  public static final Material[] SPECIAL_BLOCKS = {
-      AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE, LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK,
-      DIAMOND_BLOCK, LAPIS_BLOCK, EMERALD_BLOCK
-  };
-  /**
-   * The maximum size of an planet
-   */
+  protected static final Material[] ALLOWED_BLOCKS = {STONE, DIRT, COBBLESTONE, SANDSTONE};
+
+  protected static final Material[] TOP_LAYER_BLOCK = {GRASS, NETHERRACK, SOUL_SAND, SAND};
+
+  protected static final Material[] SPECIAL_BLOCKS = {AIR, GOLD_ORE, IRON_ORE, REDSTONE_ORE,
+      LAPIS_ORE, CAKE, GOLD_BLOCK, IRON_BLOCK, DIAMOND_BLOCK, LAPIS_BLOCK, EMERALD_BLOCK};
+
   public static final int MAX_SIZE = 30;
-  /**
-   * The minium size of an planet
-   */
   public static final int MIN_SIZE = 5;
-  /**
-   * The maximum population depth
-   */
   public static final int MAX_POPULATE_DEPTH = 1;
-  /**
-   * When this is higher than MAX_POPULATE_DEPTH, don't populate this chunk
-   */
+
   private int populateDepth;
 
-  /**
-   * Populates the world with planets
-   *
-   * @param world  the world to work on
-   * @param random the random to use
-   * @param source the source chunk
-   */
   @Override
   public void populate(World world, Random random, Chunk source) {
     if (this.populateDepth > MAX_POPULATE_DEPTH) {

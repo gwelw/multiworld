@@ -21,30 +21,32 @@ public class WorldChatSeparatorPlugin implements Listener, MultiworldAddon {
   }
 
   @EventHandler(priority = EventPriority.NORMAL)
-  public void onChat(AsyncPlayerChatEvent evt) {
+  public void onChat(AsyncPlayerChatEvent event) {
     if (!isEnabled) {
       return;
     }
-    InternalWorld w = dataHandler.getWorldManager()
-        .getInternalWorld(evt.getPlayer().getWorld().getName(), true);
-    boolean maySendChat = dataHandler.getWorldManager().getFlag(w.getName(), FlagName.SENDCHAT)
+
+    InternalWorld internalWorld = dataHandler.getWorldManager()
+        .getInternalWorld(event.getPlayer().getWorld().getName(), true);
+    boolean maySendChat = dataHandler.getWorldManager().getFlag(internalWorld.getName(), FlagName.SEND_CHAT)
         .getAsBoolean();
     if (!maySendChat) {
-      List<Player> worldPlayers = evt.getPlayer().getWorld().getPlayers();
-      Iterator<Player> recipients = evt.getRecipients().iterator();
-      Player p;
+      List<Player> worldPlayers = event.getPlayer().getWorld().getPlayers();
+      Iterator<Player> recipients = event.getRecipients().iterator();
+      Player player;
       while (recipients.hasNext()) {
-        p = recipients.next();
-        if (!worldPlayers.contains(p)) {
+        player = recipients.next();
+        if (!worldPlayers.contains(player)) {
           recipients.remove();
         }
       }
       return;
     }
+
     for (InternalWorld world : dataHandler.getWorldManager().getLoadedWorlds()) {
-      if (world != w && !dataHandler.getWorldManager().getFlag(world.getName(), FlagName.RECIEVECHAT)
+      if (world != internalWorld && !dataHandler.getWorldManager().getFlag(world.getName(), FlagName.RECEIVE_CHAT)
           .getAsBoolean()) {
-        evt.getRecipients().removeAll(world.getWorld().getPlayers());
+        event.getRecipients().removeAll(world.getWorld().getPlayers());
       }
     }
   }

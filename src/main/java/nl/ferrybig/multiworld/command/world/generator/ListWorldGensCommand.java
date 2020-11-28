@@ -21,7 +21,7 @@ public class ListWorldGensCommand extends Command {
         continue;
       }
       stack.sendMessage(MessageType.HIDDEN_SUCCESS, g.getName());
-      stack.sendMessage(MessageType.HIDDEN_SUCCESS, "+- " + g.getDestr());
+      stack.sendMessage(MessageType.HIDDEN_SUCCESS, "+- " + g.getDescription());
       stack.sendMessage(MessageType.HIDDEN_SUCCESS, "+- " + Formatter.printSpeed(g.getSpeed()));
     }
   }

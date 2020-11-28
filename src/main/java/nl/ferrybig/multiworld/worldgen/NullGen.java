@@ -6,7 +6,7 @@ import org.bukkit.World;
 
 public class NullGen extends SimpleChunkGen {
 
-  private static NullGen INSTANCE = new NullGen();
+  private static final NullGen INSTANCE = new NullGen();
 
   public static NullGen get() {
     return INSTANCE;
@@ -18,8 +18,8 @@ public class NullGen extends SimpleChunkGen {
   }
 
   @Override
-  protected ChunkMaker makeChunk(World w) {
-    return new ChunkMaker(w);
+  protected ChunkMaker makeChunk(World world) {
+    return new ChunkMaker(world);
   }
 
 }

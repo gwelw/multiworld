@@ -5,7 +5,6 @@ import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.data.PlayerHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
@@ -18,15 +17,13 @@ import org.bukkit.entity.Player;
 
 public class MoveCommand extends Command {
 
-  private final PlayerHandler p;
-  private final WorldHandler w;
-  private final DataHandler d;
+  private final PlayerHandler playerHandler;
+  private final WorldHandler worldHandler;
 
-  public MoveCommand(DataHandler data, PlayerHandler player, WorldHandler worlds) {
+  public MoveCommand(PlayerHandler player, WorldHandler worlds) {
     super("move", "Moves a player to a other world");
-    this.p = player;
-    this.w = worlds;
-    this.d = data;
+    this.playerHandler = player;
+    this.worldHandler = worlds;
   }
 
   @Override
@@ -37,7 +34,7 @@ public class MoveCommand extends Command {
           ArgumentType.TARGET_PLAYER, ArgumentType.TARGET_WORLD);
     } else {
       Player targetPlayer = Bukkit.getPlayer(args[0]);
-      InternalWorld worldObj = w.getWorld(args[1], true);
+      InternalWorld worldObj = worldHandler.getWorld(args[1], true);
       if (targetPlayer == null) {
         stack.sendMessage(MessageType.ERROR, Translation.PLAYER_NOT_FOUND,
             MessageCache.PLAYER.get(args[0]));
@@ -65,7 +62,7 @@ public class MoveCommand extends Command {
         warpLoc.setY(y);
         warpLoc.setZ(z);
       }
-      p.movePlayer(targetPlayer, warpLoc);
+      playerHandler.movePlayer(targetPlayer, warpLoc);
       stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.COMMAND_MOVE_MESSAGE_SUCCES,
           MessageCache.PLAYER.get(targetPlayer.getName()),

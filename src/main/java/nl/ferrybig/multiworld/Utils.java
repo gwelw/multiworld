@@ -1,6 +1,5 @@
 package nl.ferrybig.multiworld;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import nl.ferrybig.multiworld.command.CommandStack;
@@ -14,11 +13,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.util.ChatPaginator;
 
-public class Utils implements Serializable {
+public final class Utils {
 
-  private static final long serialVersionUID = 98487365L;
   public static final String COMMAND_STARTER = "command.";
-  public static final String PERMISSION_STARTER = "nl.ferrybig.multiworld.";
+  public static final String PERMISSION_STARTER = "multiworld.";
 
   private Utils() {
   }
@@ -50,10 +48,6 @@ public class Utils implements Serializable {
     return true;
   }
 
-  public static String getPlayerName(CommandSender sender) {
-    return sender.getName();
-  }
-
   public static InternalWorld getWorld(String name, DataHandler handler, boolean mustBeLoaded)
       throws UnknownWorldException {
     Utils.checkWorldName(name);
@@ -72,21 +66,21 @@ public class Utils implements Serializable {
     return sender.hasPermission(PERMISSION_STARTER + permission);
   }
 
-  public static String[] parseArguments(String[] list) {
-    int numberOfArguments = list.length;
+  public static String[] parseArguments(String[] arguments) {
+    int numberOfArguments = arguments.length;
     boolean hasFoundToken = false;
     ArrayList<String> argList = new ArrayList<>(numberOfArguments);
-    String tmp = null;
+    StringBuilder tmp = null;
     int index = 0;
-    for (String i : list) {
-      int quotes = Integer.numberOfTrailingZeros(i.concat(" ").split("\"").length - 1);
+    for (String argument : arguments) {
+      int quotes = Integer.numberOfTrailingZeros(argument.concat(" ").split("\"").length - 1);
       if (quotes == 0) {
         hasFoundToken = !hasFoundToken;
         if (hasFoundToken) {
           numberOfArguments--;
-          tmp = i.concat(" ");
+          tmp = new StringBuilder(argument.concat(" "));
         } else {
-          argList.add(index++, tmp.concat(i)
+          argList.add(index++, tmp.toString().concat(argument)
               .replaceAll("\"\"", "\u0000")
               .replaceAll("\"", "")
               .replaceAll("\u0000", "\""));
@@ -94,22 +88,21 @@ public class Utils implements Serializable {
         }
       } else if (hasFoundToken) {
         numberOfArguments--;
-        tmp = tmp + i + " ";
+        tmp.append(argument).append(" ");
       } else {
-        argList.add(index++, i
+        argList.add(index++, argument
             .replaceAll("\"\"", "\u0000")
             .replaceAll("\"", "")
             .replaceAll("\u0000", "\""));
       }
     }
     if (tmp != null) {
-      argList.add(tmp);
+      argList.add(tmp.toString());
     }
     return argList.toArray(new String[argList.size()]);
   }
 
   public static void sendMessage(CommandSender s, String msg) {
-
     sendMessage(s, msg, 5);
   }
 
@@ -132,58 +125,53 @@ public class Utils implements Serializable {
     sendMessage0(s, msg, prefix, addPrefixToFirstOutput);
   }
 
-  private static void sendMessage0(CommandSender s, String msg, String prefix,
+  private static void sendMessage0(CommandSender sender, String message, String prefix,
       boolean addPrefixToFirstOutput) {
-    if (s instanceof ConsoleCommandSender) {
+    if (sender instanceof ConsoleCommandSender) {
       if (addPrefixToFirstOutput) {
-        s.sendMessage(prefix + msg);
+        sender.sendMessage(prefix + message);
       } else {
-        s.sendMessage(msg);
+        sender.sendMessage(message);
       }
       return;
     }
+
     final int prefixSubstract = countOccurrences(prefix, ChatColor.COLOR_CHAR) * 2;
     final int prefixLength = prefix.length() - prefixSubstract;
     final int maxLineLenght = ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
-    if ((msg.length() + (addPrefixToFirstOutput ? prefixLength : 0)) > maxLineLenght) {
-      char color;
-      {
-        final int lastIndexOf = prefix.lastIndexOf(ChatColor.COLOR_CHAR);
-        if (lastIndexOf != -1) {
-          color = prefix.charAt(lastIndexOf + 1);
-        } else {
-          color = 'f';
-        }
-      }
+
+    if ((message.length() + (addPrefixToFirstOutput ? prefixLength : 0)) > maxLineLenght) {
+      int lastIndex = prefix.lastIndexOf(ChatColor.COLOR_CHAR);
+      char color = lastIndex != -1 ? prefix.charAt(lastIndex + 1) : 'f';
       int charsLeft = 60;
-      String[] parts = msg.split(" ");
-      StringBuilder b = new StringBuilder(maxLineLenght);
+      String[] parts = message.split(" ");
+      StringBuilder stringBuilder = new StringBuilder(maxLineLenght);
       if (addPrefixToFirstOutput) {
-        b.append(prefix);
+        stringBuilder.append(prefix);
         charsLeft -= prefixLength;
       }
-      for (String i : parts) {
-        if (i.lastIndexOf(0x00A7) != -1) {
-          assert i.lastIndexOf(0x00A7) + 1 < i.length();
-          color = i.charAt(i.lastIndexOf(0x00A7) + 1);
+      for (String part : parts) {
+        if (part.lastIndexOf(0x00A7) != -1) {
+          assert part.lastIndexOf(0x00A7) + 1 < part.length();
+          color = part.charAt(part.lastIndexOf(0x00A7) + 1);
         }
-        if ((charsLeft - i.length()) < 1) {
-          s.sendMessage(b.toString());
+        if ((charsLeft - part.length()) < 1) {
+          sender.sendMessage(stringBuilder.toString());
           charsLeft = maxLineLenght - prefixLength;
-          b.setLength(0);
-          b = new StringBuilder(maxLineLenght);
-          b.append(prefix);
-          b.append('\u00A7').append(color);
+          stringBuilder.setLength(0);
+          stringBuilder = new StringBuilder(maxLineLenght);
+          stringBuilder.append(prefix);
+          stringBuilder.append('\u00A7').append(color);
         }
-        charsLeft -= i.length() + 1;
-        charsLeft += countOccurrences(i, ChatColor.COLOR_CHAR) * 2;
-        b.append(i).append(" ");
+        charsLeft -= part.length() + 1;
+        charsLeft += countOccurrences(part, ChatColor.COLOR_CHAR) * 2;
+        stringBuilder.append(part).append(" ");
       }
-      if (b.length() != 0) {
-        s.sendMessage(b.toString());
+      if (stringBuilder.length() != 0) {
+        sender.sendMessage(stringBuilder.toString());
       }
     } else {
-      s.sendMessage(addPrefixToFirstOutput ? prefix + msg : msg);
+      sender.sendMessage(addPrefixToFirstOutput ? prefix + message : message);
     }
   }
 

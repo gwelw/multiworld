@@ -1,12 +1,16 @@
 package nl.ferrybig.multiworld.data;
 
+import static java.util.Objects.hash;
+
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 
@@ -19,48 +23,13 @@ public class InternalWorld {
   private String options;
   private Map<FlagName, FlagValue> flags;
   private String fullGeneratorName;
-  private String portalLink;
-  private String endLink;
+  private String portalLink = "";
+  private String endLink = "";
   private Difficulty difficulty = Difficulty.NORMAL;
   private WorldType type = WorldType.NORMAL;
 
-  public InternalWorld() {
-  }
-
-  public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, Map<FlagName, FlagValue> map, String fullGeneratorName,
-      Difficulty difficulty) {
-    this(name, seed, env, gen, options, map, fullGeneratorName, "", "", difficulty);
-  }
-
-  public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, Map<FlagName, FlagValue> map, String fullGeneratorName, String link,
-      String endLink, Difficulty difficulty) {
-    this(name, seed, env, gen, options, map, fullGeneratorName, link, endLink, difficulty,
-        WorldType.NORMAL);
-  }
-
-  public InternalWorld(String name, long seed, World.Environment env, ChunkGenerator gen,
-      String options, Map<FlagName, FlagValue> map, String fullGeneratorName, String link,
-      String endLink, Difficulty difficulty, WorldType type) {
-    this.worldName = name;
-    this.worldSeed = seed;
-    this.worldType = env;
-    this.worldGen = gen;
-    this.options = options;
-    this.flags = map;
-    this.fullGeneratorName = fullGeneratorName;
-    this.portalLink = link != null ? link : "";
-    this.endLink = endLink != null ? endLink : "";
-    this.difficulty = difficulty;
-  }
-
   public WorldType getType() {
     return type;
-  }
-
-  public void setType(WorldType type) {
-    this.type = type;
   }
 
   public World getWorld() {
@@ -83,10 +52,6 @@ public class InternalWorld {
     return this.options;
   }
 
-  public void setOptions(String options) {
-    this.options = options;
-  }
-
   public String getPortalWorld() {
     return this.portalLink;
   }
@@ -95,67 +60,12 @@ public class InternalWorld {
     return flags;
   }
 
-  public void setFlags(Map<FlagName, FlagValue> flags) {
-    this.flags = flags;
-  }
-
   public ChunkGenerator getGen() {
     return this.worldGen;
   }
 
-  public String getWorldType() {
-    if (this.worldGen != null) {
-      if (this.getFullGeneratorName().equals("NULLGEN")) {
-        if (this.worldType == World.Environment.NORMAL) {
-          return "Normal world with unknown external generator";
-        } else if (this.worldType == World.Environment.NETHER) {
-          return "Nether world with unknown external generator";
-        } else if (this.worldType == World.Environment.THE_END) {
-          return "End world with unknown external generator";
-        }
-      } else if (this.getFullGeneratorName().startsWith("PLUGIN")) {
-        if (this.worldType == World.Environment.NORMAL) {
-          return "Normal world with external generator: " + this.getOptions();
-        } else if (this.worldType == World.Environment.NETHER) {
-          return "Nether world with external generator: " + this.getOptions();
-        } else if (this.worldType == World.Environment.THE_END) {
-          return "End world with external generator: " + this.getOptions();
-        }
-      } else {
-        if (this.worldType == World.Environment.NORMAL) {
-          return "Normal world with internal generator: " + this.getFullGeneratorName() + (
-              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
-        } else if (this.worldType == World.Environment.NETHER) {
-          return "Nether world with internal generator: " + this.getFullGeneratorName() + (
-              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
-        } else if (this.worldType == World.Environment.THE_END) {
-          return "End world with internal generator: " + this.getFullGeneratorName() + (
-              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
-        }
-      }
-    } else {
-      if (this.worldType == World.Environment.NORMAL) {
-        return "Normal world";
-      } else if (this.worldType == World.Environment.NETHER) {
-        return "Nether world";
-      } else if (this.worldType == World.Environment.THE_END) {
-        return "End world";
-      }
-    }
-
-    return "Unknown world";
-  }
-
-  public void setWorldType(World.Environment worldType) {
-    this.worldType = worldType;
-  }
-
   public String getFullGeneratorName() {
     return this.fullGeneratorName;
-  }
-
-  public void setFullGeneratorName(String madeBy) {
-    this.fullGeneratorName = madeBy;
   }
 
   public String getEndPortalWorld() {
@@ -166,98 +76,146 @@ public class InternalWorld {
     return difficulty;
   }
 
-  public void setDifficulty(Difficulty difficulty) {
+  public String getWorldType() {
+    if (this.worldGen == null) {
+      if (this.worldType == Environment.NORMAL) {
+        return "Normal world";
+      } else if (this.worldType == Environment.NETHER) {
+        return "Nether world";
+      } else if (this.worldType == Environment.THE_END) {
+        return "End world";
+      }
+    } else {
+      if (this.getFullGeneratorName().equals("NULLGEN")) {
+        if (this.worldType == Environment.NORMAL) {
+          return "Normal world with unknown external generator";
+        } else if (this.worldType == Environment.NETHER) {
+          return "Nether world with unknown external generator";
+        } else if (this.worldType == Environment.THE_END) {
+          return "End world with unknown external generator";
+        }
+      } else if (this.getFullGeneratorName().startsWith("PLUGIN")) {
+        if (this.worldType == Environment.NORMAL) {
+          return "Normal world with external generator: " + this.getOptions();
+        } else if (this.worldType == Environment.NETHER) {
+          return "Nether world with external generator: " + this.getOptions();
+        } else if (this.worldType == Environment.THE_END) {
+          return "End world with external generator: " + this.getOptions();
+        }
+      } else {
+        if (this.worldType == Environment.NORMAL) {
+          return "Normal world with internal generator: " + this.getFullGeneratorName() + (
+              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
+        } else if (this.worldType == Environment.NETHER) {
+          return "Nether world with internal generator: " + this.getFullGeneratorName() + (
+              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
+        } else if (this.worldType == Environment.THE_END) {
+          return "End world with internal generator: " + this.getFullGeneratorName() + (
+              this.getOptions().isEmpty() ? "" : ": " + this.getOptions());
+        }
+      }
+    }
+
+    return "Unknown world";
+  }
+
+  public InternalWorld setWorldName(String worldName) {
+    this.worldName = worldName;
+    return this;
+  }
+
+  public InternalWorld setWorldSeed(long worldSeed) {
+    this.worldSeed = worldSeed;
+    return this;
+  }
+
+  public InternalWorld setWorldType(Environment worldType) {
+    this.worldType = worldType;
+    return this;
+  }
+
+  public InternalWorld setWorldGen(ChunkGenerator worldGen) {
+    this.worldGen = worldGen;
+    return this;
+  }
+
+  public InternalWorld setOptions(String options) {
+    this.options = options;
+    return this;
+  }
+
+  public InternalWorld setFlags(
+      Map<FlagName, FlagValue> flags) {
+    this.flags = flags;
+    return this;
+  }
+
+  public InternalWorld setFullGeneratorName(String fullGeneratorName) {
+    this.fullGeneratorName = fullGeneratorName;
+    return this;
+  }
+
+  public InternalWorld setPortalLink(String portalLink) {
+    this.portalLink = portalLink;
+    return this;
+  }
+
+  public InternalWorld setEndLink(String endLink) {
+    this.endLink = endLink;
+    return this;
+  }
+
+  public InternalWorld setDifficulty(Difficulty difficulty) {
     this.difficulty = difficulty;
+    return this;
+  }
+
+  public InternalWorld setType(WorldType type) {
+    this.type = type;
+    return this;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof InternalWorld)) {
       return false;
     }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final InternalWorld other = (InternalWorld) obj;
-    if (!Objects.equals(this.worldName, other.worldName)) {
-      return false;
-    }
-    if (this.worldSeed != other.worldSeed) {
-      return false;
-    }
-    if (this.worldType != other.worldType) {
-      return false;
-    }
-    if (!Objects.equals(this.worldGen, other.worldGen)) {
-      return false;
-    }
-    if (!Objects.equals(this.options, other.options)) {
-      return false;
-    }
-    if (!Objects.equals(this.flags, other.flags)) {
-      return false;
-    }
-    if (!Objects.equals(this.fullGeneratorName, other.fullGeneratorName)) {
-      return false;
-    }
-    if (!Objects.equals(this.portalLink, other.portalLink)) {
-      return false;
-    }
-    if (!Objects.equals(this.endLink, other.endLink)) {
-      return false;
-    }
-    return this.difficulty == other.difficulty;
+    InternalWorld that = (InternalWorld) o;
+    return worldSeed == that.worldSeed &&
+        Objects.equals(worldName, that.worldName) &&
+        worldType == that.worldType &&
+        Objects.equals(worldGen, that.worldGen) &&
+        Objects.equals(fullGeneratorName, that.fullGeneratorName) &&
+        Objects.equals(options, that.options) &&
+        Objects.equals(flags, that.flags) &&
+        Objects.equals(portalLink, that.portalLink) &&
+        Objects.equals(endLink, that.endLink) &&
+        difficulty == that.difficulty;
   }
 
   @Override
   public int hashCode() {
-    int hash = 0x82746283;
-    hash ^= (this.worldName != null ? this.worldName.hashCode() : 0);
-    hash ^= (int) (this.worldSeed ^ (this.worldSeed >>> 32));
-    hash ^= (this.worldType != null ? this.worldType.hashCode() : 0);
-    hash ^= (this.worldGen != null ? this.worldGen.hashCode() : 0);
-    hash ^= (this.options != null ? this.options.hashCode() : 0);
-    hash ^= (this.flags != null ? this.flags.hashCode() : 0);
-    hash ^= (this.fullGeneratorName != null ? this.fullGeneratorName.hashCode() : 0);
-    hash ^= (this.portalLink != null ? this.portalLink.hashCode() : 0);
-    hash ^= (this.endLink != null ? this.endLink.hashCode() : 0);
-    hash ^= this.difficulty.ordinal() * 123456;
-    return hash;
+    return hash(worldName, worldSeed, worldType, worldGen, options, flags, portalLink, endLink,
+        difficulty, fullGeneratorName);
   }
 
   @Override
   public String toString() {
-    return "InternalWorld{"
-        + "worldName=" + worldName
-        + ", worldSeed=" + worldSeed
-        + ", worldType=" + worldType
-        + ", worldGen=" + worldGen
-        + ", options=" + options
-        + ", flags=" + flags
-        + ", madeBy=" + fullGeneratorName
-        + ", portalLink=" + portalLink
-        + ", endLink=" + endLink
-        + ", difficulty=" + difficulty
-        + '}';
-  }
-
-  public void setWorldName(String worldName) {
-    this.worldName = worldName;
-  }
-
-  public void setWorldSeed(long worldSeed) {
-    this.worldSeed = worldSeed;
-  }
-
-  public void setWorldGen(ChunkGenerator worldGen) {
-    this.worldGen = worldGen;
-  }
-
-  public void setPortalLink(String portalLink) {
-    this.portalLink = portalLink;
-  }
-
-  public void setEndLink(String endLink) {
-    this.endLink = endLink;
+    return new StringJoiner(", ", InternalWorld.class.getSimpleName() + "[", "]")
+        .add("worldName='" + worldName + "'")
+        .add("worldSeed=" + worldSeed)
+        .add("worldType=" + worldType)
+        .add("worldGen=" + worldGen)
+        .add("options='" + options + "'")
+        .add("flags=" + flags)
+        .add("fullGeneratorName='" + fullGeneratorName + "'")
+        .add("portalLink='" + portalLink + "'")
+        .add("endLink='" + endLink + "'")
+        .add("difficulty=" + difficulty)
+        .add("type=" + type)
+        .toString();
   }
 }

@@ -154,8 +154,6 @@ public class FlyingIslandsGenerator extends ChunkGenerator implements ChunkGen {
           }
 
         }
-
-
       }
     }
     return chunk;

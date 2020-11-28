@@ -30,27 +30,12 @@ public abstract class ConfigNode<T> {
     to.set(this.configPath, value);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    @SuppressWarnings(value = "unchecked") final DefaultConfigNode<?> other = (DefaultConfigNode<?>) obj;
-    if (!Objects.equals(this.configPath, other.configPath)) {
-      return false;
-    }
-    return Objects.equals(this.defaultValue, other.defaultValue);
-  }
-
   public T get(ConfigurationSection from) {
     if (this.parent != null) {
       from = this.parent.get(from);
     }
     if (!from.contains(configPath)) {
-      log.debug("Adding missing config node: " + this.getFullPath());
+      log.debug("Adding missing config node: {}", this.getFullPath());
       this.set1(from, pack(defaultValue));
       return defaultValue;
     } else {
@@ -58,10 +43,9 @@ public abstract class ConfigNode<T> {
 
       try {
         return this.unpack(get);
-      } catch (DataPackException error) {
-        log.warn("Error with node \"" + this.getFullPath()
-            + "\" plz fix it, it has been replaced by the default value, cause was: " + error
-            .getMessage());
+      } catch (DataPackException e) {
+        log.warn("Error with node {} fix it, it has been replaced by the default value, cause was:"
+            + " {}", this.getFullPath(), e.getMessage());
         this.set1(from, this.pack(defaultValue));
         return defaultValue;
       }
@@ -75,6 +59,21 @@ public abstract class ConfigNode<T> {
 
   public T getDefaultValue() {
     return defaultValue;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null) {
+      return false;
+    }
+    if (getClass() != object.getClass()) {
+      return false;
+    }
+    @SuppressWarnings(value = "unchecked") final DefaultConfigNode<?> other = (DefaultConfigNode<?>) object;
+    if (!Objects.equals(this.configPath, other.configPath)) {
+      return false;
+    }
+    return Objects.equals(this.defaultValue, other.defaultValue);
   }
 
   @Override

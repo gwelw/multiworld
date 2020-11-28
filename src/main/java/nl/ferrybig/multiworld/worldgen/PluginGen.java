@@ -8,14 +8,17 @@ import org.bukkit.World.Environment;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PluginGen extends MultiWorldChunkGen {
+
+  private static final Logger log = LoggerFactory.getLogger(PluginGen.class);
 
   private final Environment environment;
 
   public PluginGen(Environment environment) {
     this.environment = environment;
-
   }
 
   @Override
@@ -27,26 +30,27 @@ public class PluginGen extends MultiWorldChunkGen {
       genId = pluginName.substring(index + 1);
       pluginName = pluginName.substring(0, index);
     }
-    if ("".equals(pluginName)) {
-      throw new InvalidWorldGenOptionsException("You need to specifi a plugin name");
+    if (pluginName.isBlank()) {
+      throw new InvalidWorldGenOptionsException("You need to specify a plugin name");
     }
-    Server s = Bukkit.getServer();
-    PluginManager pm = s.getPluginManager();
-    final Plugin p = pm.getPlugin(pluginName);
-    if (p == null) {
+    Server server = Bukkit.getServer();
+    PluginManager pluginManager = server.getPluginManager();
+    Plugin plugin = pluginManager.getPlugin(pluginName);
+    if (plugin == null) {
       throw new InvalidWorldGenOptionsException("Unknown plugin");
     }
+
     try {
-      final ChunkGenerator generator = p.getDefaultWorldGenerator(options.getName(), genId);
+      final ChunkGenerator generator = plugin.getDefaultWorldGenerator(options.getName(), genId);
       if (generator == null) {
         throw new InvalidWorldGenOptionsException(
-            "Was not able to find the worldgenenerator with id '" + genId + "' at plugin '" + p
+            "Was not able to find the worldgenenerator with id '" + genId + "' at plugin '" + plugin
                 .getDescription().getFullName() + "'");
       }
       options.setWorldType(environment);
       options.setWorldGen(generator);
-    } catch (Throwable e) {
-      e.printStackTrace(System.err);
+    } catch (Exception e) {
+      log.error(e.getMessage());
       throw (InvalidWorldGenOptionsException) (new InvalidWorldGenOptionsException(
           "Error with custom plugin generator")).initCause(e);
     }

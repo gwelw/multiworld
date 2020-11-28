@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nl.ferrybig.multiworld.worldgen;
 
 import java.util.HashMap;
@@ -18,7 +14,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 public class DesertGen extends MultiWorldChunkGen {
 
-  final double scale = 64.0; //how far apart the tops of the hills are
+  private static final double SCALE = 64.0; //how far apart the tops of the hills are
   private final Map<String, Short> heightMapMax = new HashMap<>();
   private final Map<String, Short> heightMapMin = new HashMap<>();
 
@@ -33,10 +29,7 @@ public class DesertGen extends MultiWorldChunkGen {
 
   private short[] parseOptions(String options) throws InvalidWorldGenOptionsException {
     if (options.isEmpty()) {
-      return new short[]
-          {
-              64, 80
-          };
+      return new short[]{64, 80};
     }
     try {
       short number = Short.parseShort(options);
@@ -44,12 +37,9 @@ public class DesertGen extends MultiWorldChunkGen {
         throw new InvalidWorldGenOptionsException(
             "Argument must be lower than 200 and higher than 64");
       }
-      return new short[]
-          {
-              number, number
-          };
+      return new short[]{number, number};
     } catch (NumberFormatException e) {
-      String[] numbers = options.split("\\-");
+      String[] numbers = options.split("-");
       if (numbers.length != 2) {
         throw new InvalidWorldGenOptionsException("wrong systax");
       }
@@ -63,10 +53,7 @@ public class DesertGen extends MultiWorldChunkGen {
           throw new InvalidWorldGenOptionsException(
               "Arguments must be lower than 200 and higher than 64");
         }
-        return new short[]
-            {
-                lowest, higest
-            };
+        return new short[]{lowest, higest};
       } catch (NumberFormatException e1) {
         throw new InvalidWorldGenOptionsException(e1.getLocalizedMessage());
       }
@@ -96,7 +83,7 @@ public class DesertGen extends MultiWorldChunkGen {
     if (maxHeight != minHeight) {
       gen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
       gen.setScale(1
-          / scale); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
+          / SCALE); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
     }
     for (int x1 = 0; x1 < 16; x1++) {
       for (int z1 = 0; z1 < 16; z1++) {
@@ -106,7 +93,7 @@ public class DesertGen extends MultiWorldChunkGen {
             Material.SAND);
         if (gen != null) {
           int height = maxHeight - minHeight;
-          double noise = gen.noise(x * 16 + x1, minHeight, z * 16 + z1, 0.5, 0.5, true);
+          double noise = gen.noise(x * 16.0 + x1, minHeight, z * 16.0 + z1, 0.5, 0.5, true);
           noise += 1;
           noise /= 2;
           noise *= height;

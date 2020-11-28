@@ -5,12 +5,14 @@ import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.exception.InvalidFlagValueException;
 
 public enum FlagValue {
-  UNKNOWN(false), FALSE(false), TRUE(true);
+  UNKNOWN(false),
+  FALSE(false),
+  TRUE(true);
+
   boolean value;
 
   FlagValue(boolean value) {
     this.value = value;
-
   }
 
   public static FlagValue parseFlagValue(String str) throws InvalidFlagValueException {

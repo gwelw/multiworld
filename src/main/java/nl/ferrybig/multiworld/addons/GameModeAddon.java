@@ -1,5 +1,8 @@
 package nl.ferrybig.multiworld.addons;
 
+import static org.bukkit.GameMode.CREATIVE;
+import static org.bukkit.GameMode.SURVIVAL;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -7,12 +10,11 @@ import java.util.UUID;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
-import nl.ferrybig.multiworld.api.events.GameModeChanceByWorldEvent;
+import nl.ferrybig.multiworld.api.events.GameModeChangeByWorldEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,14 +29,14 @@ import org.slf4j.LoggerFactory;
 public final class GameModeAddon implements Listener, MultiworldAddon {
 
   private final Logger log = LoggerFactory.getLogger(GameModeAddon.class);
-  ;
-  private final DataHandler data;
+
+  private final DataHandler dataHandler;
   private HashMap<UUID, PlayerData> creativePlayers;
   private HashMap<UUID, RemovePlayerTask> tasks;
   private boolean isEnabled = false;
 
-  public GameModeAddon(DataHandler d) {
-    this.data = d;
+  public GameModeAddon(DataHandler dataHandler) {
+    this.dataHandler = dataHandler;
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
@@ -66,7 +68,7 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     if (!isEnabled) {
       return;
     }
-    if (event.getFlag() == FlagName.CREATIVEWORLD) {
+    if (event.getFlag() == FlagName.CREATIVE_WORLD) {
       for (Player p : event.getWorld().getBukkitWorld().getPlayers()) {
         this.reloadPlayer(p, p.getWorld());
       }
@@ -88,9 +90,9 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     if (database != null) {
       database.putOnPlayer(player);
     }
-    player.setGameMode(GameMode.SURVIVAL);
-    new GameModeChanceByWorldEvent(player, GameMode.SURVIVAL).call();
-    log.trace("Chancing " + player.getDisplayName() + " game mode back to GameMode.SURVIVAL");
+    player.setGameMode(SURVIVAL);
+    new GameModeChangeByWorldEvent(player, SURVIVAL).call();
+    log.debug("Changing {} game mode back to SURVIVAL", player.getName());
   }
 
   private boolean isAffected(Player player) {
@@ -101,7 +103,7 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     if (!isEnabled || !this.isAffected(player)) {
       return;
     }
-    if (this.data.getWorldManager().getFlag(toWorld.getName(), FlagName.CREATIVEWORLD)
+    if (this.dataHandler.getWorldManager().getFlag(toWorld.getName(), FlagName.CREATIVE_WORLD)
         == FlagValue.TRUE) {
       this.addPlayer(player);
     }
@@ -110,19 +112,20 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
   private void addPlayer(Player player) {
     if (!this.creativePlayers.containsKey(player.getUniqueId())) {
       this.creativePlayers.put(player.getUniqueId(),
-          this.data.getNode(DataHandler.OPTIONS_GAMEMODE_INV) ? PlayerData.getFromPlayer(player)
+          this.dataHandler.getNode(DataHandler.OPTIONS_GAMEMODE_INV) ? PlayerData
+              .getFromPlayer(player)
               : null);
     }
-    player.setGameMode(GameMode.CREATIVE);
-    new GameModeChanceByWorldEvent(player, GameMode.CREATIVE).call();
-    log.trace("Chancing " + player.getDisplayName() + " game mode to GameMode.CREATIVE");
+    player.setGameMode(CREATIVE);
+    new GameModeChangeByWorldEvent(player, CREATIVE).call();
+    log.trace("Changing {} game mode to CREATIVE", player.getDisplayName());
   }
 
   public void reloadPlayer(Player player, World toWorld) {
     if (!isEnabled || !this.isAffected(player)) {
       return;
     }
-    if (this.data.getWorldManager().getFlag(toWorld.getName(), FlagName.CREATIVEWORLD)
+    if (this.dataHandler.getWorldManager().getFlag(toWorld.getName(), FlagName.CREATIVE_WORLD)
         == FlagValue.TRUE) {
       if (!this.creativePlayers.containsKey(player.getUniqueId()) && player.isOnline()) {
         this.addPlayer(player);

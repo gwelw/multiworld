@@ -6,9 +6,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.generator.BlockPopulator;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractPlanetGen extends EmptyWorldGenerator {
 
+  @NotNull
   @Override
   public abstract List<BlockPopulator> getDefaultPopulators(World world);
 

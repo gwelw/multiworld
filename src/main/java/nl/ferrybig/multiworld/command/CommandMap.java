@@ -57,11 +57,11 @@ public class CommandMap extends Command {
 
   public String[] getOptionsForUnfinishedCommands(CommandSender sender, String commandName,
       String[] split) {
-    if (commandName.equalsIgnoreCase("nl/ferrybig/multiworld") || commandName
+    if (commandName.equalsIgnoreCase("multiworld") || commandName
         .equalsIgnoreCase("mw")) {
       if (split.length == 0) {
         Set<String> commands = this.commands.keySet();
-        return commands.toArray(new String[commands.size()]);
+        return commands.toArray(new String[0]);
       } else if (split.length == 1) {
         Set<String> commands = new HashSet<>(this.commands.keySet());
         Set<String> found = new HashSet<>(commands.size());

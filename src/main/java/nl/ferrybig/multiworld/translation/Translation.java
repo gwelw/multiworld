@@ -62,10 +62,8 @@ public enum Translation implements PackedMessageData {
   MULTIWORLD_SAVE_FAIL_RETRY("Saved automaticly FAILED! Trying again in 10 seconds!"),
   MULTIWORLD_SAVE_FAIL_RETRY_DIRECT("Saved automaticly FAILED! Trying again...."),
   MULTIWORLD_SAVE_FAIL_SHUTDOWN("Wasn't able to save data! Data loss has been occured!!!"),
-  MULTIWORLD_SAVE_FAIL("Saved automaticly FAILED! Check console for details!"),
-  CRAFTBUKKIT_HOOKS_FAILED(
-      "Unable to hook into craftbukkit!\nRunning in bukkit compatibility mode!\nTurn this message of by changing craftbukkitHooks inside the configuration"),
-  ;
+  MULTIWORLD_SAVE_FAIL("Saved automaticly FAILED! Check console for details!");
+
   private final String humanText;
 
   Translation(String humanText) {

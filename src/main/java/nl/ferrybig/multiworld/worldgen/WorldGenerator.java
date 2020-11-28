@@ -7,25 +7,11 @@ import org.bukkit.World;
 import org.bukkit.WorldType;
 
 public enum WorldGenerator implements ChunkGen {
-  /**
-   * the normal mc world constant
-   */
+
   NORMAL(World.Environment.NORMAL, "Normal", "Makes a normal minecraft world", SpeedLevel.NORMAL),
-  /**
-   * the nether mc world contant
-   */
   NETHER(World.Environment.NETHER, "Nether", "Makes a nether world", SpeedLevel.NORMAL),
-  /*
-   *
-   */
   THE_END(World.Environment.THE_END, "The_End", "Makes a end world", SpeedLevel.NORMAL),
-  /**
-   * gen for the end
-   */
   END(THE_END, "End", "Alias for 'The_End'", false, SpeedLevel.NORMAL),
-  /**
-   * A flat world
-   */
   FLATLAND(new FlatLandChunkGenerator(), "FlatLand", "Makes a flatland for creative buildings",
       SpeedLevel.FAST),
   PIXELARTROOM(new PixelArtRoomChunkGenerator(), "PixelArtRoom",
@@ -53,54 +39,57 @@ public enum WorldGenerator implements ChunkGen {
       "Uses another generator to generate a Large Biomes world"),
   SUPERFLAT(new WorldTypeBasedGenerator(WorldType.FLAT), "SuperFlat",
       "Uses minecraft superflat methode to create a world");
+
+  private static final String NO_DESCRIPTION = "NO DESCRIPTION";
+
   private final ChunkGen generator;
   private final String name;
-  private final String destr;
+  private final String description;
   private final Boolean mayShowUP;
   private final SpeedLevel speed;
 
   WorldGenerator(ChunkGen gen) {
-    this(gen, gen.toString(), "INVALID DESTR", true, SpeedLevel.UNKNOWN);
+    this(gen, gen.toString(), NO_DESCRIPTION, true, SpeedLevel.UNKNOWN);
   }
 
   WorldGenerator(World.Environment type) {
-    this(new DefaultGen(type), type.name(), "INVALID DESTR", true, SpeedLevel.UNKNOWN);
+    this(new DefaultGen(type), type.name(), NO_DESCRIPTION, true, SpeedLevel.UNKNOWN);
   }
 
-  WorldGenerator(ChunkGen gen, String name, String destr) {
-    this(gen, name, destr, true, SpeedLevel.UNKNOWN);
+  WorldGenerator(ChunkGen gen, String name, String description) {
+    this(gen, name, description, true, SpeedLevel.UNKNOWN);
   }
 
-  WorldGenerator(World.Environment type, String name, String destr) {
-    this(new DefaultGen(type), name, destr, true, SpeedLevel.UNKNOWN);
+  WorldGenerator(World.Environment type, String name, String description) {
+    this(new DefaultGen(type), name, description, true, SpeedLevel.UNKNOWN);
   }
 
-  WorldGenerator(ChunkGen gen, String name, String destr, SpeedLevel speed) {
-    this(gen, name, destr, true, speed);
+  WorldGenerator(ChunkGen gen, String name, String description, SpeedLevel speed) {
+    this(gen, name, description, true, speed);
   }
 
-  WorldGenerator(World.Environment type, String name, String destr, SpeedLevel speed) {
-    this(new DefaultGen(type), name, destr, true, speed);
+  WorldGenerator(World.Environment type, String name, String description, SpeedLevel speed) {
+    this(new DefaultGen(type), name, description, true, speed);
   }
 
-  WorldGenerator(World.Environment type, String name, String destr, boolean visable) {
-    this(new DefaultGen(type), name, destr, visable, SpeedLevel.UNKNOWN);
+  WorldGenerator(World.Environment type, String name, String description, boolean visable) {
+    this(new DefaultGen(type), name, description, visable, SpeedLevel.UNKNOWN);
   }
 
-  WorldGenerator(ChunkGen gen, String name, String destr, boolean visable) {
-    this(gen, name, destr, visable, SpeedLevel.UNKNOWN);
+  WorldGenerator(ChunkGen gen, String name, String description, boolean visable) {
+    this(gen, name, description, visable, SpeedLevel.UNKNOWN);
   }
 
-  WorldGenerator(World.Environment type, String name, String destr, boolean visable,
+  WorldGenerator(World.Environment type, String name, String description, boolean visable,
       SpeedLevel speed) {
-    this(new DefaultGen(type), name, destr, visable, speed);
+    this(new DefaultGen(type), name, description, visable, speed);
   }
 
-  WorldGenerator(ChunkGen gen, String name, String destr, boolean visable,
+  WorldGenerator(ChunkGen gen, String name, String description, boolean visable,
       SpeedLevel speed) {
     this.generator = gen;
     this.name = name;
-    this.destr = destr;
+    this.description = description;
     this.mayShowUP = visable;
     this.speed = speed;
   }
@@ -130,10 +119,10 @@ public enum WorldGenerator implements ChunkGen {
     StringBuilder out = new StringBuilder();
     for (WorldGenerator gen : gens) {
       if (gen.mayInList()) {
-        out.append(gen.getName()).append(" - ").append(gen.getDestr()).append("#");
+        out.append(gen.getName()).append(" - ").append(gen.getDescription()).append("#");
       }
     }
-    return out.toString().split("\\#");
+    return out.toString().split("#");
   }
 
   @Override
@@ -149,8 +138,8 @@ public enum WorldGenerator implements ChunkGen {
     return this.name;
   }
 
-  public String getDestr() {
-    return this.destr;
+  public String getDescription() {
+    return this.description;
   }
 
   public SpeedLevel getSpeed() {

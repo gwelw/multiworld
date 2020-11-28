@@ -5,13 +5,11 @@ import java.util.List;
 import nl.ferrybig.multiworld.worldgen.populators.Populators;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
+import org.jetbrains.annotations.NotNull;
 
 public class BigPlanetGen extends AbstractPlanetGen implements ChunkGen {
 
-
-  public BigPlanetGen() {
-  }
-
+  @NotNull
   @Override
   public List<BlockPopulator> getDefaultPopulators(World world) {
     return Lists.newArrayList(Populators.BIG_PLANET.get(), Populators.SNOW.get(),

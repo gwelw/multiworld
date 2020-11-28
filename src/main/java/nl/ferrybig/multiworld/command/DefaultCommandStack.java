@@ -14,6 +14,7 @@ public class DefaultCommandStack implements CommandStack {
   private final CommandStack parent;
   private final Permissible permissions;
   private final CommandSender sender;
+
   private DefaultCommandStack(MessageLogger messages, CommandSender sender, Location loc,
       String[] args, CommandStack parent, String commandLabel, Permissible permissions) {
     this.messages = messages;
@@ -46,11 +47,6 @@ public class DefaultCommandStack implements CommandStack {
   @Override
   public String getCommandLabel() {
     return this.commandLabel;
-  }
-
-  @Override
-  public DebugLevel getDebugLevel() {
-    return this.messages.getDebugLevel();
   }
 
   @Override
@@ -99,11 +95,6 @@ public class DefaultCommandStack implements CommandStack {
   }
 
   @Override
-  public void sendMessageDebug(String message, DebugLevel level) {
-    messages.sendMessageDebug(message, level);
-  }
-
-  @Override
   public void sendMessageUsage(String commandLabel, ArgumentType... types) {
     messages.sendMessageUsage(commandLabel, types);
   }
@@ -138,7 +129,7 @@ public class DefaultCommandStack implements CommandStack {
     }
 
     public Builder(CommandSender sender) {
-      this(new DefaultMessageLogger(DebugLevel.NONE, sender, DefaultMessageLogger.DEFAULT_PREFIX));
+      this(new DefaultMessageLogger(sender, DefaultMessageLogger.DEFAULT_PREFIX));
       this.sender = sender;
       this.permissions = sender;
     }

@@ -14,7 +14,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 public class OceanGen extends MultiWorldChunkGen {
 
-  final double scale = 32.0; //how far apart the tops of the hills are
+  private static final double SCALE = 32.0; //how far apart the tops of the hills are
   private final Map<String, Byte> heightMapMax = new HashMap<>();
   private final Map<String, Byte> heightMapMin = new HashMap<>();
 
@@ -29,40 +29,32 @@ public class OceanGen extends MultiWorldChunkGen {
 
   private byte[] parseOptions(String options) throws InvalidWorldGenOptionsException {
     if (options.isEmpty()) {
-      return new byte[]
-          {
-              50, 60
-          };
+      return new byte[]{50, 60};
     }
+
     try {
       byte number = Byte.parseByte(options);
       if (number > 64 || number < 10) {
         throw new InvalidWorldGenOptionsException(
             "Argument must be lower than 64 and higher than 10");
       }
-      return new byte[]
-          {
-              number, number
-          };
+      return new byte[]{number, number};
     } catch (NumberFormatException e) {
-      String[] numbers = options.split("\\-");
+      String[] numbers = options.split("-");
       if (numbers.length != 2) {
         throw new InvalidWorldGenOptionsException("wrong systax");
       }
       try {
         byte lowest = Byte.parseByte(numbers[0]);
-        byte higest = Byte.parseByte(numbers[1]);
-        if (lowest > higest) {
+        byte highest = Byte.parseByte(numbers[1]);
+        if (lowest > highest) {
           throw new InvalidWorldGenOptionsException("wrong order of numbers");
         }
-        if (higest > 64 || lowest < 10) {
+        if (highest > 64 || lowest < 10) {
           throw new InvalidWorldGenOptionsException(
               "Arguments must be lower than 64 and higher than 10");
         }
-        return new byte[]
-            {
-                lowest, higest
-            };
+        return new byte[]{lowest, highest};
       } catch (NumberFormatException e1) {
         throw new InvalidWorldGenOptionsException(e1.getLocalizedMessage());
       }
@@ -92,7 +84,7 @@ public class OceanGen extends MultiWorldChunkGen {
     if (maxHeight != minHeight) {
       gen = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
       gen.setScale(1
-          / scale); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
+          / SCALE); //The distance between peaks of the terrain. Scroll down more to see what happens when you play with this
     }
     for (int x1 = 0; x1 < 16; x1++) {
       for (int z1 = 0; z1 < 16; z1++) {
@@ -102,7 +94,7 @@ public class OceanGen extends MultiWorldChunkGen {
             Material.SAND);
         if (gen != null) {
           int height = maxHeight - minHeight;
-          double noise = gen.noise(x * 16 + x1, minHeight, z * 16 + z1, 0.5, 0.5, true);
+          double noise = gen.noise(x * 16.0 + x1, minHeight, z * 16.0 + z1, 0.5, 0.5, true);
           noise += 1;
           noise /= 2;
           noise *= height;

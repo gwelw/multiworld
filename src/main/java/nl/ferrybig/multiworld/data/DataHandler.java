@@ -2,7 +2,6 @@ package nl.ferrybig.multiworld.data;
 
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.command.CommandStack;
-import nl.ferrybig.multiworld.command.DebugLevel;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.config.ConfigNode;
 import nl.ferrybig.multiworld.data.config.ConfigNodeSection;
@@ -59,8 +58,7 @@ public final class DataHandler {
   private int configSaveFailed = 0;
 
   private final Runnable saver = () -> {
-    CommandStack console = DataHandler.this.getPlugin().builder
-        .build(Bukkit.getConsoleSender(), DebugLevel.NONE);
+    CommandStack console = DataHandler.this.getPlugin().builder.build(Bukkit.getConsoleSender());
     try {
       save();
       console.sendMessageBroadcast(MessageType.SUCCESS, Translation.MULTIWORLD_SAVE_SUCCES);
@@ -111,8 +109,7 @@ public final class DataHandler {
     if (this.saveTask == null) {
       return;
     }
-    CommandStack console = DataHandler.this.getPlugin().builder
-        .build(Bukkit.getConsoleSender(), DebugLevel.NONE);
+    CommandStack console = this.getPlugin().builder.build(Bukkit.getConsoleSender());
     boolean saved = false;
     this.configSaveFailed = 0;
     while (configSaveFailed < 6 && !saved) {
@@ -183,15 +180,15 @@ public final class DataHandler {
 			this.lang = lang1;
 		}*/
     /* addons settings */
-    {
-      this.getNode(DataHandler.OPTIONS_DEBUG);
-      this.getNode(DataHandler.OPTIONS_GAMEMODE);
-      this.getNode(DataHandler.OPTIONS_GAMEMODE_INV);
-      this.getNode(DataHandler.OPTIONS_BLOCK_ENDER_CHESTS);
-      this.getNode(DataHandler.OPTIONS_LINK_END);
-      this.getNode(DataHandler.OPTIONS_LINK_NETHER);
-      this.getNode(DataHandler.OPTIONS_WORLD_SPAWN);
-    }
+
+    this.getNode(DataHandler.OPTIONS_DEBUG);
+    this.getNode(DataHandler.OPTIONS_GAMEMODE);
+    this.getNode(DataHandler.OPTIONS_GAMEMODE_INV);
+    this.getNode(DataHandler.OPTIONS_BLOCK_ENDER_CHESTS);
+    this.getNode(DataHandler.OPTIONS_LINK_END);
+    this.getNode(DataHandler.OPTIONS_LINK_NETHER);
+    this.getNode(DataHandler.OPTIONS_WORLD_SPAWN);
+
     if (this.getNode(DataHandler.OPTIONS_WORLD_SPAWN)) {
       ConfigurationSection spawnGroup = this.config.getConfigurationSection("spawnGroup");
       if (spawnGroup == null) {

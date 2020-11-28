@@ -16,10 +16,7 @@ public abstract class SimpleChunkGen extends MultiWorldChunkGen implements Chunk
   protected final Map<UUID, ChunkMaker> chunk = new HashMap<>();
 
   @Override
-  public ChunkData generateChunkData(World world,
-      Random random,
-      int x,
-      int z,
+  public ChunkData generateChunkData(World world, Random random, int x, int z,
       ChunkGenerator.BiomeGrid biomes) {
 
     ChunkMaker tmp = this.chunk.get(world.getUID());
@@ -27,11 +24,11 @@ public abstract class SimpleChunkGen extends MultiWorldChunkGen implements Chunk
       this.chunk.put(world.getUID(), this.makeChunk(world));
       tmp = this.chunk.get(world.getUID());
     }
-    Biome b = this.getBiome();
-    if (b != null) {
+    Biome biome = this.getBiome();
+    if (biome != null) {
       for (int xCounter = 0; xCounter < 16; xCounter++) {
         for (int zCounter = 0; zCounter < 16; zCounter++) {
-          biomes.setBiome(x, z, b);
+          biomes.setBiome(x, z, biome);
         }
       }
     }

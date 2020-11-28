@@ -31,11 +31,9 @@ public class GlowstonePopulator extends BlockPopulator {
         }
         // Place glowstone
 
-        for (BlockFace counter : new BlockFace[]
-            {
-                BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH,
-                BlockFace.UP, BlockFace.SELF
-            }) {
+        BlockFace[] blockFaces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH,
+            BlockFace.SOUTH, BlockFace.UP, BlockFace.SELF};
+        for (BlockFace counter : blockFaces) {
           Block tmp = mainBlock.getRelative(counter);
           if (tmp.getType() != Material.AIR) {
             tmp.setType(Material.GLOWSTONE);

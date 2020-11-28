@@ -20,20 +20,20 @@ public class LinkCommand extends Command {
       .custom("%portal%", "nether portal");
   public static final PackedMessageData PATTERN_PORTAL_END = MessageCache
       .custom("%portal%", "end portal");
-  private final AddonHandler plugin;
-  private final DataHandler d;
+  private final AddonHandler addonHandler;
+  private final DataHandler dataHandler;
   private final boolean isForEndPortals;
   private final WorldHandler worlds;
   private final PackedMessageData usedPattern;
 
-  public LinkCommand(DataHandler data, WorldHandler worlds, AddonHandler portal,
+  public LinkCommand(DataHandler dataHandler, WorldHandler worldHandler, AddonHandler addonHandler,
       boolean isForEndPortals) {
     super(isForEndPortals ? "link.end" : "link.nether",
         " Links " + (isForEndPortals ? "end" : "nether") + " portals between worlds");
-    this.d = data;
-    this.plugin = portal;
+    this.dataHandler = dataHandler;
+    this.addonHandler = addonHandler;
     this.isForEndPortals = isForEndPortals;
-    this.worlds = worlds;
+    this.worlds = worldHandler;
     this.usedPattern = isForEndPortals ? PATTERN_PORTAL_END : PATTERN_PORTAL_NETHER;
   }
 
@@ -81,7 +81,7 @@ public class LinkCommand extends Command {
           MessageCache.TARGET.get(split[1]),
           this.usedPattern);
 
-      this.d.scheduleSave();
+      this.dataHandler.scheduleSave();
     } else {
       stack.sendMessageUsage(stack.getCommandLabel(),
           (isForEndPortals ? ArgumentType.valueOf("link-end") : ArgumentType.valueOf("link")),
@@ -93,9 +93,9 @@ public class LinkCommand extends Command {
   private PortalHandler getPortalHandler() {
     AddonHolder<?> holder;
     if (isForEndPortals) {
-      holder = this.plugin.getPlugin("EndPortalHandler");
+      holder = this.addonHandler.getPlugin("EndPortalHandler");
     } else {
-      holder = this.plugin.getPlugin("NetherPortalHandler");
+      holder = this.addonHandler.getPlugin("NetherPortalHandler");
     }
     if (holder == null) {
       return null;

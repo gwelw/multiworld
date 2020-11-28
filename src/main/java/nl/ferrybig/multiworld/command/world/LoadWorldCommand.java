@@ -11,11 +11,11 @@ import org.bukkit.command.CommandSender;
 
 public class LoadWorldCommand extends Command {
 
-  private final WorldHandler worlds;
+  private final WorldHandler worldHandler;
 
-  public LoadWorldCommand(WorldHandler worlds) {
+  public LoadWorldCommand(WorldHandler worldHandler) {
     super("world.load", "Loads a world");
-    this.worlds = worlds;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -37,10 +37,10 @@ public class LoadWorldCommand extends Command {
       return;
     }
     String worldName = args[0];
-    if (!this.worlds.isWorldExistingAndSendMessage(worldName, stack)) {
+    if (!this.worldHandler.isWorldExistingAndSendMessage(worldName, stack)) {
       return;
     }
-    if (this.worlds.isWorldLoaded(args[0])) {
+    if (this.worldHandler.isWorldLoaded(args[0])) {
       stack.sendMessage(MessageType.ERROR,
           Translation.WORLD_LOADED_ALREADY,
           MessageCache.WORLD.get(worldName));
@@ -49,7 +49,7 @@ public class LoadWorldCommand extends Command {
     stack.sendMessageBroadcast(null,
         Translation.WORLD_LOADING_START,
         MessageCache.WORLD.get(worldName));
-    if (this.worlds.loadWorld(worldName) != null) {
+    if (this.worldHandler.loadWorld(worldName) != null) {
       stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.WORLD_LOADING_END,
           MessageCache.WORLD.get(worldName));

@@ -191,13 +191,13 @@ public class DungeonPopulator extends BlockPopulator {
     if (i == 6) {
       return new ItemStack(Material.BUCKET);
     }
-    if ((i == 7) && (paramRandom.nextInt(100) == 0)) {
+    if (i == 7 && (paramRandom.nextInt(100) == 0)) {
       return new ItemStack(Material.GOLDEN_APPLE);
     }
-    if ((i == 8) && (paramRandom.nextInt(2) == 0)) {
+    if (i == 8 && (paramRandom.nextInt(2) == 0)) {
       return new ItemStack(Material.REDSTONE, paramRandom.nextInt(4) + 1);
     }
-    if ((i == 9) && (paramRandom.nextInt(10) == 0)) {
+    if (i == 9 && (paramRandom.nextInt(10) == 0)) {
       return new ItemStack(Material.MUSIC_DISC_BLOCKS);
     }
     if (i == 10) {
@@ -220,16 +220,9 @@ public class DungeonPopulator extends BlockPopulator {
     }
   }
 
-  private boolean isBlock(Material mat) {
-    switch (mat) {
-      case STONE:
-      case GRASS:
-      case DIRT:
-      case COBBLESTONE:
-        return true;
-      default:
-        return false;
-    }
+  private boolean isBlock(Material material) {
+    return material == Material.STONE || material == Material.GRASS || material == Material.DIRT
+        || material == Material.COBBLESTONE;
   }
 
   public boolean isEmpty(World world, int x, int y, int z) {

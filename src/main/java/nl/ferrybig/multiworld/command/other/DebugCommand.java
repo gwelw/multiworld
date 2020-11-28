@@ -10,26 +10,27 @@ import org.bukkit.ChatColor;
 
 public class DebugCommand extends Command {
 
-  private final VersionHandler debug;
+  private final VersionHandler versionHandler;
 
-  public DebugCommand(VersionHandler d) {
+  public DebugCommand(VersionHandler versionHandler) {
     super("debug", "Prints outs some debug information");
-    this.debug = d;
+    this.versionHandler = versionHandler;
   }
 
   @Override
   public void runCommand(CommandStack stack) {
     stack.sendMessage(MessageType.HIDDEN_SUCCESS, "Now printing debug information");
-    stack.sendMessage(MessageType.HIDDEN_SUCCESS, "MultiWorld version: " + this.debug.getVersion());
+    stack.sendMessage(MessageType.HIDDEN_SUCCESS,
+        "MultiWorld version: " + this.versionHandler.getVersion());
     stack.sendMessage(MessageType.HIDDEN_SUCCESS, "Bukkit version: " + Bukkit.getVersion());
     stack.sendMessage(MessageType.HIDDEN_SUCCESS, "");
     stack.sendMessage(MessageType.HIDDEN_SUCCESS, "--<[Modules]>--");
     stack.sendMessage(MessageType.HIDDEN_SUCCESS,
         Formatter.createList(ChatColor.WHITE, "State", "pluginName"));
-    for (String plugin : debug.getPlugins()) {
+    for (String plugin : versionHandler.getPlugins()) {
       stack.sendMessage(MessageType.HIDDEN_SUCCESS,
-          Formatter.createList((debug.isLoaded(plugin)
-              ? (debug.isEnabled(plugin) ? "Working" : "Loaded")
+          Formatter.createList((versionHandler.isLoaded(plugin)
+              ? (versionHandler.isEnabled(plugin) ? "Working" : "Loaded")
               : "Unloaded"), plugin));
     }
     stack.sendMessage(MessageType.HIDDEN_SUCCESS, "");

@@ -16,18 +16,15 @@ import org.bukkit.help.HelpTopic;
 public abstract class Command {
 
   public static final String[] EMPTY_STRING_ARRAY = new String[0];
-  public static final String RESET = new String(new char[]
-      {
-          ChatColor.COLOR_CHAR, 'z'
-      });
+  public static final String RESET = new String(new char[]{ChatColor.COLOR_CHAR, 'z'});
   protected static final int MAX_COORD = 30000000;
   protected static final int MIN_COORD_MINUS_ONE = -30000001;
   protected static final int MIN_COORD = -30000000;
-  private final String perm;
+  private final String permission;
   private final String description;
 
-  public Command(String perm, String description) {
-    this.perm = perm;
+  public Command(String permission, String description) {
+    this.permission = permission;
     this.description = description;
   }
 
@@ -122,7 +119,7 @@ public abstract class Command {
   }
 
   public String getPermissions() {
-    return this.perm;
+    return this.permission;
   }
 
   public String[] calculateMissingArguments(CommandSender sender, String commandName,

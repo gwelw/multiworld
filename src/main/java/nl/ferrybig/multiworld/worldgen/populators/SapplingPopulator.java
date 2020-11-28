@@ -20,12 +20,10 @@ public class SapplingPopulator extends BlockPopulator {
       int z = random.nextInt(14) + 1;
       Block mainBlock = chunk.getBlock(x, y, z);
       //skip if the block is air
-      if (mainBlock.getType() == Material.AIR) {
-        if (mainBlock.getRelative(BlockFace.DOWN).getType() == Material.GRASS) {
-          if (mainBlock.getLightLevel() >= 9) {
-            mainBlock.setType(Material.OAK_SAPLING);
-          }
-        }
+      if (mainBlock.getType() == Material.AIR
+          && mainBlock.getRelative(BlockFace.DOWN).getType() == Material.GRASS
+          && mainBlock.getLightLevel() >= 9) {
+        mainBlock.setType(Material.OAK_SAPLING);
       }
     }
   }

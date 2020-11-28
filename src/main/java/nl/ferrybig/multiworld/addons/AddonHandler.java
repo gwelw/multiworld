@@ -33,7 +33,7 @@ public final class AddonHandler implements VersionHandler, SettingsListener {
     return plugins.getPlugins();
   }
 
-  public AddonHolder<?> getPlugin(String plugin) {
+  public AddonHolder<? extends MultiworldAddon> getPlugin(String plugin) {
     return plugins.getPlugin(plugin);
   }
 

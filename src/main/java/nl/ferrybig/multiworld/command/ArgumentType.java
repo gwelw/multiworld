@@ -20,16 +20,16 @@ public class ArgumentType {
     assert map
         != null; // If map is null, somebody have moved the map below the argument types definition
     WeakReference<ArgumentType> m = map.get(name);
-    ArgumentType s = null;
+    ArgumentType argumentType = null;
     if (m != null) {
-      s = m.get();
+      argumentType = m.get();
     }
-    if (s == null) {
-      s = new ArgumentType(name);
-      m = new WeakReference<>(s);
+    if (argumentType == null) {
+      argumentType = new ArgumentType(name);
+      m = new WeakReference<>(argumentType);
       map.put(name, m);
     }
-    return s;
+    return argumentType;
   }
 
   public String getMessage() {
@@ -37,7 +37,6 @@ public class ArgumentType {
   }
 
   private interface MessageProvider {
-
     String getMessage();
   }
 }

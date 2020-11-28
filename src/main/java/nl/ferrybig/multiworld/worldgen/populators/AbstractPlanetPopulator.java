@@ -19,13 +19,6 @@ public abstract class AbstractPlanetPopulator extends BlockPopulator implements 
           676, 729, 784, 841, 900
       };
 
-  private int makePositive(int i) {
-    if (i < 0) {
-      return -i;
-    }
-    return i;
-  }
-
   /**
    * Makes an planet whit the given options
    *
@@ -53,16 +46,16 @@ public abstract class AbstractPlanetPopulator extends BlockPopulator implements 
    * @param blockDown    The block to use as base
    * @param blockSpecial The hidden tressure inside
    */
-  protected void makePlanet(final World workingWorld,
-      final int planetX,
-      final int planetY,
-      final int planetZ,
-      final int size,
-      final Material blockTop,
-      final Material blockDown,
-      final Material blockSpecial) {
+  protected void makePlanet(World workingWorld,
+      int planetX,
+      int planetY,
+      int planetZ,
+      int size,
+      Material blockTop,
+      Material blockDown,
+      Material blockSpecial) {
     int mainDistance;
-    boolean isTop = true;
+    boolean isTop;
     Block workingBlock;
 
     int posAX = planetX - size;
@@ -74,20 +67,18 @@ public abstract class AbstractPlanetPopulator extends BlockPopulator implements 
     int comparatorSize = SQUARES[size];
     for (int x = posAX; x < posBX; x++) {
       for (int z = posAZ; z < posBZ; z++) {
-        mainDistance =
-            SQUARES[this.makePositive(x - planetX)] + SQUARES[this.makePositive(z - planetZ)];
+        mainDistance = SQUARES[Math.abs(x - planetX)] + SQUARES[Math.abs(z - planetZ)];
         if (mainDistance <= comparatorSize) {
           isTop = true;
           for (int y = posBY; y > posAY; y--) {
-            if (comparatorSize < mainDistance + SQUARES[this.makePositive(y - planetY)]) {
-              continue;
-            }
-            workingBlock = workingWorld.getBlockAt(x, y, z);
-            if (isTop) {
-              workingBlock.setType(blockTop);
-              isTop = false;
-            } else {
-              workingBlock.setType(blockDown);
+            if (comparatorSize >= mainDistance + SQUARES[Math.abs(y - planetY)]) {
+              workingBlock = workingWorld.getBlockAt(x, y, z);
+              if (isTop) {
+                workingBlock.setType(blockTop);
+                isTop = false;
+              } else {
+                workingBlock.setType(blockDown);
+              }
             }
 
           }
@@ -96,6 +87,5 @@ public abstract class AbstractPlanetPopulator extends BlockPopulator implements 
       }
     }
     workingWorld.getBlockAt(planetX, planetY, planetZ).setType(blockSpecial);
-
   }
 }

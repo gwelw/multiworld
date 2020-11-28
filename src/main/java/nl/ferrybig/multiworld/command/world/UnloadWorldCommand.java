@@ -4,7 +4,6 @@ import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
 import nl.ferrybig.multiworld.data.WorldHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
@@ -12,13 +11,11 @@ import org.bukkit.command.CommandSender;
 
 public class UnloadWorldCommand extends Command {
 
-  private final DataHandler data;
-  private final WorldHandler worlds;
+  private final WorldHandler worldHandler;
 
-  public UnloadWorldCommand(DataHandler data, WorldHandler worlds) {
+  public UnloadWorldCommand(WorldHandler worldHandler) {
     super("world.unload", "Unloads a world");
-    this.data = data;
-    this.worlds = worlds;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -40,10 +37,10 @@ public class UnloadWorldCommand extends Command {
       return;
     }
     final String worldName = arguments[0];
-    if (!this.worlds.isWorldExistingAndSendMessage(worldName, stack)) {
+    if (!this.worldHandler.isWorldExistingAndSendMessage(worldName, stack)) {
       return;
     }
-    if (!this.worlds.isWorldLoaded(worldName)) {
+    if (!this.worldHandler.isWorldLoaded(worldName)) {
       stack.sendMessage(MessageType.ERROR,
           Translation.WORLD_UNLOADED_ALREADY,
           MessageCache.WORLD.get(worldName));
@@ -52,7 +49,7 @@ public class UnloadWorldCommand extends Command {
     stack.sendMessageBroadcast(null,
         Translation.WORLD_UNLOADING_START,
         MessageCache.WORLD.get(worldName));
-    if (this.worlds.unloadWorld(worldName)) {
+    if (this.worldHandler.unloadWorld(worldName)) {
       stack.sendMessageBroadcast(MessageType.SUCCESS,
           Translation.WORLD_UNLOADING_END,
           MessageCache.WORLD.get(worldName));

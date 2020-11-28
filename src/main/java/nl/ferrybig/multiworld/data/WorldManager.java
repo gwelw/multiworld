@@ -1,10 +1,10 @@
 package nl.ferrybig.multiworld.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.addAll;
+import static java.util.Comparator.comparing;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,16 +27,20 @@ import nl.ferrybig.multiworld.worldgen.WorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.generator.ChunkGenerator;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WorldManager implements WorldUtils {
 
   private static final Logger log = LoggerFactory.getLogger(WorldManager.class);
+
+  private static final String NETHER_PORTAL = "netherportal";
+  private static final String END_PORTAL = "endportal";
   public static final ConfigNode<Difficulty> WORLD_DIFFICULTY = new DifficultyConfigNode(null,
       "difficulty", Difficulty.NORMAL);
   private final Map<String, WorldContainer> worlds;
@@ -138,15 +142,15 @@ public class WorldManager implements WorldUtils {
     InternalWorld world = w.getWorld();
     world.getFlags().put(flag, value);
     if (w.isLoaded()) {
-      if (flag == FlagName.SPAWNMONSTER) {
+      if (flag == FlagName.SPAWN_MONSTER) {
         world.getWorld().setSpawnFlags(value.getAsBoolean(), world.getWorld().getAllowAnimals());
-      } else if (flag == FlagName.SPAWNANIMAL) {
+      } else if (flag == FlagName.SPAWN_ANIMAL) {
         world.getWorld().setSpawnFlags(world.getWorld().getAllowMonsters(), value.getAsBoolean());
-      } else if (flag == FlagName.REMEMBERSPAWN) {
+      } else if (flag == FlagName.REMEMBER_SPAWN) {
         world.getWorld().setKeepSpawnInMemory(value.getAsBoolean());
       } else if (flag == FlagName.PVP) {
         world.getWorld().setPVP(value.getAsBoolean());
-      } else if (flag == FlagName.SAVEON) {
+      } else if (flag == FlagName.SAVE_ON) {
         world.getWorld().setAutoSave(value.getAsBoolean());
       }
     }
@@ -161,13 +165,13 @@ public class WorldManager implements WorldUtils {
     if (worldContainer.isLoaded()) {
       InternalWorld world = worldContainer.getWorld();
       switch (flag) {
-        case SPAWNMONSTER:
+        case SPAWN_MONSTER:
           return FlagValue.fromBoolean(world.getWorld().getAllowMonsters());
-        case SPAWNANIMAL:
+        case SPAWN_ANIMAL:
           return FlagValue.fromBoolean(world.getWorld().getAllowAnimals());
-        case REMEMBERSPAWN:
+        case REMEMBER_SPAWN:
           return FlagValue.fromBoolean(world.getWorld().getKeepSpawnInMemory());
-        case CREATIVEWORLD: {
+        case CREATIVE_WORLD: {
           FlagValue flagValue = world.getFlags().get(flag);
           if (flagValue == null) {
             return FlagValue
@@ -175,10 +179,10 @@ public class WorldManager implements WorldUtils {
           }
           return flagValue;
         }
-        case SAVEON:
+        case SAVE_ON:
           return FlagValue.fromBoolean(world.getWorld().isAutoSave());
-        case RECIEVECHAT:
-        case SENDCHAT:
+        case RECEIVE_CHAT:
+        case SEND_CHAT:
           return world.getFlags().getOrDefault(flag, FlagValue.TRUE);
         case PVP:
           return FlagValue.fromBoolean(world.getWorld().getPVP());
@@ -196,8 +200,15 @@ public class WorldManager implements WorldUtils {
     if (this.getWorldMeta(name, false) != null) {
       return false;
     }
-    InternalWorld worldData = new InternalWorld(name, seed, World.Environment.NORMAL, null, options,
-        new FlagMap(), env.name(), null, null, Difficulty.NORMAL, WorldType.NORMAL);
+    InternalWorld worldData = new InternalWorld()
+        .setWorldName(name)
+        .setWorldSeed(seed)
+        .setWorldType(Environment.NORMAL)
+        .setOptions(options)
+        .setFlags(new FlagMap())
+        .setDifficulty(Difficulty.NORMAL)
+        .setFullGeneratorName(env.getName());
+
     env.makeWorld(worldData);
     if (worldData.getEnv() == null) {
       return false;
@@ -276,18 +287,29 @@ public class WorldManager implements WorldUtils {
       }
       ChunkGenerator chunkGenerator = bukkitWorld.getGenerator();
       if (chunkGenerator != null) {
-        worldContainer = this.addWorld(
-            new InternalWorld(bukkitWorld.getName(), bukkitWorld.getSeed(),
-                bukkitWorld.getEnvironment(), NullGen.get(),
-                chunkGenerator.getClass().getName(), new FlagMap(),
-                "NULLGEN", null, null, bukkitWorld.getDifficulty(), bukkitWorld.getWorldType()),
-            true);
+        InternalWorld nullgen = new InternalWorld()
+            .setWorldName(bukkitWorld.getName())
+            .setWorldSeed(bukkitWorld.getSeed())
+            .setFlags(new FlagMap())
+            .setFullGeneratorName("NULLGEN")
+            .setDifficulty(bukkitWorld.getDifficulty())
+            .setType(bukkitWorld.getWorldType())
+            .setWorldType(bukkitWorld.getEnvironment())
+            .setOptions(chunkGenerator.getClass().getName())
+            .setWorldGen(NullGen.get());
+
+        worldContainer = this.addWorld(nullgen, true);
       } else {
-        worldContainer = this.addWorld(
-            new InternalWorld(bukkitWorld.getName(), bukkitWorld.getSeed(),
-                bukkitWorld.getEnvironment(), null, "",
-                new FlagMap(),
-                bukkitWorld.getEnvironment().name(), bukkitWorld.getDifficulty()), true);
+        InternalWorld internalWorld = new InternalWorld()
+            .setWorldName(bukkitWorld.getName())
+            .setWorldSeed(bukkitWorld.getSeed())
+            .setWorldType(bukkitWorld.getEnvironment())
+            .setOptions("")
+            .setFlags(new FlagMap())
+            .setDifficulty(bukkitWorld.getDifficulty())
+            .setFullGeneratorName(bukkitWorld.getEnvironment().name());
+
+        worldContainer = this.addWorld(internalWorld, true);
       }
     }
     return worldContainer;
@@ -347,65 +369,58 @@ public class WorldManager implements WorldUtils {
   }
 
   @Override
-  public void saveWorlds(ConfigurationSection worldSection, SpawnWorldControl spawn) {
+  public void saveWorlds(ConfigurationSection worldSection, SpawnWorldControl spawnWorldControl) {
     ConfigurationSection l2;
     ConfigurationSection l3;
-    for (WorldContainer i : new TreeSet<>(new Comparator<WorldContainer>() {
-      @Override
-      public int compare(WorldContainer t, WorldContainer t1) {
-        return t.getName()
-            .compareTo(t1.getName()); // This makes the worlds be saved in the same order every time
-      }
-    }) {
-      private static final long serialVersionUID = 1L;
 
-      {
-        addAll(Arrays.asList(getWorlds()));
-      }
-    }) {
-      InternalWorld w = i.getWorld();
-      if (!Utils.checkWorldName(w.getName())) {
-        log.warn("Was not able to save world named: {}", w.getName());
+    Set<WorldContainer> worldContainers = new TreeSet<>(comparing(WorldContainer::getName));
+    addAll(worldContainers, getWorlds());
+
+    for (WorldContainer worldContainer : worldContainers) {
+      InternalWorld internalWorld = worldContainer.getWorld();
+      if (!Utils.checkWorldName(internalWorld.getName())) {
+        log.warn("Was not able to save world named: {}", internalWorld.getName());
         continue;
       }
-      if (WorldGenerator.NULLGEN.getName().equals(w.getFullGeneratorName())) {
+      if (WorldGenerator.NULLGEN.getName().equals(internalWorld.getFullGeneratorName())) {
         continue;
       }
-      l2 = worldSection.createSection(w.getName());
-      l2.set("seed", w.getSeed());
-      l2.set("worldgen", w.getFullGeneratorName());
-      l2.set("options", w.getOptions());
-      WORLD_DIFFICULTY.set(l2, w.getDifficulty());
-      l2.set("autoload", i.isLoaded());
-      if (!w.getFlags().isEmpty()) {
+      l2 = worldSection.createSection(internalWorld.getName());
+      l2.set("seed", internalWorld.getSeed());
+      l2.set("worldgen", internalWorld.getFullGeneratorName());
+      l2.set("options", internalWorld.getOptions());
+      WORLD_DIFFICULTY.set(l2, internalWorld.getDifficulty());
+      l2.set("autoload", worldContainer.isLoaded());
+      if (!internalWorld.getFlags().isEmpty()) {
         l3 = l2.createSection("flags");
-        for (Map.Entry<FlagName, FlagValue> i1 : w.getFlags().entrySet()) {
+        for (Map.Entry<FlagName, FlagValue> entry : internalWorld.getFlags().entrySet()) {
 
-          FlagValue get = this.getFlag(w.getName(), i1.getKey());
+          FlagValue get = this.getFlag(internalWorld.getName(), entry.getKey());
           if (get != FlagValue.UNKNOWN) {
-            l3.set(i1.getKey().name(), (get == FlagValue.TRUE));
+            l3.set(entry.getKey().name(), (get == FlagValue.TRUE));
           }
         }
       }
-      if (!w.getPortalWorld().isEmpty()) {
-        l2.set("netherportal", w.getPortalWorld());
+
+      if (!internalWorld.getPortalWorld().isEmpty()) {
+        l2.set(NETHER_PORTAL, internalWorld.getPortalWorld());
       } else {
-        l2.set("netherportal", null);
+        l2.set(NETHER_PORTAL, null);
       }
-      if (!w.getEndPortalWorld().isEmpty()) {
-        l2.set("endportal", w.getEndPortalWorld());
+      if (!internalWorld.getEndPortalWorld().isEmpty()) {
+        l2.set(END_PORTAL, internalWorld.getEndPortalWorld());
       } else {
-        l2.set("endportal", null);
+        l2.set(END_PORTAL, null);
       }
-      if (spawn != null) {
-        l2.set("spawnGroup", spawn.getGroupByWorld(w.getName()));
+      if (spawnWorldControl != null) {
+        l2.set("spawnGroup", spawnWorldControl.getGroupByWorld(internalWorld.getName()));
       }
     }
   }
 
   @Override
   public void loadWorlds(ConfigurationSection worlds, Difficulty difficulty,
-      SpawnWorldControl spawn) {
+      SpawnWorldControl spawnWorldControl) {
     for (String worldName : worlds.getValues(false).keySet()) {
       if (worlds.isConfigurationSection(worldName)) {
         try {
@@ -416,31 +431,19 @@ public class WorldManager implements WorldUtils {
               .valueOf(world.getString("worldgen", "NORMAL").toUpperCase());
           String options = world.getString("options", "");
 
-          FlagMap flags = new FlagMap();
-          ConfigurationSection flagList = world.getConfigurationSection("flags");
-          if (flagList != null) {
-            FlagName[] flagNames = FlagName.class.getEnumConstants();
-            for (FlagName flagName : flagNames) {
-              if (!flagList.isBoolean(flagName.name())) {
-                continue;
-              }
-              flags.put(flagName, FlagValue.fromBoolean(flagList.getBoolean(flagName.name())));
-            }
-          }
-          String portal = world.getString("netherportal", "");
-          String endPortal = world.getString("endportal", "");
+          FlagMap flags = getFlagMap(world);
+          String portal = world.getString(NETHER_PORTAL, "");
+          String endPortal = world.getString(END_PORTAL, "");
 
-          InternalWorld worldData = new InternalWorld();
-          worldData.setWorldName(worldName);
-          worldData.setWorldSeed(seed);
-          worldData.setFullGeneratorName(gen.getName());
-          worldData.setPortalLink(portal);
-          worldData.setEndLink(endPortal);
-          worldData.setFlags(flags);
-          worldData.setOptions(options);
-
-          Difficulty diff = WORLD_DIFFICULTY.get(world);
-          worldData.setDifficulty(diff);
+          InternalWorld worldData = new InternalWorld()
+              .setWorldName(worldName)
+              .setWorldSeed(seed)
+              .setFullGeneratorName(gen.getName())
+              .setPortalLink(portal)
+              .setEndLink(endPortal)
+              .setFlags(flags)
+              .setOptions(options)
+              .setDifficulty(WORLD_DIFFICULTY.get(world));
 
           gen.makeWorld(worldData);
           if (worldData.getEnv() == null) {
@@ -452,11 +455,11 @@ public class WorldManager implements WorldUtils {
           if (world.getBoolean("autoload", true)) {
             this.loadWorld(worldData.getName()).setDifficulty(worldData.getDifficulty());
           }
-          if (spawn != null) {
+          if (spawnWorldControl != null) {
             String spawnGroup = world.getString("spawnGroup", "defaultGroup");
-            if (!spawn.registerWorldSpawn(worldName, spawnGroup)) {
+            if (!spawnWorldControl.registerWorldSpawn(worldName, spawnGroup)) {
               world.set("spawnGroup", "defaultGroup");
-              spawn.registerWorldSpawn(worldName, "defaultGroup");
+              spawnWorldControl.registerWorldSpawn(worldName, "defaultGroup");
             }
           }
         } catch (IllegalArgumentException e) {
@@ -473,5 +476,20 @@ public class WorldManager implements WorldUtils {
         log.warn("{} not a valid world, sorry", worldName);
       }
     }
+  }
+
+  @NotNull
+  private FlagMap getFlagMap(ConfigurationSection world) {
+    FlagMap flags = new FlagMap();
+    ConfigurationSection flagList = world.getConfigurationSection("flags");
+    if (flagList != null) {
+      FlagName[] flagNames = FlagName.class.getEnumConstants();
+      for (FlagName flagName : flagNames) {
+        if (flagList.isBoolean(flagName.name())) {
+          flags.put(flagName, FlagValue.fromBoolean(flagList.getBoolean(flagName.name())));
+        }
+      }
+    }
+    return flags;
   }
 }

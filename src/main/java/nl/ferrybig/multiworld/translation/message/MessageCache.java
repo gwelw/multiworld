@@ -14,8 +14,8 @@ public enum MessageCache {
   DIFFICULTY("%difficulty%"),
   TARGET("%target%"),
   FLAG("%flag%"),
-  FLAG_VALUE("%value%"),
-  ;
+  FLAG_VALUE("%value%");
+
   private final CachingMap cache;
   private final String replacePattern;
 
@@ -69,6 +69,5 @@ public enum MessageCache {
     protected boolean removeEldestEntry(Map.Entry<String, PackedMessageData> entry) {
       return this.size() > cacheSize;
     }
-
   }
 }

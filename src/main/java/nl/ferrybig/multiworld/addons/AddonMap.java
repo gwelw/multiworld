@@ -1,5 +1,12 @@
 package nl.ferrybig.multiworld.addons;
 
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_BLOCK_ENDER_CHESTS;
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_GAMEMODE;
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_LINK_END;
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_LINK_NETHER;
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_WORLD_CHAT;
+import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_WORLD_SPAWN;
+
 import java.util.HashMap;
 import java.util.Map;
 import nl.ferrybig.multiworld.data.DataHandler;
@@ -8,20 +15,20 @@ import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 public class AddonMap implements SettingsListener, PluginList {
 
   private final DataHandler data;
-  Map<String, AddonHolder<?>> pluginMap = new HashMap<>();
+  private final Map<String, AddonHolder<? extends MultiworldAddon>> pluginMap = new HashMap<>();
 
   public AddonMap(DataHandler data) {
 
     this.data = data;
     this.addPlugin(WorldChatSeparatorPlugin.class, "WorldChatSeperatorPlugin",
-        DataHandler.OPTIONS_WORLD_CHAT);
+        OPTIONS_WORLD_CHAT);
     this.addPlugin(NetherPortalHandler.class, "NetherPortalHandler",
-        DataHandler.OPTIONS_LINK_NETHER);
-    this.addPlugin(EndPortalHandler.class, "EndPortalHandler", DataHandler.OPTIONS_LINK_END);
-    this.addPlugin(GameModeAddon.class, "GameModeChancer", DataHandler.OPTIONS_GAMEMODE);
+        OPTIONS_LINK_NETHER);
+    this.addPlugin(EndPortalHandler.class, "EndPortalHandler", OPTIONS_LINK_END);
+    this.addPlugin(GameModeAddon.class, "GameModeChancer", OPTIONS_GAMEMODE);
     this.addPlugin(EnderChestBlocker.class, "EnderChestBlocker",
-        DataHandler.OPTIONS_BLOCK_ENDER_CHESTS);
-    this.addPlugin(WorldSpawnControl.class, "WorldSpawnHandler", DataHandler.OPTIONS_WORLD_SPAWN);
+        OPTIONS_BLOCK_ENDER_CHESTS);
+    this.addPlugin(WorldSpawnControl.class, "WorldSpawnHandler", OPTIONS_WORLD_SPAWN);
   }
 
   private <T extends MultiworldAddon> void addPlugin(Class<T> type, String name,
@@ -29,7 +36,7 @@ public class AddonMap implements SettingsListener, PluginList {
     pluginMap.put(name.toUpperCase(), new AddonHolder<>(type, name, data, config));
   }
 
-  public AddonHolder<?> getPlugin(String plugin) {
+  public AddonHolder<? extends MultiworldAddon> getPlugin(String plugin) {
     return pluginMap.get(plugin.toUpperCase());
   }
 
@@ -68,11 +75,9 @@ public class AddonMap implements SettingsListener, PluginList {
 
   @Override
   public void disableAll() {
-    for (AddonHolder<?> plugin : this.pluginMap.values()) {
-      if (plugin.isEnabled()) {
-        plugin.onDisable();
-      }
-    }
+    this.pluginMap.values().stream()
+        .filter(AddonHolder::isEnabled)
+        .forEach(AddonHolder::onDisable);
   }
 
   @Override

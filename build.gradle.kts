@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.ferrybig"
-version = "0.0.3-SNAPSHOT"
+version = "0.3.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {

@@ -12,8 +12,8 @@ public class EndPortalHandler extends PortalHandler {
     super(data, true);
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
   @Override
+  @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerPortal(EntityPortalEvent event) {
     super.onPlayerPortal(event);
   }

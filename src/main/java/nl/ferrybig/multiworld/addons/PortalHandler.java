@@ -22,13 +22,13 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
   public static final int END_PORTAL = 1;
   public static final int UNKNOWN_PORTAL = 0;
   public static final int NETHER_PORTAL = -1;
-  private final DataHandler data;
+  private final DataHandler dataHandler;
   private final Logger log = LoggerFactory.getLogger(PortalHandler.class);
   private final boolean handleEndPortals;
   private boolean enabled = false;
 
-  public PortalHandler(DataHandler d, boolean handleEndPortals) {
-    this.data = d;
+  public PortalHandler(DataHandler dataHandler, boolean handleEndPortals) {
+    this.dataHandler = dataHandler;
     this.handleEndPortals = handleEndPortals;
   }
 
@@ -47,74 +47,43 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
     this.log.info("[PortalHandler] loaded!");
   }
 
-  /**
-   * Save the data
-   *
-   * @throws ConfigException       When there was a configuration error
-   * @throws IllegalStateException When it wasn't enabled
-   */
   public void save() throws ConfigException {
     if (!enabled) {
-      throw new IllegalStateException();
+      throw new IllegalStateException("Not enabled");
     }
-    this.data.save();
+    this.dataHandler.save();
     this.log.info("[PortalHandler] saved!");
   }
-  /*
-   * Is this enabled
-   */
 
-  /**
-   * Checks if this lugin is enabled
-   *
-   * @return true if its been enabled, false otherwise
-   */
   public boolean isEnabled() {
     return this.enabled;
   }
 
-  /**
-   * Disable this plugin
-   */
   @Override
   public void onDisable() {
     if (!enabled) {
-      throw new IllegalStateException();
+      throw new IllegalStateException("Already disabled");
     }
     enabled = false;
   }
 
-  /**
-   * Enable this plugin
-   */
   @Override
   public void onEnable() {
     if (enabled) {
-      throw new IllegalStateException("Already loaded");
+      throw new IllegalStateException("Already enabled");
     }
     this.enabled = true;
     this.load();
   }
 
-  /**
-   * Adds a link to the database, or remove it if world2 is null
-   *
-   * @param world1 the target world
-   * @param world2 the destination world
-   */
   public void add(String world1, String world2) {
     if (this.handleEndPortals) {
-      this.data.getWorldManager().setEndPortal(world1, world2);
+      this.dataHandler.getWorldManager().setEndPortal(world1, world2);
     } else {
-      this.data.getWorldManager().setPortal(world1, world2);
+      this.dataHandler.getWorldManager().setPortal(world1, world2);
     }
   }
 
-  /**
-   * Called when a player uses a portal
-   *
-   * @param event The event data
-   */
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerPortal(EntityPortalEvent event) {
     if (event.isCancelled() || !this.enabled) {
@@ -125,16 +94,17 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
         "[PortalHandler] got portal " + mapType + " for location " + event.getFrom().toVector()
             .toString() + ".");
     if (this.handleEndPortals) {
-      if ((mapType == END_PORTAL)) {
+      if (mapType == END_PORTAL) {
         log.debug("[PortalHandler] got PortalType.END.");
-        InternalWorld from = this.data.getWorldManager()
+        InternalWorld from = this.dataHandler.getWorldManager()
             .getInternalWorld(event.getFrom().getWorld().getName(), true);
         String toWorldString = from.getEndPortalWorld();
         if (!toWorldString.isEmpty()) {
-          World toWorld = this.data.getWorldManager().getWorld(toWorldString);
+          World toWorld = this.dataHandler.getWorldManager().getWorld(toWorldString);
           if (toWorld != null) {
-            World.Environment toDim = toWorld.getEnvironment(), fromDim = event.getFrom().getWorld()
-                .getEnvironment();
+            World.Environment toDim = toWorld.getEnvironment();
+            World.Environment fromDim = event.getFrom().getWorld().getEnvironment();
+
             if (toDim == World.Environment.THE_END) {
               Location loc = new Location(toWorld, 100, 54, 0);
               loc = event.getPortalTravelAgent().findOrCreate(loc);
@@ -161,24 +131,21 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
                 .toLowerCase() + " to get to world " + toWorldString);
       }
     } else {
-      if ((!this.handleEndPortals) && (mapType == NETHER_PORTAL)) {
+      if (!this.handleEndPortals && mapType == NETHER_PORTAL) {
         log.debug("[PortalHandler] got PortalType.NETHER.");
-        String toWorldString = this.data.getWorldManager()
+        String toWorldString = this.dataHandler.getWorldManager()
             .getInternalWorld(event.getFrom().getWorld().getName(), true).getPortalWorld();
         if (!toWorldString.isEmpty()) {
-          World toWorld = this.data.getWorldManager().getWorld(toWorldString);
+          World toWorld = this.dataHandler.getWorldManager().getWorld(toWorldString);
           if (toWorld != null) {
             World.Environment toDim = toWorld.getEnvironment(), fromDim = event.getFrom().getWorld()
                 .getEnvironment();
             float div;
-            if (fromDim == toDim)//Env is same at both worlds
-            {
+            if (fromDim == toDim) {
               div = 1.0f;
-            } else if (fromDim == World.Environment.NETHER) //env is nether at target world
-            {
+            } else if (fromDim == World.Environment.NETHER) {
               div = 8.0f;
-            } else if (toDim == World.Environment.NETHER) // env is nether at from world
-            {
+            } else if (toDim == World.Environment.NETHER) {
               div = 0.125f;
             } else {
               div = 1.0f;
@@ -197,9 +164,8 @@ public abstract class PortalHandler implements Listener, MultiworldAddon, Settin
     }
   }
 
-  private int getPortalType(Location loc) {
-
-    Block mainBlock = loc.getBlock();
+  private int getPortalType(Location location) {
+    Block mainBlock = location.getBlock();
     Material toCheck;
     for (BlockFace face : new BlockFace[]
         {

@@ -3,24 +3,14 @@ package nl.ferrybig.multiworld.command.spawn;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.PlayerHandler;
-import nl.ferrybig.multiworld.data.WorldHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.Location;
 
 public class SetSpawnCommand extends Command {
 
-  private final PlayerHandler p;
-  private final WorldHandler w;
-  private final DataHandler d;
-
-  public SetSpawnCommand(DataHandler data, WorldHandler worlds, PlayerHandler player) {
+  public SetSpawnCommand() {
     super("setspawn", "Sets a spawn of a world");
-    this.w = worlds;
-    this.p = player;
-    this.d = data;
   }
 
   @Override

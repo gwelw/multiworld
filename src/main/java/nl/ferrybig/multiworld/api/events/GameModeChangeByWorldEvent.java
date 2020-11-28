@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class GameModeChanceByWorldEvent extends MultiWorldEvent {
+public class GameModeChangeByWorldEvent extends MultiWorldEvent {
 
   private static final HandlerList handlers = new HandlerList();
   private final Player player;
   private final GameMode newMode;
 
-  public GameModeChanceByWorldEvent(Player player, GameMode newMode) {
+  public GameModeChangeByWorldEvent(Player player, GameMode newMode) {
     super();
     this.player = player;
     this.newMode = newMode;

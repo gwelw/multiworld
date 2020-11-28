@@ -1,6 +1,5 @@
 package nl.ferrybig.multiworld.command.flag;
 
-import nl.ferrybig.multiworld.addons.AddonHandler;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
@@ -18,16 +17,14 @@ import org.bukkit.command.CommandSender;
 
 public class SetFlagCommand extends Command {
 
-  private final DataHandler d;
-  private final AddonHandler pl;
-  private final WorldHandler worlds;
+  private final DataHandler dataHandler;
+  private final WorldHandler worldHandler;
 
-  public SetFlagCommand(DataHandler data, AddonHandler pl, WorldHandler worlds) {
+  public SetFlagCommand(DataHandler dataHandler, WorldHandler worldHandler) {
     super("setflag",
         "This commands sets a flag value on a world, \nflag values can be compared with gamerules");
-    this.d = data;
-    this.pl = pl;
-    this.worlds = worlds;
+    this.dataHandler = dataHandler;
+    this.worldHandler = worldHandler;
   }
 
   @Override
@@ -38,7 +35,7 @@ public class SetFlagCommand extends Command {
           ArgumentType.TARGET_WORLD, ArgumentType.valueOf("<Flag>"),
           ArgumentType.valueOf("<value>"));
     } else {
-      InternalWorld world = worlds.getWorld(split[0], false);
+      InternalWorld world = worldHandler.getWorld(split[0], false);
       FlagName flag;
       FlagValue valueTo;
       try {
@@ -52,15 +49,15 @@ public class SetFlagCommand extends Command {
         return;
       }
 
-      if (this.d.getWorldManager().getFlag(world.getName(), flag) == valueTo) {
+      if (this.dataHandler.getWorldManager().getFlag(world.getName(), flag) == valueTo) {
         stack.sendMessage(
             MessageType.ERROR,
             Translation.COMMAND_SETFLAG_FAIL_SAME_VALUE,
             MessageCache.FLAG.get(flag.toString())
         );
       } else {
-        this.d.getWorldManager().setFlag(world.getName(), flag, valueTo);
-        this.d.scheduleSave();
+        this.dataHandler.getWorldManager().setFlag(world.getName(), flag, valueTo);
+        this.dataHandler.scheduleSave();
         stack.sendMessageBroadcast(
             MessageType.SUCCESS,
             Translation.COMMAND_SETFLAG_SUCCES,

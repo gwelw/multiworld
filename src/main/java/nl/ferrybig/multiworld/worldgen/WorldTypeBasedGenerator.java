@@ -25,19 +25,18 @@ public class WorldTypeBasedGenerator extends MultiWorldChunkGen {
     } else {
       option = "";
     }
-    if ("".equals(generator)) {
+    if (generator.isBlank()) {
       generator = "NORMAL";
     } else {
       generator = generator.toUpperCase(Locale.ENGLISH);
     }
     ChunkGen env = WorldGenerator.getGenByName(generator);
-    {
-      String orginalOptions = options.getOptions();
-      options.setOptions(option);
-      env.makeWorld(options);
-      options.setOptions(orginalOptions);
-    }
+
+    String originalOptions = options.getOptions();
+    options.setOptions(option);
+    env.makeWorld(options);
+    options.setOptions(originalOptions);
+
     options.setType(type);
   }
-
 }

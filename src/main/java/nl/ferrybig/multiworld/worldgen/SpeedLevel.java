@@ -4,5 +4,5 @@ public enum SpeedLevel {
   SLOW,
   NORMAL,
   FAST,
-  UNKNOWN;
+  UNKNOWN
 }

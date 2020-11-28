@@ -1,5 +1,10 @@
 package nl.ferrybig.multiworld.chat;
 
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+
 import java.util.Arrays;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import nl.ferrybig.multiworld.worldgen.SpeedLevel;
@@ -7,9 +12,9 @@ import org.bukkit.ChatColor;
 
 public class Formatter {
 
-  private static final String BOOLEAN_TRUE = ChatColor.GREEN + "True";
-  private static final String BOOLEAN_FALSE = ChatColor.RED + "False";
-  private static final String UNKNOWN_FLAG = ChatColor.GOLD + "Unknown";
+  private static final String BOOLEAN_TRUE = GREEN + "True";
+  private static final String BOOLEAN_FALSE = RED + "False";
+  private static final String UNKNOWN_FLAG = GOLD + "Unknown";
 
   private Formatter() {
   }
@@ -39,7 +44,7 @@ public class Formatter {
   }
 
   public static String createList(Object... args) {
-    return createList(ChatColor.GOLD, args);
+    return createList(GOLD, args);
   }
 
   public static String createList(ChatColor color, Object... args) {
@@ -53,12 +58,12 @@ public class Formatter {
       throw new IllegalArgumentException(color.length + "!=" + args.length);
     }
     StringBuilder out = new StringBuilder();
-    out.append(ChatColor.BLUE).append("[");
+    out.append(BLUE).append("[");
     for (int i = 0; i < args.length; i++) {
-      out.append(color[i]).append(args[i]).append(ChatColor.BLUE).append(", ");
+      out.append(color[i]).append(args[i]).append(BLUE).append(", ");
     }
     out.setLength(out.length() - 2);
-    out.append(ChatColor.BLUE).append("]");
+    out.append(BLUE).append("]");
     return out.toString();
   }
 

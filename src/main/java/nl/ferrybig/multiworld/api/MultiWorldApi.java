@@ -6,19 +6,16 @@ import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.exception.ConfigException;
 import nl.ferrybig.multiworld.exception.ConfigurationSaveException;
 
-public class MultiWorldAPI {
+public class MultiWorldApi {
 
   protected final MultiWorldPlugin plugin;
 
-  public MultiWorldAPI(MultiWorldPlugin plugin) {
+  public MultiWorldApi(MultiWorldPlugin plugin) {
     this.plugin = plugin;
   }
 
   protected boolean isValid() {
-    if (this.plugin.isEnabled()) {
-      return true;
-    }
-    return false;
+    return this.plugin.isEnabled();
   }
 
   protected void checkValid() {
@@ -28,9 +25,8 @@ public class MultiWorldAPI {
   }
 
   public boolean isCreativeWorld(String world) {
-
     checkValid();
-    return this.getWorld(world).getOptionValue(FlagName.CREATIVEWORLD);
+    return this.getWorld(world).getOptionValue(FlagName.CREATIVE_WORLD);
   }
 
   public boolean isWorldExisting(String world) {
@@ -58,13 +54,13 @@ public class MultiWorldAPI {
     assert this.plugin.getPluginHandler() != null;
     switch (addon) {
       case GAMEMODE_CHANGER:
-        return this.plugin.getPluginHandler().isLoaded("GameModeChancer");
+        return this.plugin.getPluginHandler().isLoaded("GameModeChanger");
       case END_PORTAL_HANDLER:
         return this.plugin.getPluginHandler().isLoaded("EndPortalHandler");
       case NETHER_PORTAL_HANDLER:
         return this.plugin.getPluginHandler().isLoaded("NetherPortalHandler");
       case WORLD_CHAT_SEPARATOR:
-        return this.plugin.getPluginHandler().isLoaded("WorldChatSeperatorPlugin");
+        return this.plugin.getPluginHandler().isLoaded("WorldChatSeparatorPlugin");
     }
     return false;
   }
@@ -74,32 +70,32 @@ public class MultiWorldAPI {
     assert this.plugin.getPluginHandler() != null;
     switch (addon) {
       case GAMEMODE_CHANGER:
-        return this.plugin.getPluginHandler().isEnabled("GameModeChancer");
+        return this.plugin.getPluginHandler().isEnabled("GameModeChanger");
       case END_PORTAL_HANDLER:
         return this.plugin.getPluginHandler().isEnabled("EndPortalHandler");
       case NETHER_PORTAL_HANDLER:
         return this.plugin.getPluginHandler().isEnabled("NetherPortalHandler");
       case WORLD_CHAT_SEPARATOR:
-        return this.plugin.getPluginHandler().isEnabled("WorldChatSeperatorPlugin");
+        return this.plugin.getPluginHandler().isEnabled("WorldChatSeparatorPlugin");
     }
     return false;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
+  public boolean equals(Object object) {
+    if (object == null) {
       return false;
     }
-    if (getClass() != obj.getClass()) {
+    if (getClass() != object.getClass()) {
       return false;
     }
-    final MultiWorldAPI other = (MultiWorldAPI) obj;
+    final MultiWorldApi other = (MultiWorldApi) object;
     return Objects.equals(this.plugin, other.plugin);
   }
 
   @Override
   public int hashCode() {
-    return this.plugin != null ? this.plugin.hashCode() : 0;
+    return Objects.hashCode(this.plugin);
   }
 
   @Override
@@ -116,11 +112,11 @@ public class MultiWorldAPI {
     }
   }
 
-  public String getCaseCorrectName(String world) {
-    MultiWorldWorldData w = this.getWorld(world);
-    if (w == null) {
-      return world;
+  public String getCaseCorrectName(String worldName) {
+    MultiWorldWorldData worldData = this.getWorld(worldName);
+    if (worldData == null) {
+      return worldName;
     }
-    return w.getName();
+    return worldData.getName();
   }
 }
