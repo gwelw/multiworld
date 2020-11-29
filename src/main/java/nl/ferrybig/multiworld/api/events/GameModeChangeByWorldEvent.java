@@ -9,12 +9,12 @@ public class GameModeChangeByWorldEvent extends MultiWorldEvent {
 
   private static final HandlerList handlers = new HandlerList();
   private final Player player;
-  private final GameMode newMode;
+  private final GameMode newGameMode;
 
-  public GameModeChangeByWorldEvent(Player player, GameMode newMode) {
+  public GameModeChangeByWorldEvent(Player player, GameMode newGameMode) {
     super();
     this.player = player;
-    this.newMode = newMode;
+    this.newGameMode = newGameMode;
   }
 
   public static HandlerList getHandlerList() {
@@ -31,7 +31,7 @@ public class GameModeChangeByWorldEvent extends MultiWorldEvent {
     return player;
   }
 
-  public GameMode getNewMode() {
-    return newMode;
+  public GameMode getNewGameMode() {
+    return newGameMode;
   }
 }

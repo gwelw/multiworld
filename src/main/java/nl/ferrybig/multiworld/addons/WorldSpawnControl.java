@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.addons;
 
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

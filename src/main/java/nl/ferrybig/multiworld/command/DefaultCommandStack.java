@@ -9,17 +9,17 @@ public class DefaultCommandStack implements CommandStack {
 
   private final String[] args;
   private final String commandLabel;
-  private final Location loc;
+  private final Location location;
   private final MessageLogger messages;
   private final CommandStack parent;
   private final Permissible permissions;
   private final CommandSender sender;
 
-  private DefaultCommandStack(MessageLogger messages, CommandSender sender, Location loc,
+  private DefaultCommandStack(MessageLogger messages, CommandSender sender, Location location,
       String[] args, CommandStack parent, String commandLabel, Permissible permissions) {
     this.messages = messages;
     this.sender = sender;
-    this.loc = loc;
+    this.location = location;
     this.args = args;
     this.parent = parent;
     this.commandLabel = commandLabel;
@@ -51,7 +51,7 @@ public class DefaultCommandStack implements CommandStack {
 
   @Override
   public Location getLocation() {
-    return this.loc;
+    return this.location;
   }
 
   @Override

@@ -26,7 +26,7 @@ public abstract class ConfigNode<T> {
     return (parent == null ? "" : (parent.getFullPath() + ".")) + this.configPath;
   }
 
-  protected void set1(ConfigurationSection to, Object value) {
+  protected void setValue(ConfigurationSection to, Object value) {
     to.set(this.configPath, value);
   }
 
@@ -36,7 +36,7 @@ public abstract class ConfigNode<T> {
     }
     if (!from.contains(configPath)) {
       log.debug("Adding missing config node: {}", this.getFullPath());
-      this.set1(from, pack(defaultValue));
+      this.setValue(from, pack(defaultValue));
       return defaultValue;
     } else {
       Object get = from.get(configPath, this.pack(defaultValue));
@@ -46,7 +46,7 @@ public abstract class ConfigNode<T> {
       } catch (DataPackException e) {
         log.warn("Error with node {} fix it, it has been replaced by the default value, cause was:"
             + " {}", this.getFullPath(), e.getMessage());
-        this.set1(from, this.pack(defaultValue));
+        this.setValue(from, this.pack(defaultValue));
         return defaultValue;
       }
     }
@@ -69,7 +69,7 @@ public abstract class ConfigNode<T> {
     if (getClass() != object.getClass()) {
       return false;
     }
-    @SuppressWarnings(value = "unchecked") final DefaultConfigNode<?> other = (DefaultConfigNode<?>) object;
+    DefaultConfigNode<?> other = (DefaultConfigNode<?>) object;
     if (!Objects.equals(this.configPath, other.configPath)) {
       return false;
     }
@@ -88,7 +88,7 @@ public abstract class ConfigNode<T> {
     if (this.parent != null) {
       to = this.parent.get(to);
     }
-    this.set1(to, this.pack(value));
+    this.setValue(to, this.pack(value));
   }
 
   @Override

@@ -1,12 +1,15 @@
-package nl.ferrybig.multiworld.data;
+package nl.ferrybig.multiworld.handler;
+
+import static nl.ferrybig.multiworld.translation.message.MessageCache.WORLD;
 
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
+import nl.ferrybig.multiworld.data.InternalWorld;
+import nl.ferrybig.multiworld.data.WorldUtils;
 import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.translation.Translation;
-import nl.ferrybig.multiworld.translation.message.MessageCache;
-import nl.ferrybig.multiworld.worldgen.WorldGenerator;
+import nl.ferrybig.multiworld.generator.WorldGenerator;
 import org.bukkit.World;
 
 public class WorldHandler {
@@ -31,13 +34,12 @@ public class WorldHandler {
   }
 
   public boolean isWorldExistingAndSendMessage(String world, CommandStack stack) {
-    if (!this.isWorldExisting(world)) {
-      stack.sendMessage(MessageType.ERROR,
-          Translation.WORLD_NOT_FOUND,
-          MessageCache.WORLD.get(world));
-      return false;
+    if (this.isWorldExisting(world)) {
+      return true;
     }
-    return true;
+
+    stack.sendMessage(MessageType.ERROR, Translation.WORLD_NOT_FOUND, WORLD.get(world));
+    return false;
   }
 
   public boolean isWorldLoaded(String world) {

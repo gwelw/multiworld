@@ -7,7 +7,7 @@ import static org.bukkit.ChatColor.RED;
 
 import java.util.Arrays;
 import nl.ferrybig.multiworld.flags.FlagValue;
-import nl.ferrybig.multiworld.worldgen.SpeedLevel;
+import nl.ferrybig.multiworld.generator.SpeedLevel;
 import org.bukkit.ChatColor;
 
 public class Formatter {

@@ -4,7 +4,7 @@ import nl.ferrybig.multiworld.api.MultiWorldWorldData;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.flags.FlagValue;
-import nl.ferrybig.multiworld.worldgen.WorldGenerator;
+import nl.ferrybig.multiworld.generator.WorldGenerator;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

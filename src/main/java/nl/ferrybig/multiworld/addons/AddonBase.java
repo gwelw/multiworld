@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.addons;
 
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 
 public abstract class AddonBase implements MultiworldAddon {
 

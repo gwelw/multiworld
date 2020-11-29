@@ -4,7 +4,7 @@ import nl.ferrybig.multiworld.command.ArgumentType;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.WorldUtils;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
@@ -41,8 +41,7 @@ public class DeleteCommand extends Command {
     WorldUtils manager = dataHandler.getWorldManager();
     String targetWorld = stack.getArguments()[0];
     if (manager.getWorldMeta(targetWorld, false) == null) {
-      stack.sendMessage(MessageType.ERROR,
-          Translation.WORLD_NOT_FOUND,
+      stack.sendMessage(MessageType.ERROR, Translation.WORLD_NOT_FOUND,
           MessageCache.WORLD.get(targetWorld));
       return;
     }

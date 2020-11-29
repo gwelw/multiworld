@@ -3,7 +3,7 @@ package nl.ferrybig.multiworld.addons;
 import java.util.Iterator;
 import java.util.List;
 import nl.ferrybig.multiworld.api.flag.FlagName;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

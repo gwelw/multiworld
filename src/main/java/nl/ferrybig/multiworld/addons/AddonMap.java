@@ -1,15 +1,15 @@
 package nl.ferrybig.multiworld.addons;
 
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_BLOCK_ENDER_CHESTS;
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_GAMEMODE;
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_LINK_END;
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_LINK_NETHER;
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_WORLD_CHAT;
-import static nl.ferrybig.multiworld.data.DataHandler.OPTIONS_WORLD_SPAWN;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_BLOCK_ENDER_CHESTS;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_GAMEMODE;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_LINK_END;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_LINK_NETHER;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_WORLD_CHAT;
+import static nl.ferrybig.multiworld.handler.DataHandler.OPTIONS_WORLD_SPAWN;
 
 import java.util.HashMap;
 import java.util.Map;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 
 public class AddonMap implements SettingsListener, PluginList {

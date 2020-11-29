@@ -13,6 +13,7 @@ import java.util.Set;
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.translation.message.PackedMessageData;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Server;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -68,8 +69,8 @@ public class DefaultMessageLogger implements MessageLogger {
   public void sendMessageBroadcast(MessageType type, String message, boolean sendToConsole) {
     message = message.replace(Command.RESET, getLastColors(prefix));
     String result = prefix + receiver.getName() + ": " + message;
-    if (receiver instanceof BlockCommandSender && ((BlockCommandSender) receiver).getBlock()
-        .getWorld().getGameRuleValue("commandBlockOutput").equalsIgnoreCase("false")) {
+    if (receiver instanceof BlockCommandSender && !((BlockCommandSender) receiver).getBlock()
+        .getWorld().getGameRuleValue(GameRule.COMMAND_BLOCK_OUTPUT)) {
       receiver.getServer().getConsoleSender().sendMessage(result);
       return;
     }

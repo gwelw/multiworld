@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.api.MultiWorldWorldData;
-import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
+import nl.ferrybig.multiworld.api.events.FlagChangeEvent;
 import nl.ferrybig.multiworld.api.events.WorldCreateEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
 import nl.ferrybig.multiworld.data.config.ConfigNode;
@@ -22,8 +22,8 @@ import nl.ferrybig.multiworld.data.config.DifficultyConfigNode;
 import nl.ferrybig.multiworld.exception.WorldGenException;
 import nl.ferrybig.multiworld.flags.FlagMap;
 import nl.ferrybig.multiworld.flags.FlagValue;
-import nl.ferrybig.multiworld.worldgen.NullGen;
-import nl.ferrybig.multiworld.worldgen.WorldGenerator;
+import nl.ferrybig.multiworld.generator.NullGenerator;
+import nl.ferrybig.multiworld.generator.WorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
@@ -155,7 +155,7 @@ public class WorldManager implements WorldUtils {
       }
     }
     if (!isStartingUp && value != FlagValue.UNKNOWN) {
-      new FlagChanceEvent(w, flag, value.getAsBoolean(flag)).call();
+      new FlagChangeEvent(w, flag, value.getAsBoolean(flag)).call();
     }
   }
 
@@ -296,7 +296,7 @@ public class WorldManager implements WorldUtils {
             .setType(bukkitWorld.getWorldType())
             .setWorldType(bukkitWorld.getEnvironment())
             .setOptions(chunkGenerator.getClass().getName())
-            .setWorldGen(NullGen.get());
+            .setWorldGen(NullGenerator.get());
 
         worldContainer = this.addWorld(nullgen, true);
       } else {

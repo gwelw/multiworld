@@ -4,8 +4,6 @@ import nl.ferrybig.multiworld.exception.MultiWorldException;
 
 public class DataPackException extends MultiWorldException {
 
-  private static final long serialVersionUID = 1L;
-
   public DataPackException(String msg) {
     super(msg);
   }

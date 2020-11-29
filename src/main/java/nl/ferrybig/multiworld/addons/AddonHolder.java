@@ -2,7 +2,7 @@ package nl.ferrybig.multiworld.addons;
 
 import java.util.StringJoiner;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.config.DefaultConfigNode;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -48,8 +48,8 @@ public class AddonHolder<T extends MultiworldAddon> implements MultiworldAddon, 
           Bukkit.getServer().getPluginManager()
               .registerEvents((Listener) this.getAddon(), MultiWorldPlugin.getInstance());
         }
-      } catch (Exception ex) {
-        throw new RuntimeException("Mistake from delevoper: " + ex.toString(), ex);
+      } catch (Exception e) {
+        throw new RuntimeException("Mistake from delevoper: " + e.toString(), e);
       }
     }
     log.debug("Enabling plugin {}", type.getSimpleName());

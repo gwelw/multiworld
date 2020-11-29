@@ -4,7 +4,7 @@ import nl.ferrybig.multiworld.chat.Formatter;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.worldgen.WorldGenerator;
+import nl.ferrybig.multiworld.generator.WorldGenerator;
 
 public class ListWorldGensCommand extends Command {
 

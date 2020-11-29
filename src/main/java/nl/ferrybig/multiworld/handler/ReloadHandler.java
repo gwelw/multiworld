@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld.data;
+package nl.ferrybig.multiworld.handler;
 
 import nl.ferrybig.multiworld.addons.AddonHandler;
 import nl.ferrybig.multiworld.exception.ConfigException;

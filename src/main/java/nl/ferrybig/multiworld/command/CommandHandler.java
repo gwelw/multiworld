@@ -23,11 +23,11 @@ import nl.ferrybig.multiworld.command.world.ListCommand;
 import nl.ferrybig.multiworld.command.world.LoadWorldCommand;
 import nl.ferrybig.multiworld.command.world.UnloadWorldCommand;
 import nl.ferrybig.multiworld.command.world.generator.ListWorldGensCommand;
-import nl.ferrybig.multiworld.data.DataHandler;
-import nl.ferrybig.multiworld.data.PlayerHandler;
-import nl.ferrybig.multiworld.data.ReloadHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
+import nl.ferrybig.multiworld.handler.PlayerHandler;
+import nl.ferrybig.multiworld.handler.ReloadHandler;
 import nl.ferrybig.multiworld.data.VersionHandler;
-import nl.ferrybig.multiworld.data.WorldHandler;
+import nl.ferrybig.multiworld.handler.WorldHandler;
 
 public class CommandHandler extends CommandMap {
 

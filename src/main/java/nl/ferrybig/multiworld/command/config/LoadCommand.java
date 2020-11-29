@@ -3,7 +3,7 @@ package nl.ferrybig.multiworld.command.config;
 import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.ReloadHandler;
+import nl.ferrybig.multiworld.handler.ReloadHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 
 public class LoadCommand extends Command {

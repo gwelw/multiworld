@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import nl.ferrybig.multiworld.Utils;
 import nl.ferrybig.multiworld.api.flag.FlagName;
-import nl.ferrybig.multiworld.worldgen.WorldGenerator;
+import nl.ferrybig.multiworld.generator.WorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;

@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.addons;
 
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.ConfigException;
 import org.bukkit.Location;

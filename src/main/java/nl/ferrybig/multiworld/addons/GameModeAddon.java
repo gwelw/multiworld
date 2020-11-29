@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.UUID;
 import nl.ferrybig.multiworld.MultiWorldPlugin;
 import nl.ferrybig.multiworld.Utils;
-import nl.ferrybig.multiworld.api.events.FlagChanceEvent;
+import nl.ferrybig.multiworld.api.events.FlagChangeEvent;
 import nl.ferrybig.multiworld.api.events.GameModeChangeByWorldEvent;
 import nl.ferrybig.multiworld.api.flag.FlagName;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.flags.FlagValue;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -64,13 +64,14 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
   }
 
   @EventHandler
-  public void onFlagChance(FlagChanceEvent event) {
+  public void onFlagChange(FlagChangeEvent event) {
     if (!isEnabled) {
       return;
     }
+
     if (event.getFlag() == FlagName.CREATIVE_WORLD) {
-      for (Player p : event.getWorld().getBukkitWorld().getPlayers()) {
-        this.reloadPlayer(p, p.getWorld());
+      for (Player player : event.getWorld().getBukkitWorld().getPlayers()) {
+        this.reloadPlayer(player, player.getWorld());
       }
     }
   }
@@ -79,6 +80,7 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     if (!isEnabled) {
       return;
     }
+
     PlayerData tmp = this.creativePlayers.get(player.getUniqueId());
     if (tmp != null) {
       removePlayerAction(player, tmp);
@@ -90,6 +92,7 @@ public final class GameModeAddon implements Listener, MultiworldAddon {
     if (database != null) {
       database.putOnPlayer(player);
     }
+
     player.setGameMode(SURVIVAL);
     new GameModeChangeByWorldEvent(player, SURVIVAL).call();
     log.debug("Changing {} game mode back to SURVIVAL", player.getName());

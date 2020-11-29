@@ -5,14 +5,14 @@ import nl.ferrybig.multiworld.api.flag.FlagName;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class FlagChanceEvent extends MultiWorldEvent {
+public class FlagChangeEvent extends MultiWorldEvent {
 
   private static final HandlerList handlers = new HandlerList();
   private final MultiWorldWorldData world;
   private final FlagName flag;
   private final boolean newValue;
 
-  public FlagChanceEvent(MultiWorldWorldData world, FlagName flag, boolean newValue) {
+  public FlagChangeEvent(MultiWorldWorldData world, FlagName flag, boolean newValue) {
     super();
     this.world = world;
     this.flag = flag;

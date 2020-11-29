@@ -10,7 +10,7 @@ public enum FlagName {
   REMEMBER_SPAWN("RememberSpawn", true),
   CREATIVE_WORLD("CreativeWorld", false),
   SAVE_ON("SaveOn", true),
-  RECEIVE_CHAT("RecieveChat", true),
+  RECEIVE_CHAT("ReceiveChat", true),
   SEND_CHAT("SendChat", true);
 
   private final String userFriendlyName;

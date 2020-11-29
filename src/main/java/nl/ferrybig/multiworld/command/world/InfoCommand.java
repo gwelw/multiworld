@@ -5,7 +5,7 @@ import nl.ferrybig.multiworld.command.Command;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
 import nl.ferrybig.multiworld.data.InternalWorld;
-import nl.ferrybig.multiworld.data.WorldHandler;
+import nl.ferrybig.multiworld.handler.WorldHandler;
 import nl.ferrybig.multiworld.translation.Translation;
 import nl.ferrybig.multiworld.translation.message.MessageCache;
 import org.bukkit.command.CommandSender;

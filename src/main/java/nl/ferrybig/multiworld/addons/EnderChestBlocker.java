@@ -1,7 +1,7 @@
 package nl.ferrybig.multiworld.addons;
 
 import nl.ferrybig.multiworld.api.flag.FlagName;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

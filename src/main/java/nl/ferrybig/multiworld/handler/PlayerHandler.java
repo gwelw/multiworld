@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld.data;
+package nl.ferrybig.multiworld.handler;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

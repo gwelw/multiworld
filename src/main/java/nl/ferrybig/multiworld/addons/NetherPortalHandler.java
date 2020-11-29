@@ -1,6 +1,6 @@
 package nl.ferrybig.multiworld.addons;
 
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityPortalEvent;
@@ -12,15 +12,15 @@ public class NetherPortalHandler extends PortalHandler {
     super(data, false);
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
   @Override
+  @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerPortal(EntityPortalEvent event) {
     super.onPlayerPortal(event);
   }
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerPortal(PlayerPortalEvent event) {
-    final EntityPortalEvent evt = new EntityPortalEvent(event.getPlayer(), event.getFrom(),
+    EntityPortalEvent evt = new EntityPortalEvent(event.getPlayer(), event.getFrom(),
         event.getTo(), event.getPortalTravelAgent());
     evt.setCancelled(event.isCancelled());
     this.onPlayerPortal(evt);
