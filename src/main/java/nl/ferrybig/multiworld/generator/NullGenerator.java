@@ -1,14 +1,14 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import nl.ferrybig.multiworld.data.InternalWorld;
-import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
+import nl.ferrybig.multiworld.generator.util.ChunkMaker;
 import org.bukkit.World;
 
-public class NullGen extends SimpleChunkGen {
+public class NullGenerator extends SimpleChunkGenerator {
 
-  private static final NullGen INSTANCE = new NullGen();
+  private static final NullGenerator INSTANCE = new NullGenerator();
 
-  public static NullGen get() {
+  public static NullGenerator get() {
     return INSTANCE;
   }
 
@@ -21,5 +21,4 @@ public class NullGen extends SimpleChunkGen {
   protected ChunkMaker makeChunk(World world) {
     return new ChunkMaker(world);
   }
-
 }

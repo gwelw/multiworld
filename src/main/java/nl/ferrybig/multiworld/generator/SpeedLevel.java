@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 public enum SpeedLevel {
   SLOW,

@@ -1,12 +1,13 @@
-package nl.ferrybig.multiworld.worldgen.util;
+package nl.ferrybig.multiworld.generator.util;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
 
-public final class ChunkMaker implements Cloneable, Serializable {
+public final class ChunkMaker implements Serializable {
 
   private static final long serialVersionUID = 111234729L;
 
@@ -132,7 +133,6 @@ public final class ChunkMaker implements Cloneable, Serializable {
       if ((t.x == a.x) || (t.x == b.x) || (t.z == a.z) || (t.z == b.z)) {
         t.setBlock(block);
       }
-
     });
   }
 
@@ -146,11 +146,6 @@ public final class ChunkMaker implements Cloneable, Serializable {
 
   public Material[][] getRawChunk() {
     return this.chunk;
-  }
-
-  @Override
-  public ChunkMaker clone() throws CloneNotSupportedException {
-    return (ChunkMaker) super.clone();
   }
 
   @Override
@@ -194,13 +189,13 @@ public final class ChunkMaker implements Cloneable, Serializable {
     void run(Pointer target, Pointer selection1, Pointer selection2);
   }
 
-  public class Pointer implements Cloneable, Serializable, Comparable<Pointer> {
+  public class Pointer implements Serializable, Comparable<Pointer> {
 
     private static final long serialVersionUID = 56874873276L;
 
-    public final int x;
-    public final int y;
-    public final int z;
+    private final int x;
+    private final int y;
+    private final int z;
 
     public Pointer() {
       this(0, 0, 0);
@@ -246,37 +241,26 @@ public final class ChunkMaker implements Cloneable, Serializable {
       if (object == null) {
         return false;
       }
+      if (this == object) {
+        return true;
+      }
       if (getClass() != object.getClass()) {
         return false;
       }
-      final Pointer other = (Pointer) object;
-      if (this.x != other.x) {
-        return false;
-      }
-      if (this.y != other.y) {
-        return false;
-      }
-
-      return this.z == other.z;
+      Pointer pointer = (Pointer) object;
+      return x == pointer.x &&
+          y == pointer.y &&
+          z == pointer.z;
     }
 
     @Override
     public int hashCode() {
-      int hash = 7;
-      hash = 4 * hash + this.x;
-      hash = 7 * hash + this.y;
-      hash = 4 * hash + this.z;
-      return hash;
+      return Objects.hash(x, y, z);
     }
 
     @Override
     public String toString() {
       return "Pointer{x=" + x + ",y=" + y + ",z=" + z + "}";
-    }
-
-    @Override
-    public Pointer clone() throws CloneNotSupportedException {
-      return (Pointer) super.clone();
     }
 
     @Override

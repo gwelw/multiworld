@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
@@ -11,13 +11,13 @@ import org.bukkit.plugin.PluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PluginGen extends MultiWorldChunkGen {
+public class PluginGenerator extends MultiWorldChunkGenerator {
 
-  private static final Logger log = LoggerFactory.getLogger(PluginGen.class);
+  private static final Logger log = LoggerFactory.getLogger(PluginGenerator.class);
 
   private final Environment environment;
 
-  public PluginGen(Environment environment) {
+  public PluginGenerator(Environment environment) {
     this.environment = environment;
   }
 
@@ -50,7 +50,6 @@ public class PluginGen extends MultiWorldChunkGen {
       options.setWorldType(environment);
       options.setWorldGen(generator);
     } catch (Exception e) {
-      log.error(e.getMessage());
       throw (InvalidWorldGenOptionsException) (new InvalidWorldGenOptionsException(
           "Error with custom plugin generator")).initCause(e);
     }

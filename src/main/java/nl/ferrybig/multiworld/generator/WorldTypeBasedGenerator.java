@@ -1,11 +1,11 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import java.util.Locale;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.WorldGenException;
 import org.bukkit.WorldType;
 
-public class WorldTypeBasedGenerator extends MultiWorldChunkGen {
+public class WorldTypeBasedGenerator extends MultiWorldChunkGenerator {
 
   private final WorldType type;
 
@@ -25,12 +25,9 @@ public class WorldTypeBasedGenerator extends MultiWorldChunkGen {
     } else {
       option = "";
     }
-    if (generator.isBlank()) {
-      generator = "NORMAL";
-    } else {
-      generator = generator.toUpperCase(Locale.ENGLISH);
-    }
-    ChunkGen env = WorldGenerator.getGenByName(generator);
+
+    generator = generator.isBlank() ? "NORMAL" : generator.toUpperCase(Locale.ENGLISH);
+    CustomChunkGenerator env = WorldGenerator.getGenByName(generator);
 
     String originalOptions = options.getOptions();
     options.setOptions(option);

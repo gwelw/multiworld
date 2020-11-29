@@ -1,16 +1,16 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.bukkit.Material.AIR;
 
 import java.util.List;
 import java.util.Random;
-import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
+import nl.ferrybig.multiworld.generator.util.ChunkMaker;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
-public class EmptyWorldGenerator extends SimpleChunkGen {
+public class EmptyWorldGenerator extends SimpleChunkGenerator {
 
   @Override
   public List<BlockPopulator> getDefaultPopulators(World world) {

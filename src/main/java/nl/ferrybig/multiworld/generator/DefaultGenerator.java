@@ -1,17 +1,17 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import nl.ferrybig.multiworld.data.InternalWorld;
 import org.bukkit.World;
 
-public class DefaultGen implements ChunkGen {
+public class DefaultGenerator implements CustomChunkGenerator {
 
   public final World.Environment type;
 
-  public DefaultGen(World.Environment worldType) {
+  public DefaultGenerator(World.Environment worldType) {
     this.type = worldType;
   }
 
-  public DefaultGen() {
+  public DefaultGenerator() {
     this.type = World.Environment.NORMAL;
   }
 

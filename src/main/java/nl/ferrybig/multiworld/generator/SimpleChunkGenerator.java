@@ -1,4 +1,4 @@
-package nl.ferrybig.multiworld.worldgen;
+package nl.ferrybig.multiworld.generator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,23 +6,23 @@ import java.util.Random;
 import java.util.UUID;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.InvalidWorldGenOptionsException;
-import nl.ferrybig.multiworld.worldgen.util.ChunkMaker;
+import nl.ferrybig.multiworld.generator.util.ChunkMaker;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.generator.ChunkGenerator;
 
-public abstract class SimpleChunkGen extends MultiWorldChunkGen implements ChunkGen {
+public abstract class SimpleChunkGenerator extends MultiWorldChunkGenerator implements
+    CustomChunkGenerator {
 
   protected final Map<UUID, ChunkMaker> chunk = new HashMap<>();
 
   @Override
   public ChunkData generateChunkData(World world, Random random, int x, int z,
-      ChunkGenerator.BiomeGrid biomes) {
+      org.bukkit.generator.ChunkGenerator.BiomeGrid biomes) {
 
-    ChunkMaker tmp = this.chunk.get(world.getUID());
-    if (tmp == null) {
+    ChunkMaker chunkMaker = this.chunk.get(world.getUID());
+    if (chunkMaker == null) {
       this.chunk.put(world.getUID(), this.makeChunk(world));
-      tmp = this.chunk.get(world.getUID());
+      chunkMaker = this.chunk.get(world.getUID());
     }
     Biome biome = this.getBiome();
     if (biome != null) {
@@ -32,7 +32,7 @@ public abstract class SimpleChunkGen extends MultiWorldChunkGen implements Chunk
         }
       }
     }
-    return tmp.toChunkData(this.createChunkData(world));
+    return chunkMaker.toChunkData(this.createChunkData(world));
   }
 
   protected abstract ChunkMaker makeChunk(World world);
