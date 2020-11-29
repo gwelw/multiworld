@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import nl.ferrybig.multiworld.command.CommandStack;
 import nl.ferrybig.multiworld.command.MessageType;
-import nl.ferrybig.multiworld.data.DataHandler;
+import nl.ferrybig.multiworld.handler.DataHandler;
 import nl.ferrybig.multiworld.data.InternalWorld;
 import nl.ferrybig.multiworld.exception.UnknownWorldException;
 import nl.ferrybig.multiworld.translation.Translation;
@@ -36,11 +36,10 @@ public final class Utils {
     if (Character.isLetterOrDigit(name.charAt(0)) && Character
         .isLetterOrDigit(name.charAt(name.length() - 1))) {
       for (char i : name.toCharArray()) {
-        if (Character.isLetterOrDigit(i) || Character.getType(i) == Character.SPACE_SEPARATOR
-            || i == '_' || i == '-' || i == ',') {
-          continue;
+        if (!Character.isLetterOrDigit(i) && Character.getType(i) != Character.SPACE_SEPARATOR
+            && i != '_' && i != '-' && i != ',') {
+          return false;
         }
-        return false;
       }
     } else {
       return false;
